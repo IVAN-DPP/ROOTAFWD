@@ -19,7 +19,7 @@ void Analysis(){
     //DataEvent *myDataPERP=new DataEvent(fileNamePERP,treeName);
     string fileNamePERP="List1.txt";
     DataEvent *myDataPERP=new DataEvent(fileNamePERP,treeName, 35);
-    
+ 
     ///Define histograms here
     TH2F *h_DeltaBe[3];
     h_DeltaBe[0]=new TH2F("h_DeltaBe_0","Proton ;p [GeV/c];#Delta #beta;",200, 0, 3, 200, -0.2, 0.2);
@@ -63,37 +63,55 @@ void Analysis(){
     
 
     TH1F *h_phot[3];
-    h_phot[0]=new TH1F("h_phot_0","Proton ;p [GeV/c]; #beta;",200, 0, 3);
-    h_phot[1]=new TH1F("h_phot_1","Kaon ;p [GeV/c];#beta;",200, 0, 3);
-    h_phot[2]=new TH1F("h_phot_2","Pion ;p [GeV/c]; #beta;",200, 0, 3);
-
-
+    h_phot[0] = new TH1F("h_phot_0","Foton ;p [GeV/c]; #beta;",200, 0, 30);
+    h_phot[1] = new TH1F("h_phot_1","Masa0",200,-20,20);
+    h_phot[2] = new TH1F("h_phot_2","Masa No Kaon+",200,-1,5);
     Int_t conteo=0;
+
     while (myDataPERP->getEntry()<myDataPERP->getEntries()){
       myDataPERP->getNextEntry();
-        if (myDataPERP->getEntry() % 1000 == 0){
-            fprintf (stderr, "Looped over PERP %.2f percent \r", myDataPERP->getEntry()*100.0/myDataPERP->getEntries());
-            fflush (stderr);
-        }
-
-        double deltbeta[3];
-        for (int i=0;i<myDataPERP->getNum_chargedtracks();i++){
-            deltbeta[i]=myDataPERP->getEVNT_track(i).Beta()-myDataPERP->getEVNT_bem(i);
-            h_DeltaBe[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),deltbeta[i]);
-            h_BeVSp[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),myDataPERP->getEVNT_bem(i));
-	    h_ThVSphi[i]->Fill(myDataPERP->getEVNT_track(i).Phi(),myDataPERP->getEVNT_track(i).Theta());
-	    h_CosTheta[i]->Fill(myDataPERP->getEVNT_track(i).CosTheta());
-	    h_Theta[i]->Fill(myDataPERP->getEVNT_track(i).Theta());
-	    h_phi[i]->Fill(myDataPERP->getEVNT_track(i).Phi());
-	    h_DBe[i]->Fill(deltbeta[i]);
-	    h_p[i]->Fill(myDataPERP->getEVNT_track(i).Rho());
-	}
+      if (myDataPERP->getEntry() % 1000 == 0){
+	fprintf (stderr, "Looped over PERP %.2f percent \r", myDataPERP->getEntry()*100.0/myDataPERP->getEntries());
+	fflush (stderr);
+      }
+      
+      double deltbeta[3];
+      for (int i=0;i<myDataPERP->getNum_chargedtracks();i++){
+	deltbeta[i]=myDataPERP->getEVNT_track(i).Beta()-myDataPERP->getEVNT_bem(i);
+	if(deltbeta[0] >= 0.04 || deltbeta[0] <= -0.015) continue;
+        //h_phot[2]->Fill(myDataPERP->getEVNT_track(i).M());
+	h_DeltaBe[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),deltbeta[i]);
+	h_BeVSp[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),myDataPERP->getEVNT_bem(i));
+	h_ThVSphi[i]->Fill(myDataPERP->getEVNT_track(i).Phi(),myDataPERP->getEVNT_track(i).Theta());
+	h_CosTheta[i]->Fill(myDataPERP->getEVNT_track(i).CosTheta());
+	h_Theta[i]->Fill(myDataPERP->getEVNT_track(i).Theta());
+	h_phi[i]->Fill(myDataPERP->getEVNT_track(i).Phi());
+	h_DBe[i]->Fill(deltbeta[i]);
+	h_p[i]->Fill(myDataPERP->getEVNT_track(i).Rho());
 
 	
-        // for (int ii=0;ii<myDataPERP->getNum_photons();ii++){
+      }
+      
+      for(int i=0;i<myDataPERP->getNum_photons();i++){
+	h_phot[0]->Fill(myDataPERP->getDelt_t_k(i));   
 	
-        // }
+      }
+      
 
+      for(int i=0;i<myDataPERP->getNumph_pi();i++){
+	h_phot[2]->Fill(myDataPERP->getK_mm(i).Mt());	     
+	  
+	//h_phot[1]->Fill(myDataPERP->getKpi_mm(i).Mt());
+	
+	myDataPERP->getPpi_mm(i);
+	myDataPERP->getPipi_mm(i);
+	// myDataPERP->getDKppi_mm(i);
+	// myDataPERP->getDKp_mm(i);
+      }
+      
+      // for(int i=0;i<myDataPERP->getNum_neu();i++)
+      // 	h_phot[1]->Fill(myDataPERP->getDKppi_mm(i).M());
+      //h_phot[1]->Fill(myDataPERP->getNum_photons());
     }
     cout<<endl;
     
@@ -158,6 +176,14 @@ void Analysis(){
     h_p[2]->Draw();
     //h_CosTheta[2]->Draw();
 
+    TCanvas *CPhot = new TCanvas("CPhot","Photon",900,500);
+    CPhot->Divide(1,3);
+    CPhot->cd(1);
+    h_phot[0]->Draw();
+    CPhot->cd(2);
+    h_phot[2]->Draw();
+    CPhot->cd(3);
+    h_phot[1]->Draw();
     
 }
 
