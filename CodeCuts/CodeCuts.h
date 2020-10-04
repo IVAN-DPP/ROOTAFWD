@@ -1,31 +1,20 @@
 #include "Histograms.h"
-#include "../DataEvent.cpp"
-
-#include "TROOT.h"
-#include "TH1F.h"
-#include "TH2F.h"
-#include "TCanvas.h"
-#include "TF2.h"
-#include "TEllipse.h"
-#include "TMath.h"
-#include "TStyle.h"
-#include "TGraphErrors.h"
-#include <sstream>
+#include "Libraries.h"
 
 #ifndef CODECUTS_H
 #define CODECUTS_H
 
-class Clase : public Histograms {
+class Codecuts : public Histograms {
 
 private:
 
 public:
-  Clase(){DoHistograms();}
+  Codecuts(){DoHistograms();}
   void CodeCuts();
 
 };
 
-void Clase::CodeCuts(){
+void Codecuts::CodeCuts(){
 
   
   string treeName="g13b";

@@ -1,7 +1,4 @@
-#include <iostream>
-#include "TH1.h"
-#include "TH2.h"
-#include "TCanvas.h"
+#include "Libraries.h"
 
 #ifndef HISTOGRAMS_C
 #define HISTOGRAMS_C

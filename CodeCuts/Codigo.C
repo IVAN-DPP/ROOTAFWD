@@ -1,12 +1,10 @@
 #include "Histograms.h"
 #include "CodeCuts.h"
-
-#include <cstdlib>
-#include <cstdio>
+#include "Libraries.h"
 
 void Codigo(){
 
-  Clase Cls;
+  Codecuts Cls;
   Cls.CodeCuts();
 
   remove("Codigo_C_ACLiC_dict_rdict.pcm");
