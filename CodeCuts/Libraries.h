@@ -12,6 +12,13 @@
 #include "TMath.h"
 #include "TStyle.h"
 #include "TGraphErrors.h"
+#include "TProfile.h"
+#include "TEllipse.h"
+// #include "RooRealVar.h"
+// #include "RooDataSet.h"
+// #include "RooDataHist.h"
+// #include "RooGaussian.h"
+// #include "RooPlot.h"
 
 #include <sstream>
 #include <iostream>
