@@ -108,14 +108,14 @@ void Histograms::DoHistograms(){
 
    //-----Correlation Theta-Phi, ----------//
 
-  h_ThePhi_proton=new TH2F("h_ThePhi_proton","Proton ; Grades[°]; #beta;",200, -180, 180, 200, 0, 150);
-  h_ThePhi_kaon=new TH2F("h_ThePhi_kaon","Kaon ; Grades[°]; #beta;",200,  -180, 180, 200, 0, 150);
-  h_ThePhi_pion=new TH2F("h_ThePhi_pion","Pion ; Grades[°]; #beta;", 200,  -180, 180, 200, 0, 150);
+  h_ThePhi_proton=new TH2F("h_ThePhi_proton","Proton ;#theta #circ; #phi #circ;",200, -180, 180, 200, 0, 150);
+  h_ThePhi_kaon=new TH2F("h_ThePhi_kaon","Kaon ;#theta #circ; #phi #circ;",200,  -180, 180, 200, 0, 150);
+  h_ThePhi_pion=new TH2F("h_ThePhi_pion","Pion ;#theta #circ; #phi #circ;", 200,  -180, 180, 200, 0, 150);
 
  //-------------Fiduciary cuts-------------------------//
-    h_ThePhi_protoncut=new TH2F("h_ThePhi_proton","Proton ;Grades[°]; #beta;",200, -180, 180, 200, 0, 150);
-  h_ThePhi_kaoncut=new TH2F("h_ThePhi_kaon","Kaon ; Grades[°]; #beta;",200,  -180, 180, 200, 0, 150);
-  h_ThePhi_pioncut=new TH2F("h_ThePhi_pion","Pion ; Grades[°]; #beta;", 200,  -180, 180, 200, 0, 150);
+  h_ThePhi_protoncut=new TH2F("h_ThePhi_proton","Proton ;#theta #circ; #phi #circ;",200, -180, 180, 200, 0, 150);
+  h_ThePhi_kaoncut=new TH2F("h_ThePhi_kaon","Kaon ; #theta #circ; #phi #circ;",200,  -180, 180, 200, 0, 150);
+  h_ThePhi_pioncut=new TH2F("h_ThePhi_pion","Pion ; #theta #circ; #phi #circ", 200,  -180, 180, 200, 0, 150);
 
 
   
@@ -142,15 +142,15 @@ void Histograms::DoHistograms(){
   //-------------- Reconstruction --------- //
 
   h_MissingMass = new TH1F("h_missingmass",
-			   "Missing mass (Neutron); Missing Mass [GeV/c^2]; counts",
+			   "Missing mass (Neutron); Missing Mass [GeV/c^{2}]; counts",
 			   100, 0.7, 1.2);
   
   h_MissingMass_kaonpion = new TH1F("h_missingmass_kaonpion",
-				    "Missing mass Kaon_pion ; Missing Mass [GeV/c^2]; counts",
+				    "Missing mass Kaon_pion ; Missing Mass [GeV/c^{2}]; counts",
 				    100, 0.7, 1.2);
   
   h_MissingMass_vsMissingMasskaonpion = new TH2F("MissingMass_correlation",
-						 "Missing Mass Correlation; W-Kaon [GeV/c^2];  W-Pion [GeV/c^2]",
+						 "Missing Mass Correlation; W-Kaon [GeV/c^{2}];  W-Pion [GeV/c^{2}]",
 						 100, 0.7, 1.2, 100, 0.7, 1.2);
   
   h_MissingP = new TH1F("h_missingp",
@@ -158,23 +158,23 @@ void Histograms::DoHistograms(){
 			100, 0.0, 1.5);
   
   h_MissingPvsMass = new TH2F("h_missingpvsm",
-			      "Missing W vs P; Missing momentum [GeV/c]; Missing Mass [GeV/c^2]",
+			      "Missing W vs P; Missing momentum [GeV/c]; Missing Mass [GeV/c^{2}]",
 			      100, 0.0, 1.5, 100, 0.7, 1.2);
   
   h_MissingMassvsSigmaMass = new TH2F("h_missingmvsSigma",
-				      "Invariant Mass Sigma vs Missing Mass Neutron (Kaon); Mass [GeV/c^2]; Mass [GeV/c^2]",
+				      "Invariant Mass Sigma vs Missing Mass Neutron (Kaon); Mass [GeV/c^{2}]; Mass [GeV/c^{2}]",
 				      100,1.0,1.5, 100, 0.7, 1.2);
   
   h_MissingPvsSigmaMass = new TH2F("h_missingPvsSigma",
-				   "Invariant Mass Sigma vs Missing Momentum Neutron (Kaon); Mass [GeV/c^2]; p [GeV/c] ",
+				   "Invariant Mass Sigma vs Missing Momentum Neutron (Kaon); Mass [GeV/c^{2}]; p [GeV/c] ",
 				   100,1.0,1.5, 100, 0.0, 1.5);
   
   h_InvariantMass = new TH1F("h_InvariantMass",
-			     "Invariant mass Sigma With Cuts; Mass [GeV/c^2]; counts ",
+			     "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
 			     100, 1.0, 1.5);
   
   h_LambdaMass = new TH1F("h_LambdaMass",
-			  "Invariant mass Lambda With Cuts; Mass [GeV/c^2]; counts ",
+			  "Invariant mass Lambda With Cuts; Mass [GeV/c^{2}]; counts ",
 			  100, 1.08, 1.16);
 
 
@@ -312,20 +312,20 @@ void Histograms::DoCanvas(){
   TCanvas *c4=new TCanvas("c4","Theta-Phi correlation", 900, 500);
   c4->Divide(1,3);
   c4->cd(1);
-  h_ThePhi_proton->Draw();
+  h_ThePhi_proton->Draw("colz");
   c4->cd(2);
-  h_ThePhi_kaon->Draw();
+  h_ThePhi_kaon->Draw("colz");
   c4->cd(3);
-  h_ThePhi_pion->Draw();
+  h_ThePhi_pion->Draw("colz");
 
   TCanvas *c5=new TCanvas("c5","Fiduciary cuts", 900, 500);
   c5->Divide(1,3);
   c5->cd(1);
-  h_ThePhi_protoncut->Draw();
+  h_ThePhi_protoncut->Draw("colz");
   c5->cd(2);
-  h_ThePhi_kaoncut->Draw();
+  h_ThePhi_kaoncut->Draw("colz");
   c5->cd(3);
-  h_ThePhi_pioncut->Draw();
+  h_ThePhi_pioncut->Draw("colz");
 
   
   

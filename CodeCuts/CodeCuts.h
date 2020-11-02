@@ -72,44 +72,44 @@ void Codecuts::CodeCuts(){
     //------------------------------------------------------------//
 
     Double_t phiproton_cut;
-      phiproton_cut= myDataPERP->getEVNT_track(0).Phi()*TMath::RadToDeg();
+    phiproton_cut= myDataPERP->getEVNT_track(0).Phi()*TMath::RadToDeg();
 
-    if( (phiproton_cut <= -25) && (phiproton_cut >= -35)) continue;
-    if( (phiproton_cut <= -85) && (phiproton_cut >= -95)) continue;
-    if( (phiproton_cut <= -145) && (phiproton_cut >= -155)) continue;
-    if( (phiproton_cut >= 25) && (phiproton_cut <=35)) continue;
-    if ((phiproton_cut >= 85) && (phiproton_cut <=95)) continue;
-    if ((phiproton_cut >= 145) && (phiproton_cut <=155)) continue;
+    if( (phiproton_cut <= -25)   && (phiproton_cut >= -35)  ) continue;
+    if( (phiproton_cut <= -85)   && (phiproton_cut >= -95)  ) continue;
+    if( (phiproton_cut <= -145)  && (phiproton_cut >= -155) ) continue;
+    if( (phiproton_cut >= 25)    && (phiproton_cut <= 35)   ) continue;
+    if( (phiproton_cut >= 85)    && (phiproton_cut <= 95)   ) continue;
+    if( (phiproton_cut >= 145)   && (phiproton_cut <= 155)  ) continue;
      
-      h_ThePhi_protoncut->Fill(phiproton_cut, myDataPERP->getEVNT_track(0).Theta()*TMath::RadToDeg());
-
+    h_ThePhi_protoncut->Fill(phiproton_cut, myDataPERP->getEVNT_track(0).Theta()*TMath::RadToDeg());
+    
     //kaon cuts
-
-      Double_t phikaon_cut;
-      phikaon_cut= myDataPERP->getEVNT_track(1).Phi()*TMath::RadToDeg();
-
-      if( (phikaon_cut <= -25) && (phikaon_cut >= -35)) continue;
-      if( (phikaon_cut <= -85) && (phikaon_cut >= -95)) continue;
-      if( (phikaon_cut <= -145) && (phikaon_cut >= -155)) continue;
-      if( (phikaon_cut >= 25) && (phikaon_cut <=35)) continue;
-      if ((phikaon_cut >= 85) && (phikaon_cut <=95)) continue;
-      if ((phikaon_cut >= 145) && (phikaon_cut <=155)) continue;
-     
-      h_ThePhi_kaoncut->Fill(phikaon_cut, myDataPERP->getEVNT_track(1).Theta()*TMath::RadToDeg());
-  
+    
+    Double_t phikaon_cut;
+    phikaon_cut= myDataPERP->getEVNT_track(1).Phi()*TMath::RadToDeg();
+    
+    if( (phikaon_cut <= -25)   && (phikaon_cut >= -35)  ) continue;
+    if( (phikaon_cut <= -85)   && (phikaon_cut >= -95)  ) continue;
+    if( (phikaon_cut <= -145)  && (phikaon_cut >= -155) ) continue;
+    if( (phikaon_cut >= 25)    && (phikaon_cut <= 35)   ) continue;
+    if( (phikaon_cut >= 85)    && (phikaon_cut <= 95)   ) continue;
+    if( (phikaon_cut >= 145)   && (phikaon_cut <= 155)  ) continue;
+    
+    h_ThePhi_kaoncut->Fill(phikaon_cut, myDataPERP->getEVNT_track(1).Theta()*TMath::RadToDeg());
+    
     //Pion cuts
-
-        Double_t phiPion_cut;
-      phiPion_cut= myDataPERP->getEVNT_track(2).Phi()*TMath::RadToDeg();
-
-      if( (phiPion_cut <= -25) && (phiPion_cut >= -35)) continue;
-      if( (phiPion_cut <= -85) && (phiPion_cut >= -95)) continue;
-      if( (phiPion_cut <= -145) && (phiPion_cut >= -155)) continue;
-      if( (phiPion_cut >= 25) && (phiPion_cut <=35)) continue;
-      if ((phiPion_cut >= 85) && (phiPion_cut <=95)) continue;
-      if ((phiPion_cut >= 145) && (phiPion_cut <=155)) continue;
-     
-      h_ThePhi_pioncut->Fill(phiPion_cut, myDataPERP->getEVNT_track(2).Theta()*TMath::RadToDeg());
+    
+    Double_t phiPion_cut;
+    phiPion_cut= myDataPERP->getEVNT_track(2).Phi()*TMath::RadToDeg();
+    
+    if( (phiPion_cut <= -25)   && (phiPion_cut >= -35)  ) continue;
+    if( (phiPion_cut <= -85)   && (phiPion_cut >= -95)  ) continue;
+    if( (phiPion_cut <= -145)  && (phiPion_cut >= -155) ) continue;
+    if( (phiPion_cut >= 25)    && (phiPion_cut <= 35)   ) continue;
+    if( (phiPion_cut >= 85)    && (phiPion_cut <= 95)   ) continue;
+    if( (phiPion_cut >= 145)   && (phiPion_cut <= 155)  ) continue;
+    
+    h_ThePhi_pioncut->Fill(phiPion_cut, myDataPERP->getEVNT_track(2).Theta()*TMath::RadToDeg());
     
     //------------------ Photons, Delta T  ------------------ // 
     
