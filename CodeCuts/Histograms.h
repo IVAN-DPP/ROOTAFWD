@@ -43,10 +43,23 @@ class Histograms{
   TH2F *h_DeltaBVSInvariantMass;
   TH2F *h_DeltaBVSMissingMass;
   TH2F *h_DeltaBVSMissingMomentum;
+
   //--- Ellipse Cuts ---- //
   
   TEllipse *myEllipse;
 
+   //-----Correlation Theta-Phi, ----------//
+ 
+  TH2F *h_ThePhi_proton;
+  TH2F *h_ThePhi_kaon;
+  TH2F *h_ThePhi_pion;
+
+   //--- Fiduciary cuts ---//
+  TH2F *h_ThePhi_protoncut;
+  TH2F *h_ThePhi_kaoncut;
+  TH2F *h_ThePhi_pioncut;
+  
+  
  public:
   Histograms(){}
   void DoHistograms();
@@ -93,6 +106,19 @@ void Histograms::DoHistograms(){
   h_BeVSpcut[1]=new TH2F("h_BeVSp_1","Kaon ;p [GeV/c];#beta;",200, 0, 3, 200, 0, 1);
   h_BeVSpcut[2]=new TH2F("h_BeVSp_2","Pion ;p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
 
+   //-----Correlation Theta-Phi, ----------//
+
+  h_ThePhi_proton=new TH2F("h_ThePhi_proton","Proton ; Grades[°]; #beta;",200, -180, 180, 200, 0, 150);
+  h_ThePhi_kaon=new TH2F("h_ThePhi_kaon","Kaon ; Grades[°]; #beta;",200,  -180, 180, 200, 0, 150);
+  h_ThePhi_pion=new TH2F("h_ThePhi_pion","Pion ; Grades[°]; #beta;", 200,  -180, 180, 200, 0, 150);
+
+ //-------------Fiduciary cuts-------------------------//
+    h_ThePhi_protoncut=new TH2F("h_ThePhi_proton","Proton ;Grades[°]; #beta;",200, -180, 180, 200, 0, 150);
+  h_ThePhi_kaoncut=new TH2F("h_ThePhi_kaon","Kaon ; Grades[°]; #beta;",200,  -180, 180, 200, 0, 150);
+  h_ThePhi_pioncut=new TH2F("h_ThePhi_pion","Pion ; Grades[°]; #beta;", 200,  -180, 180, 200, 0, 150);
+
+
+  
   //------------------ Photons, Delta T  ------------------ // 
   
   h_DeltaTall[0]=new TH1F("h_DeltaTall_0","Kaon ;#Delta t [ns];counts;", 200, -10, 10);
@@ -166,7 +192,7 @@ void Histograms::DoHistograms(){
 
 
   //0.9395601,1.052416,0.08003898,0.03282563,0,360,45
-  myEllipse = new TEllipse(0.9395601,1.052416,0.04,0.015,0,360,45);
+  myEllipse = new TEllipse(0.9395601,1.052416,0.04,0.02,0,360,45);
 }
 
 
@@ -283,6 +309,26 @@ void Histograms::DoCanvas(){
   c31->cd(2);
   h_LambdaMass->Draw();
 
+  TCanvas *c4=new TCanvas("c4","Theta-Phi correlation", 900, 500);
+  c4->Divide(1,3);
+  c4->cd(1);
+  h_ThePhi_proton->Draw();
+  c4->cd(2);
+  h_ThePhi_kaon->Draw();
+  c4->cd(3);
+  h_ThePhi_pion->Draw();
+
+  TCanvas *c5=new TCanvas("c5","Fiduciary cuts", 900, 500);
+  c5->Divide(1,3);
+  c5->cd(1);
+  h_ThePhi_protoncut->Draw();
+  c5->cd(2);
+  h_ThePhi_kaoncut->Draw();
+  c5->cd(3);
+  h_ThePhi_pioncut->Draw();
+
+  
+  
   TCanvas *c32=new TCanvas("c32","Missing mass", 900, 500);
   c32->cd(1);
   h_MissingMass_vsMissingMasskaonpion->Draw("colz");

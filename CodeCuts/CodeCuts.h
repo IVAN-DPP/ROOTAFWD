@@ -57,6 +57,59 @@ void Codecuts::CodeCuts(){
     }
 
     if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue;    //Cut from Delta Beta vs Missingmass,Missing momentum, Invariantmass
+
+
+    
+   
+    //------------------Correlation Theta-Phi, -----------------------/
+    
+    h_ThePhi_proton->Fill(myDataPERP->getEVNT_track(0).Phi()*TMath::RadToDeg(), myDataPERP->getEVNT_track(0).Theta()*TMath::RadToDeg());  
+    h_ThePhi_kaon->Fill(myDataPERP->getEVNT_track(1).Phi()*TMath::RadToDeg(), myDataPERP->getEVNT_track(1).Theta()*TMath::RadToDeg());
+    h_ThePhi_pion->Fill(myDataPERP->getEVNT_track(2).Phi()*TMath::RadToDeg(), myDataPERP->getEVNT_track(2).Theta()*TMath::RadToDeg());
+
+    
+     //-----Cuts due to detector geometry (Fiduciary cuts)---------//
+    //------------------------------------------------------------//
+
+    Double_t phiproton_cut;
+      phiproton_cut= myDataPERP->getEVNT_track(0).Phi()*TMath::RadToDeg();
+
+    if( (phiproton_cut <= -25) && (phiproton_cut >= -35)) continue;
+    if( (phiproton_cut <= -85) && (phiproton_cut >= -95)) continue;
+    if( (phiproton_cut <= -145) && (phiproton_cut >= -155)) continue;
+    if( (phiproton_cut >= 25) && (phiproton_cut <=35)) continue;
+    if ((phiproton_cut >= 85) && (phiproton_cut <=95)) continue;
+    if ((phiproton_cut >= 145) && (phiproton_cut <=155)) continue;
+     
+      h_ThePhi_protoncut->Fill(phiproton_cut, myDataPERP->getEVNT_track(0).Theta()*TMath::RadToDeg());
+
+    //kaon cuts
+
+      Double_t phikaon_cut;
+      phikaon_cut= myDataPERP->getEVNT_track(1).Phi()*TMath::RadToDeg();
+
+      if( (phikaon_cut <= -25) && (phikaon_cut >= -35)) continue;
+      if( (phikaon_cut <= -85) && (phikaon_cut >= -95)) continue;
+      if( (phikaon_cut <= -145) && (phikaon_cut >= -155)) continue;
+      if( (phikaon_cut >= 25) && (phikaon_cut <=35)) continue;
+      if ((phikaon_cut >= 85) && (phikaon_cut <=95)) continue;
+      if ((phikaon_cut >= 145) && (phikaon_cut <=155)) continue;
+     
+      h_ThePhi_kaoncut->Fill(phikaon_cut, myDataPERP->getEVNT_track(1).Theta()*TMath::RadToDeg());
+  
+    //Pion cuts
+
+        Double_t phiPion_cut;
+      phiPion_cut= myDataPERP->getEVNT_track(2).Phi()*TMath::RadToDeg();
+
+      if( (phiPion_cut <= -25) && (phiPion_cut >= -35)) continue;
+      if( (phiPion_cut <= -85) && (phiPion_cut >= -95)) continue;
+      if( (phiPion_cut <= -145) && (phiPion_cut >= -155)) continue;
+      if( (phiPion_cut >= 25) && (phiPion_cut <=35)) continue;
+      if ((phiPion_cut >= 85) && (phiPion_cut <=95)) continue;
+      if ((phiPion_cut >= 145) && (phiPion_cut <=155)) continue;
+     
+      h_ThePhi_pioncut->Fill(phiPion_cut, myDataPERP->getEVNT_track(2).Theta()*TMath::RadToDeg());
     
     //------------------ Photons, Delta T  ------------------ // 
     
@@ -104,16 +157,16 @@ void Codecuts::CodeCuts(){
     kaon = myDataPERP->geteloss_track(1);
     pion = myDataPERP->geteloss_track(2);
     Wneutron_kaon = photon + deuteron - proton - kaon - pion;
-    Neutron.SetXYZM(Wneutron_kaon.Px(),Wneutron_kaon.Py(),Wneutron_kaon.Pz(),0.939);
+    Neutron.SetXYZM(Wneutron_kaon.Px(), Wneutron_kaon.Py(), Wneutron_kaon.Pz(), 0.939);
     Sigma = pion + Neutron;
     Lambda = pion + proton;
     
     Wneutron_pion = photon + deuteron - proton - kaonpion - pion;         // This missing mass is with the Pion-
     
 
-    double radx=0.04, rady=0.015, offsetx=0.9395601, offsety=1.052416, angle=45*TMath::DegToRad();
+    double radx=0.04, rady=0.02, offsetx=0.9395601, offsety=1.052416, angle=45*TMath::DegToRad();
     
-    Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)+TMath::Power((Wneutron_kaon.M()-offsetx)*sin(angle)-(Wneutron_pion.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
+      Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)+TMath::Power((Wneutron_kaon.M()-offsetx)*sin(angle)-(Wneutron_pion.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
 
     if(El > 1) continue;
     
@@ -127,8 +180,9 @@ void Codecuts::CodeCuts(){
     //h_MissingPvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.P());
     h_MissingMass_vsMissingMasskaonpion->Fill(Wneutron_kaon.M(), Wneutron_pion.M());
     
-    if( ((Lambda.M()<1.05) || (Lambda.M()>1.20)) && ( Wneutron_kaon.M()>0.9) && (Wneutron_kaon.M()<1.0) && (Wneutron_kaon.P()>0.2))
-      h_InvariantMass->Fill(Sigma.M());
+    if( ((Lambda.M()<1.05) || (Lambda.M()>1.20)) && (Wneutron_kaon.M()>0.9) && (Wneutron_kaon.M()<1.0) && (Wneutron_kaon.P()>0.2))
+    h_InvariantMass->Fill(Sigma.M());
+
     //if( ((Lambda.M()<1.05) || (Lambda.M()>1.20)) && (W.M()>0.9) && (W.M()<1.0) )
     //if( ((Lambda.M()<1.05) || (Lambda.M()>1.20)) && (W.M()>0.9) )
     
@@ -144,13 +198,13 @@ void Codecuts::CodeCuts(){
   }
   cout<<endl;
   
-   TF1 *f1 = new TF1("f1","gaus",-0.1,0.1);
-   f1->SetParameters(0.,1.0);
-   h_MissingMass->Fit(f1);
+  //TF1 *f1 = new TF1("f1","gaus",-0.1,0.1);
+  //f1->SetParameters(0.,1.0);
+  // h_MissingMass->Fit(f1);
    //f1->SetRange(0.1,1.7,-0.045,0.05);
-   f1->Draw("same");
+  // f1->Draw("same");
   
-  DoCanvas();
+   DoCanvas();
 }
 
 #endif
