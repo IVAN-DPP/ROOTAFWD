@@ -91,7 +91,7 @@ void Codecuts::CodeCuts(){
 
     //-------------- Reconstruction --------- //
     
-    TLorentzVector photon, deuteron, kaon, kaonpion, proton, pion, Wneutron_kaon, Wneutron_pion, Sigma, Lambda;
+    TLorentzVector photon, deuteron, kaon, kaonpion, proton, pion, Wneutron_kaon, Wneutron_pion, Sigma, Lambda, Neutron;
     photon.SetXYZM(0,0,myDataPERP->getTAGR_epho(myDataPERP->getIndex_k(0)),0);
     deuteron.SetXYZM(0,0,0,1.8756);
     double Px_kaonpion = myDataPERP->getEVNT_track(1).Rho()* sin(myDataPERP->getEVNT_track(1).Theta())* cos(myDataPERP->getEVNT_track(1).Phi());
@@ -104,7 +104,8 @@ void Codecuts::CodeCuts(){
     kaon = myDataPERP->geteloss_track(1);
     pion = myDataPERP->geteloss_track(2);
     Wneutron_kaon = photon + deuteron - proton - kaon - pion;
-    Sigma = pion + Wneutron_kaon;
+    Neutron.SetXYZM(Wneutron_kaon.Px(),Wneutron_kaon.Py(),Wneutron_kaon.Pz(),0.939);
+    Sigma = pion + Neutron;
     Lambda = pion + proton;
     
     Wneutron_pion = photon + deuteron - proton - kaonpion - pion;         // This missing mass is with the Pion-
@@ -126,8 +127,8 @@ void Codecuts::CodeCuts(){
     //h_MissingPvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.P());
     h_MissingMass_vsMissingMasskaonpion->Fill(Wneutron_kaon.M(), Wneutron_pion.M());
     
-    //if( ((Lambda.M()<1.05) || (Lambda.M()>1.20)) && (W.M()>0.9) && (W.M()<1.0) && (W.P()>0.2))
-    h_InvariantMass->Fill(Sigma.M());
+    if( ((Lambda.M()<1.05) || (Lambda.M()>1.20)) && ( Wneutron_kaon.M()>0.9) && (Wneutron_kaon.M()<1.0) && (Wneutron_kaon.P()>0.2))
+      h_InvariantMass->Fill(Sigma.M());
     //if( ((Lambda.M()<1.05) || (Lambda.M()>1.20)) && (W.M()>0.9) && (W.M()<1.0) )
     //if( ((Lambda.M()<1.05) || (Lambda.M()>1.20)) && (W.M()>0.9) )
     
