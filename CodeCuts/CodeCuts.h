@@ -18,13 +18,14 @@ void Codecuts::CodeCuts(){
 
 
   //RooRealVar *x = new RooRealVar("x","x",-10,-10); // Pendiente --p-p-p-p-p-p-p-p-p-para
-  
+
   string treeName="g13b";
   //For 1 root file use constructor below
   //string fileNamePERP="/home/emuneva/Analysis/PARA/skim2_55065.root";
   //DataEvent *myDataPERP=new DataEvent(fileNamePERP,treeName);
   string fileNamePERP="../List1.txt";
   DataEvent *myDataPERP=new DataEvent(fileNamePERP,treeName, 35);
+
 
 
   while (myDataPERP->getEntry()<myDataPERP->getEntries()){
@@ -43,6 +44,7 @@ void Codecuts::CodeCuts(){
       deltbeta[i]=myDataPERP->getEVNT_track(i).Beta()-myDataPERP->getEVNT_bem(i);
       h_DeltaBe[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),deltbeta[i]);
       h_BeVSp[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),myDataPERP->getEVNT_bem(i));
+
     }
 
     //------------------ Delta Beta with Cuts ---------------//
@@ -197,12 +199,7 @@ void Codecuts::CodeCuts(){
     
   }
   cout<<endl;
-  
-  //TF1 *f1 = new TF1("f1","gaus",-0.1,0.1);
-  //f1->SetParameters(0.,1.0);
-  // h_MissingMass->Fit(f1);
-   //f1->SetRange(0.1,1.7,-0.045,0.05);
-  // f1->Draw("same");
+
   
    DoCanvas();
 }

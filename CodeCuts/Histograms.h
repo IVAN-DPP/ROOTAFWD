@@ -14,6 +14,10 @@ class Histograms{
   TH2F *h_DeltaBecut[3];
   TH2F *h_BeVSpcut[3];
 
+  TF1 *FFits[3];               //Fits for do cuts
+  TF1 *FFitsminus[3];
+  string FFname[3];
+  
   TH1F *h_DeltaTall[2];
   TH2F *h_DeltaTallvsp[2];
   TH1F *h_DeltaT[2];
@@ -94,6 +98,15 @@ void Histograms::DoHistograms(){
   BeVSpPion = new TF1("BeVSpPion","x/std::sqrt(std::pow(x,2)+std::pow(0.139,2))",0,2);
   BeVSpPion->SetLineColor(kBlack);
   BeVSpPion->SetLineStyle(2);
+  
+  //------- Fits for do cuts in Delta B ----------- //
+
+  FFits[0] = new TF1("DBProtonFit","gaus",0,3);
+  FFits[1] = new TF1("DBKaonFit","gaus",0,3);
+  FFits[2] = new TF1("DBPionFit","gaus",0,3);
+
+
+  
   
   //-------- Delta Beta Cuts ------- //
 
@@ -198,38 +211,67 @@ void Histograms::DoHistograms(){
 
 void Histograms::DoCanvas(){
 
-  /*
+  
   //---------------- Delta B Without Cuts ----------------- //
 
 
-  TCanvas *c0=new TCanvas("c0","Delta Beta y Beta", 900, 500);
+  TCanvas *c0=new TCanvas("c0","Delta Beta y Beta", 1450, 500);
   c0->Divide(2,1);
   c0->cd(1);
   h_DeltaBe[0]->Draw("colz");
- 
+  h_DeltaBe[0]->Fit(FFits[0]);
+  //Fit functions
+  FFname[0]=FFits[0]->GetName();
+  FFname[0].insert(0,"-1.0*");
+  FFitsminus[0] = new TF1("DBProtonFitminus",FFname[0].c_str(),0,3);
+  FFits[0]->Draw("same");
+  FFitsminus[0]->Draw("same");
+  
+
   c0->cd(2);
   h_BeVSp[0]->Draw("colz");
   BeVSpProton->Draw("same");
+  c0->SaveAs("imagenes/ProtonDB_VS_P.eps");
   
-  TCanvas *c01=new TCanvas("c01","Delta Beta y Beta", 900, 500);
+  TCanvas *c01=new TCanvas("c01","Delta Beta y Beta", 1450, 500);
   c01->Divide(2,1);
   c01->cd(1);
   h_DeltaBe[1]->Draw("colz");
+  h_DeltaBe[1]->Fit(FFits[1]);
+  //Fit functions
+  FFname[1]=FFits[1]->GetName();
+  FFname[1].insert(0,"-1.0*");
+  FFitsminus[1] = new TF1("DBProtonFitminus",FFname[1].c_str(),0,3);
+  FFits[1]->Draw("same");
+  FFitsminus[1]->Draw("same");
+
+  
   c01->cd(2);
   h_BeVSp[1]->Draw("colz");
   BeVSpKaon->Draw("same");
-
-  TCanvas *c02=new TCanvas("c02","Delta Beta y Beta", 900, 500);
+  c01->SaveAs("imagenes/KaonDB_VS_P.eps");
+  
+  TCanvas *c02=new TCanvas("c02","Delta Beta y Beta", 1450, 500);
   c02->Divide(2,1);
   c02->cd(1);
   h_DeltaBe[2]->Draw("colz");
+  h_DeltaBe[2]->Fit(FFits[2]);
+  //Fit functions
+  FFname[2]=FFits[2]->GetName();
+  FFname[2].insert(0,"-1.0*");
+  FFitsminus[2] = new TF1("DBProtonFitminus",FFname[2].c_str(),0,3);
+  FFits[2]->Draw("same");
+  FFitsminus[2]->Draw("same");
+  
   c02->cd(2);
   h_BeVSp[2]->Draw("colz");
   BeVSpPion->Draw("same");
-  
+  c02->SaveAs("imagenes/PionDB_VS_P.eps");
+
+  /*
   //---------------- Delta B With Cuts ----------------- //
 
-  TCanvas *c0cut=new TCanvas("c0cut","Delta Beta and Beta with Cuts", 900, 500);
+  TCanvas *c0cut=new TCanvas("c0cut","Delta Beta and Beta with Cuts", 1450, 500);
   c0cut->Divide(2,1);
   c0cut->cd(1);
   h_DeltaBecut[0]->Draw("colz");
@@ -237,7 +279,7 @@ void Histograms::DoCanvas(){
   h_BeVSpcut[0]->Draw("colz");
   BeVSpProton->Draw("same");
   
-  TCanvas *c01cut=new TCanvas("c01cut","Delta Beta and Beta with Cuts", 900, 500);
+  TCanvas *c01cut=new TCanvas("c01cut","Delta Beta and Beta with Cuts", 1450, 500);
   c01cut->Divide(2,1);
   c01cut->cd(1);
   h_DeltaBecut[1]->Draw("colz");
@@ -245,7 +287,7 @@ void Histograms::DoCanvas(){
   h_BeVSpcut[1]->Draw("colz");
   BeVSpKaon->Draw("same");
   
-  TCanvas *c02cut=new TCanvas("c02cut","Delta Beta and Beta with Cuts", 900, 500);
+  TCanvas *c02cut=new TCanvas("c02cut","Delta Beta and Beta with Cuts", 1450, 500);
   c02cut->Divide(2,1);
   c02cut->cd(1);
   h_DeltaBecut[2]->Draw("colz");
