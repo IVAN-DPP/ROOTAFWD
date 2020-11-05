@@ -10,6 +10,8 @@
 #include "TF2.h"
 #include "TEllipse.h"
 #include "TMath.h"
+#include "TLine.h"
+#include "TPad.h"
 #include "TStyle.h"
 #include "TGraphErrors.h"
 #include "TProfile.h"
@@ -25,5 +27,6 @@
 #include <cstdlib>
 #include <cstdio>
 #include <string>
+#include <vector>
 
 #endif

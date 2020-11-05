@@ -58,8 +58,12 @@ void Codecuts::CodeCuts(){
       h_BeVSpcut[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),myDataPERP->getEVNT_bem(i));
     }
 
+     if(deltbetacut[0] > 0.05  || deltbetacut[0] < -0.045) continue;
+      if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
+    
     if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue;    //Cut from Delta Beta vs Missingmass,Missing momentum, Invariantmass
 
+    
 
     
    
@@ -170,7 +174,7 @@ void Codecuts::CodeCuts(){
     
       Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)+TMath::Power((Wneutron_kaon.M()-offsetx)*sin(angle)-(Wneutron_pion.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
 
-    if(El > 1) continue;
+      if(El > 1) continue;
     
     
     h_MissingMass->Fill(Wneutron_kaon.M());

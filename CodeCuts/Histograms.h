@@ -102,8 +102,8 @@ void Histograms::DoHistograms(){
   //------- Fits for do cuts in Delta B ----------- //
 
   FFits[0] = new TF1("DBProtonFit","gaus",0,3);
-  FFits[1] = new TF1("DBKaonFit","gaus",0,3);
-  FFits[2] = new TF1("DBPionFit","gaus",0,3);
+  FFits[1] = new TF1("DBKaonFit","0.025", 0, 3);
+  FFits[2] = new TF1("DBPionFit","0.05",0,3);
 
 
   
@@ -267,7 +267,7 @@ void Histograms::DoCanvas(){
   h_BeVSp[2]->Draw("colz");
   BeVSpPion->Draw("same");
   c02->SaveAs("imagenes/PionDB_VS_P.eps");
-
+  
   /*
   //---------------- Delta B With Cuts ----------------- //
 
@@ -341,6 +341,7 @@ void Histograms::DoCanvas(){
   h_MissingMass->Draw();
   c3->cd(2);
   h_MissingMass_kaonpion->Draw();
+  c3->SaveAs("imagenes/MissingMass.eps");
 
   //h_MissingP->Draw();
   
@@ -350,15 +351,101 @@ void Histograms::DoCanvas(){
   h_InvariantMass->Draw();
   c31->cd(2);
   h_LambdaMass->Draw();
+  c31->SaveAs("imagenes/InvariantMass.eps");
 
+  double x=-145,b=-155,y1=150,y2=0; //Coordenadas de las líneas
+
+ 
   TCanvas *c4=new TCanvas("c4","Theta-Phi correlation", 900, 500);
   c4->Divide(1,3);
   c4->cd(1);
   h_ThePhi_proton->Draw("colz");
+   vector<TLine*> lineasproton(12);
+ 
+  
+  for (int i=0; i<11; i+=2) {
+    
+    lineasproton.at(i)= new TLine(x, y1, x, y2);    
+    if (x > 0)
+      lineasproton.at(i+1)= new TLine(x+10, y1, x+10, y2);
+    
+    else
+      lineasproton.at(i+1)= new TLine(x-10, y1, x-10, y2);
+
+    if (x == -25)
+      x+=50;
+    else
+      x+=60;
+
+    lineasproton.at(i)->SetLineWidth(2);
+    lineasproton.at(i+1)->SetLineWidth(2);
+    lineasproton.at(i)->SetLineColor(2);
+    lineasproton.at(i+1)->SetLineColor(2);
+    
+    lineasproton.at(i)->Draw("same");
+    lineasproton.at(i+1)->Draw("same");
+  }
   c4->cd(2);
   h_ThePhi_kaon->Draw("colz");
+  x=-145;
+  vector<TLine*> lineaskaon(12);
+  
+  for (int i=0; i<11; i+=2) {
+    
+    lineaskaon.at(i)= new TLine(x, y1, x, y2);    
+    if (x > 0)
+      lineaskaon.at(i+1)= new TLine(x+10, y1, x+10, y2);
+    
+    else
+      lineaskaon.at(i+1)= new TLine(x-10, y1, x-10, y2);
+
+    if (x == -25)
+      x+=50;
+    else
+      x+=60;
+
+    lineaskaon.at(i)->SetLineWidth(2);
+    lineaskaon.at(i+1)->SetLineWidth(2);
+    lineaskaon.at(i)->SetLineColor(2);
+    lineaskaon.at(i+1)->SetLineColor(2);
+    
+    lineaskaon.at(i)->Draw("same");
+    lineaskaon.at(i+1)->Draw("same");
+  }
   c4->cd(3);
   h_ThePhi_pion->Draw("colz");
+  x=-145;
+  vector<TLine*> lineaspion(12);
+   
+  for (int i=0; i<11; i+=2) {
+    
+    lineaspion.at(i)= new TLine(x, y1, x, y2);    
+    if (x > 0)
+      lineaspion.at(i+1)= new TLine(x+10, y1, x+10, y2);
+    
+    else
+      lineaspion.at(i+1)= new TLine(x-10, y1, x-10, y2);
+
+    if (x == -25)
+      x+=50;
+    else
+      x+=60;
+
+    lineaspion.at(i)->SetLineWidth(2);
+    lineaspion.at(i+1)->SetLineWidth(2);
+    lineaspion.at(i)->SetLineColor(2);
+    lineaspion.at(i+1)->SetLineColor(2);
+    
+    lineaspion.at(i)->Draw("same");
+    lineaspion.at(i+1)->Draw("same");
+  }
+
+   
+  
+  
+  c4->SaveAs("imagenes/Fiduciarycuts.eps");
+
+  
 
   TCanvas *c5=new TCanvas("c5","Fiduciary cuts", 900, 500);
   c5->Divide(1,3);
@@ -367,16 +454,16 @@ void Histograms::DoCanvas(){
   c5->cd(2);
   h_ThePhi_kaoncut->Draw("colz");
   c5->cd(3);
-  h_ThePhi_pioncut->Draw("colz");
-
-  
+  h_ThePhi_pioncut->Draw("colz");  
   
   TCanvas *c32=new TCanvas("c32","Missing mass", 900, 500);
   c32->cd(1);
   h_MissingMass_vsMissingMasskaonpion->Draw("colz");
   myEllipse->SetFillStyle(0);
   myEllipse->SetLineColor(kRed);
-  //myEllipse->Draw("same"); 
+  myEllipse->Draw("same");
+  c32->SaveAs("imagenes/Ellipse.eps");
+  
   TCanvas *c40 = new TCanvas("c40","Delta Beta Vs Missingmass and Invariantmass", 900, 500);;
   c40->Divide(3,1);
   c40->cd(1);
@@ -386,5 +473,7 @@ void Histograms::DoCanvas(){
   c40->cd(3);
   h_DeltaBVSMissingMomentum->Draw("colz");
 }
+
+
 
 #endif
