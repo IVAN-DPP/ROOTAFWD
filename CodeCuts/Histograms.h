@@ -233,6 +233,7 @@ void Histograms::DoCanvas(){
   VertexLines[1]->Draw("same");
 
   c00->SaveAs("imagenes/Vertex.eps");
+
   //---------------- Delta B Without Cuts ----------------- //
 
 

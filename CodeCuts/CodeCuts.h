@@ -34,9 +34,11 @@ void Codecuts::CodeCuts(){
     double deltbeta[3]     = {};
     double deltbetacut[3]  = {};
 
-    h_Vertex->Fill(myDataPERP->getEVNT_vertex(1).Z());
+    //---------- Vertex ------------ //
     
+    h_Vertex->Fill(myDataPERP->getEVNT_vertex(1).Z());
     if(myDataPERP->getEVNT_vertex(1).Z()<-39.0  || myDataPERP->getEVNT_vertex(1).Z()>-1.0) continue;
+    
     for (int i=0;i<myDataPERP->getNum_chargedtracks();i++){
       deltbeta[i]=myDataPERP->getEVNT_track(i).Beta()-myDataPERP->getEVNT_bem(i);
       h_DeltaBe[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),deltbeta[i]);
