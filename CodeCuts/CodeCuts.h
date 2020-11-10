@@ -17,12 +17,7 @@ public:
 void Codecuts::CodeCuts(){
 
 
-  //RooRealVar *x = new RooRealVar("x","x",-10,-10); // Pendiente --p-p-p-p-p-p-p-p-p-para
-
   string treeName="g13b";
-  //For 1 root file use constructor below
-  //string fileNamePERP="/home/emuneva/Analysis/PARA/skim2_55065.root";
-  //DataEvent *myDataPERP=new DataEvent(fileNamePERP,treeName);
   string fileNamePERP="../List1.txt";
   DataEvent *myDataPERP=new DataEvent(fileNamePERP,treeName, 35);
 
@@ -36,15 +31,15 @@ void Codecuts::CodeCuts(){
     }
 
     //------------------ Delta Beta ---------------//
-    double deltbeta[3];
-    double deltbetacut[3];
+    double deltbeta[3]     = {};
+    double deltbetacut[3]  = {};
     
     if(myDataPERP->getEVNT_vertex(1).Z()<-39.0  || myDataPERP->getEVNT_vertex(1).Z()>-1.0) continue;
     for (int i=0;i<myDataPERP->getNum_chargedtracks();i++){
       deltbeta[i]=myDataPERP->getEVNT_track(i).Beta()-myDataPERP->getEVNT_bem(i);
       h_DeltaBe[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),deltbeta[i]);
       h_BeVSp[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),myDataPERP->getEVNT_bem(i));
-
+      
     }
 
     //------------------ Delta Beta with Cuts ---------------//
@@ -57,29 +52,28 @@ void Codecuts::CodeCuts(){
       h_DeltaBecut[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),deltbeta[i]);
       h_BeVSpcut[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),myDataPERP->getEVNT_bem(i));
     }
-
-     if(deltbetacut[0] > 0.05  || deltbetacut[0] < -0.045) continue;
-      if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
     
+    if(deltbetacut[0] > 0.05  || deltbetacut[0] < -0.045) continue;
+    if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
     if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue;    //Cut from Delta Beta vs Missingmass,Missing momentum, Invariantmass
-
     
-
+    
+    
     
    
     //------------------Correlation Theta-Phi, -----------------------/
     
-    h_ThePhi_proton->Fill(myDataPERP->getEVNT_track(0).Phi()*TMath::RadToDeg(), myDataPERP->getEVNT_track(0).Theta()*TMath::RadToDeg());  
-    h_ThePhi_kaon->Fill(myDataPERP->getEVNT_track(1).Phi()*TMath::RadToDeg(), myDataPERP->getEVNT_track(1).Theta()*TMath::RadToDeg());
-    h_ThePhi_pion->Fill(myDataPERP->getEVNT_track(2).Phi()*TMath::RadToDeg(), myDataPERP->getEVNT_track(2).Theta()*TMath::RadToDeg());
-
+    h_ThePhi[0]->Fill(myDataPERP->getEVNT_track(0).Phi()*TMath::RadToDeg(), myDataPERP->getEVNT_track(0).Theta()*TMath::RadToDeg());  
+    h_ThePhi[1]->Fill(myDataPERP->getEVNT_track(1).Phi()*TMath::RadToDeg(), myDataPERP->getEVNT_track(1).Theta()*TMath::RadToDeg());
+    h_ThePhi[2]->Fill(myDataPERP->getEVNT_track(2).Phi()*TMath::RadToDeg(), myDataPERP->getEVNT_track(2).Theta()*TMath::RadToDeg());
     
-     //-----Cuts due to detector geometry (Fiduciary cuts)---------//
+    
+    //-----Cuts due to detector geometry (Fiduciary cuts)---------//
     //------------------------------------------------------------//
 
     Double_t phiproton_cut;
     phiproton_cut= myDataPERP->getEVNT_track(0).Phi()*TMath::RadToDeg();
-
+    
     if( (phiproton_cut <= -25)   && (phiproton_cut >= -35)  ) continue;
     if( (phiproton_cut <= -85)   && (phiproton_cut >= -95)  ) continue;
     if( (phiproton_cut <= -145)  && (phiproton_cut >= -155) ) continue;
@@ -87,7 +81,7 @@ void Codecuts::CodeCuts(){
     if( (phiproton_cut >= 85)    && (phiproton_cut <= 95)   ) continue;
     if( (phiproton_cut >= 145)   && (phiproton_cut <= 155)  ) continue;
      
-    h_ThePhi_protoncut->Fill(phiproton_cut, myDataPERP->getEVNT_track(0).Theta()*TMath::RadToDeg());
+    h_ThePhicut[0]->Fill(phiproton_cut, myDataPERP->getEVNT_track(0).Theta()*TMath::RadToDeg());
     
     //kaon cuts
     
@@ -101,7 +95,7 @@ void Codecuts::CodeCuts(){
     if( (phikaon_cut >= 85)    && (phikaon_cut <= 95)   ) continue;
     if( (phikaon_cut >= 145)   && (phikaon_cut <= 155)  ) continue;
     
-    h_ThePhi_kaoncut->Fill(phikaon_cut, myDataPERP->getEVNT_track(1).Theta()*TMath::RadToDeg());
+    h_ThePhicut[1]->Fill(phikaon_cut, myDataPERP->getEVNT_track(1).Theta()*TMath::RadToDeg());
     
     //Pion cuts
     
@@ -115,7 +109,7 @@ void Codecuts::CodeCuts(){
     if( (phiPion_cut >= 85)    && (phiPion_cut <= 95)   ) continue;
     if( (phiPion_cut >= 145)   && (phiPion_cut <= 155)  ) continue;
     
-    h_ThePhi_pioncut->Fill(phiPion_cut, myDataPERP->getEVNT_track(2).Theta()*TMath::RadToDeg());
+    h_ThePhicut[2]->Fill(phiPion_cut, myDataPERP->getEVNT_track(2).Theta()*TMath::RadToDeg());
     
     //------------------ Photons, Delta T  ------------------ // 
     
@@ -169,12 +163,11 @@ void Codecuts::CodeCuts(){
     
     Wneutron_pion = photon + deuteron - proton - kaonpion - pion;         // This missing mass is with the Pion-
     
-
-    double radx=0.04, rady=0.02, offsetx=0.9395601, offsety=1.052416, angle=45*TMath::DegToRad();
     
-      Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)+TMath::Power((Wneutron_kaon.M()-offsetx)*sin(angle)-(Wneutron_pion.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
-
-      if(El > 1) continue;
+    Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
+      +TMath::Power((Wneutron_kaon.M()-offsetx)*sin(angle)-(Wneutron_pion.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
+    
+    if(El > 1) continue;
     
     
     h_MissingMass->Fill(Wneutron_kaon.M());
