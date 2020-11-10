@@ -13,6 +13,8 @@ class Histograms{
   friend void LinesPTCuts();       //Functions for do the lines in Theta-Phi Correlations
 
 protected:
+
+  TH1F *h_Vertex                            = NULL;
   
   TH2F *h_DeltaBe[3]                        = {};
   TH2F *h_BeVSp[3]                          = {};
@@ -75,6 +77,8 @@ public:
 
 void Histograms::DoHistograms(){
 
+  h_Vertex = new TH1F("h_Vertex","Vertex; distance [cm]; counts",200,0,-40);
+  
   //------------------ Delta Beta ---------------//
   
   h_DeltaBe[0]=new TH2F("h_DeltaBe_0","Proton ;p [GeV/c];#Delta #beta;",200, 0, 3, 200, -0.2, 0.2);
@@ -213,7 +217,22 @@ void Histograms::DoHistograms(){
 
 void Histograms::DoCanvas(){
 
-  
+  TCanvas *c00 = new TCanvas("c00","Vertex",900,500);
+  c00->cd(0);
+  h_Vertex->Draw();
+  TLine *VertexLines[2]={};
+  VertexLines[0] = new TLine(-1.0,16000,-1.0,0);
+  VertexLines[1] = new TLine(-39.0,16000,-39.0,0);
+
+  VertexLines[0]->SetLineWidth(2);
+  VertexLines[1]->SetLineWidth(2);
+  VertexLines[0]->SetLineColor(2);
+  VertexLines[1]->SetLineColor(2);
+
+  VertexLines[0]->Draw("same");
+  VertexLines[1]->Draw("same");
+
+  c00->SaveAs("imagenes/Vertex.eps");
   //---------------- Delta B Without Cuts ----------------- //
 
 
