@@ -1,12 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="es">
   <head>
     <meta charset="UTF-8"/>
-    <title>Codogo Trabajo de Grado</title>
   </head>
-  <body>
-    <header>
-      <h1>CODIGO TRABAJO DE GRADO</h1>
+  <body>		
+    <header>	
+      <h1 align="center">CODIGO TRABAJO DE GRADO</h1>
+      <h2 align="center">Análisis de datos con ROOT/C++</h2>
     </header>
+    
   </body>
 </html>
