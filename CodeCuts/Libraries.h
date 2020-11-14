@@ -16,6 +16,10 @@
 #include "TGraphErrors.h"
 #include "TProfile.h"
 #include "TEllipse.h"
+#include "TLorentzVector.h"
+#include "TVector3.h"
+#include "TObject.h"
+#include "TObjArray.h"
 // #include "RooRealVar.h"
 // #include "RooDataSet.h"
 // #include "RooDataHist.h"
@@ -24,9 +28,16 @@
 
 #include <sstream>
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <cstdio>
 #include <string>
 #include <vector>
+#include <stdlib.h>
+#include <stdio.h>
+#include <algorithm>
+#include <dirent.h>
+#include <math.h>
+#include <assert.h>
 
 #endif
