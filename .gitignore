@@ -7,3 +7,9 @@ PERP/
 CodeCuts/PARA
 CodeCuts/PERP
 CodeCuts/imagenes
+CodeCuts/*.d
+CodeCuts/*.so
+CodeCuts/*.pcm
+CodeCuts/Tables
+
+
