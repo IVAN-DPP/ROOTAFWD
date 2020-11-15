@@ -1,6 +1,6 @@
 #include "Histograms.h"
 #include "Libraries.h"
-#include "Miscelaneous.h"
+//#include "Miscelaneous.h"
 
 
 #ifndef CODECUTS_H
@@ -22,13 +22,14 @@ void Codecuts::CodeCuts(){
   string treeName="g13b";
   string fileNamePERP="../List1.txt";
   DataEvent *myDataPERP=new DataEvent(fileNamePERP,treeName, 35);
-  
+
+  /*
   vector<string> filename;
   vector<string> PolTableName;
   
   PolTableName.push_back("./Tables/Beam_3309_CohEdge_1.3_AUTO_and_AMO_PARA_1273.0.fitted2");//1
   PolTableName.push_back("./Tables/Beam_3309_CohEdge_1.3_AUTO_and_AMO_PARA_1274.0.fitted2");//2
-  /*
+  
   PolTableName.push_back("./PolTables_ce13_42_PERP.dat");//3
   PolTableName.push_back("./PolTables_ce15_41_PARA.dat");//4
   PolTableName.push_back("./PolTables_ce15_41_PERP.dat");//5
@@ -51,6 +52,7 @@ void Codecuts::CodeCuts(){
   PolTableName.push_back("./PolTables_ce13_33_PERP.dat");//21
   */
   
+  /*
   ListFilesAtDir("./PARA","root",filename);
   ListFilesAtDir("./PERP","root",filename);
   
@@ -71,7 +73,7 @@ void Codecuts::CodeCuts(){
   }
 
   //exit(1);
-  
+  */
 
   while (myDataPERP->getEntry()<myDataPERP->getEntries()){
     myDataPERP->getNextEntry();
@@ -85,6 +87,7 @@ void Codecuts::CodeCuts(){
     double deltbetacut[3]  = {};
 
     //---------- Vertex ------------ //
+
     
     h_Vertex->Fill(myDataPERP->getEVNT_vertex(1).Z());
     if(myDataPERP->getEVNT_vertex(1).Z()<-39.0  || myDataPERP->getEVNT_vertex(1).Z()>-1.0) continue;
@@ -93,13 +96,15 @@ void Codecuts::CodeCuts(){
       deltbeta[i]=myDataPERP->getEVNT_track(i).Beta()-myDataPERP->getEVNT_bem(i);
       h_DeltaBe[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),deltbeta[i]);
       h_BeVSp[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),myDataPERP->getEVNT_bem(i));
-      
+      h_BeVSpT->Fill(myDataPERP->getEVNT_track(i).Rho(),myDataPERP->getEVNT_bem(i));
     }
 
     //------------------ Delta Beta with Cuts ---------------//
     
     for (int i=0;i<myDataPERP->getNum_chargedtracks();i++){
       deltbetacut[i]=myDataPERP->getEVNT_track(i).Beta()-myDataPERP->getEVNT_bem(i);
+
+      
       if(deltbetacut[0] > 0.05  || deltbetacut[0] < -0.045) continue;
       if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
       if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue;
@@ -216,7 +221,10 @@ void Codecuts::CodeCuts(){
     Lambda = pion + proton;
     
     Wneutron_pion = photon + deuteron - proton - kaonpion - pion;         // This missing mass is with the Pion-
-    
+
+
+    h_MissingMasscut->Fill(Wneutron_kaon.M());
+    h_MissingMass_kaonpioncut->Fill(Wneutron_pion.M());
     
     Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
       +TMath::Power((Wneutron_kaon.M()-offsetx)*sin(angle)-(Wneutron_pion.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
@@ -226,7 +234,7 @@ void Codecuts::CodeCuts(){
     
     h_MissingMass->Fill(Wneutron_kaon.M());
     h_MissingMass_kaonpion->Fill(Wneutron_pion.M());
-    
+   
     //h_MissingP->Fill(W.P());
     //h_MissingPvsMass->Fill(W.P(), Wneutron_kaon.M());
     //h_MissingMassvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.M());

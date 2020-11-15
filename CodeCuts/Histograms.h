@@ -18,8 +18,10 @@ protected:
   
   TH2F *h_DeltaBe[3]                        = {};
   TH2F *h_BeVSp[3]                          = {};
+  TH2F *h_BeVSpT                            = NULL;
   TH2F *h_DeltaBecut[3]                     = {};
   TH2F *h_BeVSpcut[3]                       = {};
+  
   
   TF1 *FFits[3]                             = {};               //Fits for do cuts
   TF1 *FFitsminus[3]                        = {};
@@ -39,6 +41,8 @@ protected:
   
   TH1F *h_MissingMass                     = NULL;
   TH1F *h_MissingMass_kaonpion            = NULL;
+  TH1F *h_MissingMasscut                  = NULL;
+  TH1F *h_MissingMass_kaonpioncut         = NULL;
   
   TH2F *h_MissingMass_vsMissingMasskaonpion = NULL;
 
@@ -90,18 +94,20 @@ void Histograms::DoHistograms(){
   h_BeVSp[1]=new TH2F("h_BeVSp_1","Kaon ;p [GeV/c];#beta;",200, 0, 3, 200, 0, 1);
   h_BeVSp[2]=new TH2F("h_BeVSp_2","Pion ;p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
 
+  h_BeVSpT = new TH2F("h_BeVSpT","Particles ;Momentum (p) [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
+
   //--> Beta vs P with PDG MASSES
 
-  BeVSp[0] = new TF1("BeVSpProton","x/std::sqrt(std::pow(x,2)+std::pow(0.938,2))",0,2);
+  BeVSp[0] = new TF1("BeVSpProton","x/std::sqrt(std::pow(x,2)+std::pow(0.938,2))",0,3);
   BeVSp[0]->SetLineColor(kBlack);
   BeVSp[0]->SetLineStyle(2);
   
-  BeVSp[1] = new TF1("BeVSpKaon","x/std::sqrt(std::pow(x,2)+std::pow(0.493,2))",0,2);
+  BeVSp[1] = new TF1("BeVSpKaon","x/std::sqrt(std::pow(x,2)+std::pow(0.493,2))",0,3);
   BeVSp[1]->SetLineColor(kBlack);
   BeVSp[1]->SetLineStyle(2);
 
   
-  BeVSp[2] = new TF1("BeVSpPion","x/std::sqrt(std::pow(x,2)+std::pow(0.139,2))",0,2);
+  BeVSp[2] = new TF1("BeVSpPion","x/std::sqrt(std::pow(x,2)+std::pow(0.139,2))",0,3);
   BeVSp[2]->SetLineColor(kBlack);
   BeVSp[2]->SetLineStyle(2);
   
@@ -131,7 +137,7 @@ void Histograms::DoHistograms(){
   h_ThePhi[1] = new TH2F("h_ThePhi_kaon","Kaon ;#theta #circ; #phi #circ;",200,  -180, 180, 200, 0, 150);
   h_ThePhi[2] = new TH2F("h_ThePhi_pion","Pion ;#theta #circ; #phi #circ;", 200,  -180, 180, 200, 0, 150);
 
- //-------------Fiduciary cuts-------------------------//
+ //-------------Fiducial cuts-------------------------//
 
   h_ThePhicut[0] = new TH2F("h_ThePhi_protoncut","Proton ;#theta #circ; #phi #circ;",200, -180, 180, 200, 0, 150);
   h_ThePhicut[1] = new TH2F("h_ThePhi_kaoncut","Kaon ; #theta #circ; #phi #circ;",200,  -180, 180, 200, 0, 150);
@@ -168,9 +174,18 @@ void Histograms::DoHistograms(){
   h_MissingMass_kaonpion = new TH1F("h_missingmass_kaonpion",
 				    "Missing mass Kaon_pion ; Missing Mass [GeV/c^{2}]; counts",
 				    100, 0.7, 1.2);
+
+  h_MissingMasscut = new TH1F("h_missingmasscut",
+			   "Missing mass (Neutron); Missing Mass [GeV/c^{2}]; counts",
+			   100, 0.7, 1.2);
+  
+  h_MissingMass_kaonpioncut = new TH1F("h_missingmass_kaonpioncut",
+				    "Missing mass Kaon_pion ; Missing Mass [GeV/c^{2}]; counts",
+				    100, 0.7, 1.2);
+
   
   h_MissingMass_vsMissingMasskaonpion = new TH2F("MissingMass_correlation",
-						 "Missing Mass Correlation; W-Kaon [GeV/c^{2}];  W-Pion [GeV/c^{2}]",
+						 "Missing Mass Correlation; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}];  #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]",
 						 100, 0.7, 1.2, 100, 0.7, 1.2);
   
   h_MissingP = new TH1F("h_missingp",
@@ -251,8 +266,7 @@ void Histograms::DoCanvas(){
   
 
   c0->cd(2);
-  h_BeVSp[0]->Draw("colz");
-  BeVSp[0]->Draw("same");
+  h_DeltaBecut[0]->Draw("colz");
   c0->SaveAs("imagenes/ProtonDB_VS_P.eps");
   
   TCanvas *c01=new TCanvas("c01","Delta Beta y Beta", 1450, 500);
@@ -269,8 +283,7 @@ void Histograms::DoCanvas(){
 
   
   c01->cd(2);
-  h_BeVSp[1]->Draw("colz");
-  BeVSp[1]->Draw("same");
+  h_DeltaBecut[1]->Draw("colz");
   c01->SaveAs("imagenes/KaonDB_VS_P.eps");
   
   TCanvas *c02=new TCanvas("c02","Delta Beta y Beta", 1450, 500);
@@ -286,62 +299,91 @@ void Histograms::DoCanvas(){
   FFitsminus[2]->Draw("same");
   
   c02->cd(2);
-  h_BeVSp[2]->Draw("colz");
-  BeVSp[2]->Draw("same");
+  h_DeltaBecut[2]->Draw("colz");
   c02->SaveAs("imagenes/PionDB_VS_P.eps");
   
-  /*
+  
   //---------------- Delta B With Cuts ----------------- //
 
   TCanvas *c0cut=new TCanvas("c0cut","Delta Beta and Beta with Cuts", 1450, 500);
   c0cut->Divide(2,1);
   c0cut->cd(1);
-  h_DeltaBecut[0]->Draw("colz");
+  h_BeVSpT->Draw("colz");
+  BeVSp[0]->Draw("same");
+  BeVSp[1]->Draw("same");
+  BeVSp[2]->Draw("same");
+  
   c0cut->cd(2);
   h_BeVSpcut[0]->Draw("colz");
-  BeVSpProton->Draw("same");
+  
+  BeVSp[0]->Draw("same");
+  c0cut->SaveAs("imagenes/ProtonB_VS_P.eps");
+ //BeVSpProton->Draw("same");
   
   TCanvas *c01cut=new TCanvas("c01cut","Delta Beta and Beta with Cuts", 1450, 500);
   c01cut->Divide(2,1);
   c01cut->cd(1);
-  h_DeltaBecut[1]->Draw("colz");
+  h_BeVSpT->Draw("colz");
+  BeVSp[0]->Draw("same");
+  BeVSp[1]->Draw("same");
+  BeVSp[2]->Draw("same");
   c01cut->cd(2);
   h_BeVSpcut[1]->Draw("colz");
-  BeVSpKaon->Draw("same");
+
+  BeVSp[1]->Draw("same");
+  c01cut->SaveAs("imagenes/KaonB_VS_P.eps");
+ // BeVSpKaon->Draw("same");
   
   TCanvas *c02cut=new TCanvas("c02cut","Delta Beta and Beta with Cuts", 1450, 500);
   c02cut->Divide(2,1);
   c02cut->cd(1);
-  h_DeltaBecut[2]->Draw("colz");
+  h_BeVSpT->Draw("colz");
+  BeVSp[0]->Draw("same");
+  BeVSp[1]->Draw("same");
+  BeVSp[2]->Draw("same");
   c02cut->cd(2);
   h_BeVSpcut[2]->Draw("colz");
-  BeVSpPion->Draw("same");
-  
+  BeVSp[2]->Draw("same");
+  //BeVSpPion->Draw("same");
+  c02cut->SaveAs("imagenes/PionB_VS_P.eps");
 
-  //------------------ Delta de T without Cuts ---------------- //
   
+  //------------------ Delta de T without Cuts ---------------- //
+
+  /*
   TCanvas *c1=new TCanvas("c1","Delta T", 900, 500);
   c1->Divide(2,1);
   c1->cd(1);
-  h_DeltaTall[0]->Draw(); 
+  h_DeltaT[0]->Draw(); 
   c1->cd(2);
-  h_DeltaTall[1]->Draw();
+  h_DeltaT[1]->Draw();
 
+  
   TCanvas *c11=new TCanvas("c11","Delta T", 900, 500);
   c11->Divide(2,1);
   c11->cd(1);
   h_DeltaTallvsp[0]->Draw("colz"); 
   c11->cd(2);
   h_DeltaTallvsp[1]->Draw("colz");
+  */
 
-
-  TCanvas *c12=new TCanvas("c12","Delta T", 900, 500);
+  TCanvas *c12=new TCanvas("c12","Delta T", 1450, 500);
+  TLine *DTL1= new TLine( -1.0, 0., -1.0 ,86000.);
+  TLine *DTL2= new TLine( 1.0, 0., 1.0 ,86000.);
+  DTL1->SetLineWidth(2);
+  DTL2->SetLineWidth(2);
+  DTL1->SetLineColor(2);
+  DTL2->SetLineColor(2);
   c12->Divide(2,1);
   c12->cd(1);
-  h_DeltaT[0]->Draw();
+  h_DeltaTall[0]->Draw();
+  DTL1->Draw("same");
+  DTL2->Draw("same");
   c12->cd(2);
-  h_DeltaT[1]->Draw();
-
+  h_DeltaTall[1]->Draw();
+  DTL1->Draw("same");
+  DTL2->Draw("same");
+  c12->SaveAs("imagenes/DeltaTcut.eps");
   // ------------- Energy Loss ---------------- //
   
   TCanvas *c2=new TCanvas("c2","Delta Energy loss", 900, 500);
@@ -353,7 +395,7 @@ void Histograms::DoCanvas(){
   c2->cd(3);
   h_eloss[2]->Draw();
 
-  */
+  
   
   //-------------- Reconstruction --------- //
   
@@ -361,9 +403,13 @@ void Histograms::DoCanvas(){
   c3->Divide(2,1);
   c3->cd(1);
   h_MissingMass->Draw();
+  h_MissingMasscut->Draw("same");
   c3->cd(2);
   h_MissingMass_kaonpion->Draw();
+  h_MissingMass_kaonpioncut->Draw("same");
   c3->SaveAs("imagenes/MissingMass.eps");
+
+ 
 
   //h_MissingP->Draw();
   
