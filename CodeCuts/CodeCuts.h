@@ -223,8 +223,9 @@ void Codecuts::CodeCuts(){
     Wneutron_pion = photon + deuteron - proton - kaonpion - pion;         // This missing mass is with the Pion-
 
 
-    h_MissingMasscut->Fill(Wneutron_kaon.M());
-    h_MissingMass_kaonpioncut->Fill(Wneutron_pion.M());
+    h_MissingMass->Fill(Wneutron_kaon.M());
+    h_MissingMass_kaonpion->Fill(Wneutron_pion.M());
+    h_MissingPvsMass->Fill(Wneutron_kaon.M(),Wneutron_kaon.P());
     
     Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
       +TMath::Power((Wneutron_kaon.M()-offsetx)*sin(angle)-(Wneutron_pion.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
@@ -232,25 +233,36 @@ void Codecuts::CodeCuts(){
     if(El > 1) continue;
     
     
-    h_MissingMass->Fill(Wneutron_kaon.M());
-    h_MissingMass_kaonpion->Fill(Wneutron_pion.M());
-   
-    //h_MissingP->Fill(W.P());
-    //h_MissingPvsMass->Fill(W.P(), Wneutron_kaon.M());
-    //h_MissingMassvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.M());
-    //h_MissingPvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.P());
+    h_MissingMasscut->Fill(Wneutron_kaon.M());
+    h_MissingMass_kaonpioncut->Fill(Wneutron_pion.M());
+    
+    h_MissingP->Fill(Wneutron_kaon.P());
+    
+    h_MissingPvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.P());
     h_MissingMass_vsMissingMasskaonpion->Fill(Wneutron_kaon.M(), Wneutron_pion.M());
     
-    if( ((Lambda.M()<1.05) || (Lambda.M()>1.20)) && (Wneutron_kaon.M()>0.9) && (Wneutron_kaon.M()<1.0) && (Wneutron_kaon.P()>0.2))
+    if(Wneutron_kaon.P()<=0.2) continue;                                    //Cut for rescattering
+    
+    h_MissingPcut->Fill(Wneutron_kaon.P());
+    
     h_InvariantMass->Fill(Sigma.M());
+
+    h_LambdaMass->Fill(Lambda.M());
+
+    if ( Lambda.M()>=1.11 && Lambda.M()<=1.122 ) continue;                   //Cut for LamdaMass in +/- 3sigma
+    if ( Wneutron_kaon.M()<=0.9 || Wneutron_kaon.M()>=0.96 ) continue;       //Cut from correlation MM
+
+    h_InvariantMasscut->Fill(Sigma.M());
+    h_MissingMassvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.M());
+
+    
 
     //if( ((Lambda.M()<1.05) || (Lambda.M()>1.20)) && (W.M()>0.9) && (W.M()<1.0) )
     //if( ((Lambda.M()<1.05) || (Lambda.M()>1.20)) && (W.M()>0.9) )
     
     
     //if(Sigma.M()<1.10 || Sigma.M()>1.40)
-    h_LambdaMass->Fill(Lambda.M());
-
+    
     // Pion - 
     h_DeltaBVSInvariantMass->Fill(Sigma.M(),deltbeta[2]);
     h_DeltaBVSMissingMass->Fill(Wneutron_kaon.M(),deltbeta[2]);
