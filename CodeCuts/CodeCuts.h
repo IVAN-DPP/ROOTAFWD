@@ -1,6 +1,6 @@
 #include "Histograms.h"
 #include "Libraries.h"
-//#include "Miscelaneous.h"
+#include "Miscelaneous.h"
 
 
 #ifndef CODECUTS_H
@@ -23,36 +23,10 @@ void Codecuts::CodeCuts(){
   string fileNamePERP="../List1.txt";
   DataEvent *myDataPERP=new DataEvent(fileNamePERP,treeName, 35);
 
-  /*
+  
   vector<string> filename;
   vector<string> PolTableName;
-  
-  PolTableName.push_back("./Tables/Beam_3309_CohEdge_1.3_AUTO_and_AMO_PARA_1273.0.fitted2");//1
-  PolTableName.push_back("./Tables/Beam_3309_CohEdge_1.3_AUTO_and_AMO_PARA_1274.0.fitted2");//2
-  
-  PolTableName.push_back("./PolTables_ce13_42_PERP.dat");//3
-  PolTableName.push_back("./PolTables_ce15_41_PARA.dat");//4
-  PolTableName.push_back("./PolTables_ce15_41_PERP.dat");//5
-  PolTableName.push_back("./PolTables_ce15_45_PARA.dat");//6
-  PolTableName.push_back("./PolTables_ce15_45_PERP.dat");//7
-  PolTableName.push_back("./PolTables_ce17_41_PARA.dat");//8
-  PolTableName.push_back("./PolTables_ce17_41_PERP.dat");//9
-  PolTableName.push_back("./PolTables_ce17_47_PARA.dat");//10
-  PolTableName.push_back("./PolTables_ce17_47_PERP.dat");//11
-  //PolTableName.push_back("./PolTables_ce19_51_PARA.dat");//12
-  //PolTableName.push_back("./PolTables_ce19_51_PERP.dat");//13
-  PolTableName.push_back("./PolTables_ce19_51_PERPnewTable.dat");//13
-  PolTableName.push_back("./PolTables_ce21_51_PARA.dat");//14
-  PolTableName.push_back("./PolTables_ce21_51_PERP.dat");//15
-  PolTableName.push_back("./PolTables_ce21_52_PARA.dat");//16
-  PolTableName.push_back("./PolTables_ce21_52_PERP.dat");//17
-  PolTableName.push_back("./PolTables_ce23_52_PARA.dat");//18
-  PolTableName.push_back("./PolTables_ce23_52_PERP.dat");//19
-  PolTableName.push_back("./PolTables_ce13_33_PARA.dat");//20
-  PolTableName.push_back("./PolTables_ce13_33_PERP.dat");//21
-  */
-  
-  /*
+   
   ListFilesAtDir("./PARA","root",filename);
   ListFilesAtDir("./PERP","root",filename);
   
@@ -63,17 +37,18 @@ void Codecuts::CodeCuts(){
     myData[i]=new DataEvent(filename.at(i),treeName);
   }
 
-  //ListFilesAtDir("./Tables", PolTableName);
+  ListFilesAtDir("./ListTables", PolTableName);
   
   const int NumbOfPolFiles=PolTableName.size();
   for (int i=0;i<NumbOfPolFiles;i++){
     char *cstr = const_cast<char *>(PolTableName[i].c_str());
-    cout << cstr << endl;
     LoadPolTable(i,cstr);
   }
+  
+  
 
-  //exit(1);
-  */
+  exit(1);
+  
 
   while (myDataPERP->getEntry()<myDataPERP->getEntries()){
     myDataPERP->getNextEntry();
