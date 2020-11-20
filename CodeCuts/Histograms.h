@@ -197,7 +197,7 @@ void Histograms::DoHistograms(){
   
   h_MissingP = new TH1F("h_missingp",
 			"Missing momentum Neutron; Missing momentum [GeV/c]; counts",
-			100, 0.0, 1.5);
+			100, 0.0, 1.);
 
   h_MissingPcut = new TH1F("h_missingpcut",
 			"Missing momentum Neutron; Missing momentum [GeV/c]; counts",
@@ -258,6 +258,8 @@ void Histograms::DoCanvas(){
 
   TCanvas *c00 = new TCanvas("c00","Vertex",900,500);
   c00->cd(0);
+  h_Vertex->SetLabelSize(0.05, "XY");
+  h_Vertex->SetTitleSize(0.045, "XY");
   h_Vertex->Draw();
   TLine *VertexLines[2]={};
   VertexLines[0] = new TLine(-1.0,16000,-1.0,0);
@@ -279,6 +281,8 @@ void Histograms::DoCanvas(){
   TCanvas *c0=new TCanvas("c0","Delta Beta y Beta", 1450, 500);
   c0->Divide(2,1);
   c0->cd(1);
+  h_DeltaBe[0]->SetLabelSize(0.045, "XY");
+  h_DeltaBe[0]->SetTitleSize(0.043, "XY");
   h_DeltaBe[0]->Draw("colz");
   h_DeltaBe[0]->Fit(FFits[0]);
   //Fit functions
@@ -290,12 +294,16 @@ void Histograms::DoCanvas(){
   
 
   c0->cd(2);
+  h_DeltaBecut[0]->SetLabelSize(0.045, "XY");
+  h_DeltaBecut[0]->SetTitleSize(0.043, "XY");
   h_DeltaBecut[0]->Draw("colz");
   c0->SaveAs("imagenes/ProtonDB_VS_P.eps");
   
   TCanvas *c01=new TCanvas("c01","Delta Beta y Beta", 1450, 500);
   c01->Divide(2,1);
   c01->cd(1);
+  h_DeltaBe[1]->SetLabelSize(0.045, "XY");
+  h_DeltaBe[1]->SetTitleSize(0.043, "XY");
   h_DeltaBe[1]->Draw("colz");
   h_DeltaBe[1]->Fit(FFits[1]);
   //Fit functions
@@ -307,12 +315,16 @@ void Histograms::DoCanvas(){
 
   
   c01->cd(2);
+  h_DeltaBecut[1]->SetLabelSize(0.045, "XY");
+  h_DeltaBecut[1]->SetTitleSize(0.043, "XY"); 
   h_DeltaBecut[1]->Draw("colz");
   c01->SaveAs("imagenes/KaonDB_VS_P.eps");
   
   TCanvas *c02=new TCanvas("c02","Delta Beta y Beta", 1450, 500);
   c02->Divide(2,1);
   c02->cd(1);
+  h_DeltaBe[2]->SetLabelSize(0.045, "XY");
+  h_DeltaBe[2]->SetTitleSize(0.043, "XY");
   h_DeltaBe[2]->Draw("colz");
   h_DeltaBe[2]->Fit(FFits[2]);
   //Fit functions
@@ -323,6 +335,8 @@ void Histograms::DoCanvas(){
   FFitsminus[2]->Draw("same");
   
   c02->cd(2);
+  h_DeltaBecut[2]->SetLabelSize(0.045, "XY");
+  h_DeltaBecut[2]->SetTitleSize(0.043, "XY");
   h_DeltaBecut[2]->Draw("colz");
   c02->SaveAs("imagenes/PionDB_VS_P.eps");
   
@@ -332,25 +346,32 @@ void Histograms::DoCanvas(){
   TCanvas *c0cut=new TCanvas("c0cut","Delta Beta and Beta with Cuts", 1450, 500);
   c0cut->Divide(2,1);
   c0cut->cd(1);
+  h_BeVSpT->SetLabelSize(0.045, "XY");
+  h_BeVSpT->SetTitleSize(0.043, "XY");
   h_BeVSpT->Draw("colz");
   BeVSp[0]->Draw("same");
   BeVSp[1]->Draw("same");
   BeVSp[2]->Draw("same");
   
   c0cut->cd(2);
-  h_BeVSpcut[0]->Draw("colz");
-  
+  h_BeVSpcut[0]->SetLabelSize(0.045, "XY");
+  h_BeVSpcut[0]->SetTitleSize(0.043, "XY");
+  h_BeVSpcut[0]->Draw("colz");  
   BeVSp[0]->Draw("same");
   c0cut->SaveAs("imagenes/ProtonB_VS_P.eps");
   
   TCanvas *c01cut=new TCanvas("c01cut","Delta Beta and Beta with Cuts", 1450, 500);
   c01cut->Divide(2,1);
   c01cut->cd(1);
+  h_BeVSpT->SetLabelSize(0.045, "XY");
+  h_BeVSpT->SetTitleSize(0.043, "XY");
   h_BeVSpT->Draw("colz");
   BeVSp[0]->Draw("same");
   BeVSp[1]->Draw("same");
   BeVSp[2]->Draw("same");
   c01cut->cd(2);
+  h_BeVSpcut[1]->SetLabelSize(0.045, "XY");
+  h_BeVSpcut[1]->SetTitleSize(0.043, "XY");
   h_BeVSpcut[1]->Draw("colz");
 
   BeVSp[1]->Draw("same");
@@ -359,11 +380,15 @@ void Histograms::DoCanvas(){
   TCanvas *c02cut=new TCanvas("c02cut","Delta Beta and Beta with Cuts", 1450, 500);
   c02cut->Divide(2,1);
   c02cut->cd(1);
+  h_BeVSpT->SetLabelSize(0.045, "XY");
+  h_BeVSpT->SetTitleSize(0.043, "XY");
   h_BeVSpT->Draw("colz");
   BeVSp[0]->Draw("same");
   BeVSp[1]->Draw("same");
   BeVSp[2]->Draw("same");
   c02cut->cd(2);
+  h_BeVSpcut[2]->SetLabelSize(0.045, "XY");
+  h_BeVSpcut[2]->SetTitleSize(0.043, "XY");
   h_BeVSpcut[2]->Draw("colz");
   BeVSp[2]->Draw("same");
   c02cut->SaveAs("imagenes/PionB_VS_P.eps");
@@ -397,10 +422,14 @@ void Histograms::DoCanvas(){
   DTL2->SetLineColor(2);
   c12->Divide(2,1);
   c12->cd(1);
+  h_DeltaTall[0]->SetLabelSize(0.045, "XY");
+  h_DeltaTall[0]->SetTitleSize(0.043, "XY");
   h_DeltaTall[0]->Draw();
   DTL1->Draw("same");
   DTL2->Draw("same");
   c12->cd(2);
+  h_DeltaTall[1]->SetLabelSize(0.045, "XY");
+  h_DeltaTall[1]->SetTitleSize(0.043, "XY");
   h_DeltaTall[1]->Draw();
   TLine *DTL1Pion= new TLine( -1.0, 0., -1.0 ,45000);
   TLine *DTL2Pion= new TLine( 1.0, 0., 1.0 ,45000);
@@ -417,10 +446,16 @@ void Histograms::DoCanvas(){
   TCanvas *c2=new TCanvas("c2","Delta Energy loss", 1450, 500);
   c2->Divide(3,1);
   c2->cd(1);
+  h_eloss[0]->SetLabelSize(0.038, "XY");
+  h_eloss[0]->SetTitleSize(0.04, "XY");
   h_eloss[0]->Draw();
   c2->cd(2);
+  h_eloss[1]->SetLabelSize(0.038, "XY");
+  h_eloss[1]->SetTitleSize(0.04, "XY");
   h_eloss[1]->Draw();
   c2->cd(3);
+  h_eloss[2]->SetLabelSize(0.038, "XY");
+  h_eloss[2]->SetTitleSize(0.04, "XY");
   h_eloss[2]->Draw();
 
   
@@ -430,11 +465,15 @@ void Histograms::DoCanvas(){
   TCanvas *c3=new TCanvas("c3","Missing mass", 1450, 500);
   c3->Divide(2,1);
   c3->cd(1);
+  h_MissingMass->SetLabelSize(0.045, "XY");
+  h_MissingMass->SetTitleSize(0.043, "XY");
   h_MissingMass->Draw();
   h_MissingMasscut->SetFillColor(kRed-7);
   h_MissingMasscut->Draw("same");
 
   c3->cd(2);
+  h_MissingMass_kaonpion->SetLabelSize(0.045, "XY");
+  h_MissingMass_kaonpion->SetTitleSize(0.043, "XY");
   h_MissingMass_kaonpion->Draw();
   h_MissingMass_kaonpioncut->SetFillColor(kRed-7);
   h_MissingMass_kaonpioncut->Draw("same");
@@ -442,9 +481,12 @@ void Histograms::DoCanvas(){
   c3->SaveAs("imagenes/MissingMass.eps");
 
   TCanvas *c310=new TCanvas("c31","Missing Momentum", 1450, 500);
-  TLine *MMPL = new TLine(0.2,0,0.2,6200);
+  c310->cd(1);
+  TLine *MMPL = new TLine(0.2,0,0.2,4300);
   MMPL->SetLineWidth(2);
   MMPL->SetLineColor(kBlue);
+  h_MissingP->SetLabelSize(0.053, "XY");
+  h_MissingP->SetTitleSize(0.047, "XY");
   h_MissingP->Draw();
   h_MissingPcut->SetFillColor(kBlue-7);
   h_MissingPcut->Draw("same");
@@ -455,6 +497,8 @@ void Histograms::DoCanvas(){
   
   TCanvas *c31=new TCanvas("c31","Correlation of MM", 900, 500);
   c31->cd(1);
+  h_MissingMass_vsMissingMasskaonpion->SetLabelSize(0.05, "XY");
+  h_MissingMass_vsMissingMasskaonpion->SetTitleSize(0.045, "XY");  
   h_MissingMass_vsMissingMasskaonpion->Draw("colz");
   myEllipse->SetFillStyle(0);
   myEllipse->SetLineColor(kRed);
@@ -463,23 +507,29 @@ void Histograms::DoCanvas(){
   
   TCanvas *c312=new TCanvas("c312","Missing Momentum vs Missing Mass", 900, 500);
   c312->cd(0);
+  h_MissingPvsMass->SetLabelSize(0.05, "XY");
+  h_MissingPvsMass->SetTitleSize(0.045, "XY");
   h_MissingPvsMass->Draw("colz");
   c312->SaveAs("imagenes/MissingMomentumCorrelation.eps");
   
   TCanvas *c32=new TCanvas("c32","Invariant mass", 1450, 500);
   c32->Divide(2,1);
   c32->cd(1);
+  h_InvariantMass->SetLabelSize(0.045, "XY");
+  h_InvariantMass->SetTitleSize(0.043, "XY");
   h_InvariantMass->Draw();
   h_InvariantMasscut->SetFillColor(kGreen-7);
   h_InvariantMasscut->Draw("same");
   c32->cd(2);
-  TLine *LAML1= new TLine( 1.11, 0., 1.11, 500);
-  TLine *LAML2= new TLine( 1.122, 0., 1.122 ,500);
+  TLine *LAML1= new TLine( 1.11, 0., 1.11, 520);
+  TLine *LAML2= new TLine( 1.122, 0., 1.122 ,520);
   LAML1->SetLineWidth(2);
   LAML2->SetLineWidth(2);
   LAML1->SetLineColor(2);
   LAML2->SetLineColor(2);
 
+  h_LambdaMass->SetLabelSize(0.045, "XY");
+  h_LambdaMass->SetTitleSize(0.043, "XY");
   h_LambdaMass->Draw();
   h_LambdaMass->Fit(lamdaMassFit);
   lamdaMassFit->Draw("same");
@@ -491,14 +541,21 @@ void Histograms::DoCanvas(){
   TCanvas *c4=new TCanvas("c4","Theta-Phi correlation", 900, 500);
   c4->Divide(1,3);
   c4->cd(1);
+  h_ThePhi[0]->SetLabelSize(0.1, "XY");
+  h_ThePhi[0]->SetTitleSize(0.05, "XY");
   h_ThePhi[0]->Draw("colz");
   LinesPTCuts();
  
   c4->cd(2);
+  h_ThePhi[1]->SetLabelSize(0.1, "XY");
+  h_ThePhi[1]->SetTitleSize(0.05, "XY");
   h_ThePhi[1]->Draw("colz");
+  
   LinesPTCuts();
 
   c4->cd(3);
+  h_ThePhi[2]->SetLabelSize(0.1, "XY");
+  h_ThePhi[2]->SetTitleSize(0.05, "XY");
   h_ThePhi[2]->Draw("colz");
   LinesPTCuts();
   
@@ -509,21 +566,33 @@ void Histograms::DoCanvas(){
   TCanvas *c5=new TCanvas("c5","Fiduciary cuts", 900, 500);
   c5->Divide(1,3);
   c5->cd(1);
+  h_ThePhicut[0]->SetLabelSize(0.1, "XY");
+  h_ThePhicut[0]->SetTitleSize(0.05, "XY");
   h_ThePhicut[0]->Draw("colz");
   c5->cd(2);
+  h_ThePhicut[1]->SetLabelSize(0.1, "XY");
+  h_ThePhicut[1]->SetTitleSize(0.05, "XY");
   h_ThePhicut[1]->Draw("colz");
   c5->cd(3);
+  h_ThePhicut[2]->SetLabelSize(0.1, "XY");
+  h_ThePhicut[2]->SetTitleSize(0.05, "XY");
   h_ThePhicut[2]->Draw("colz");  
   
 
   
-  TCanvas *c40 = new TCanvas("c40","Delta Beta Vs Missingmass and Invariantmass", 900, 500);
+  TCanvas *c40 = new TCanvas("c40","Delta Beta Vs Missing mass and Invariantmass", 900, 500);
   c40->Divide(3,1);
   c40->cd(1);
+  h_DeltaBVSInvariantMass->SetLabelSize(0.03, "XY");
+  h_DeltaBVSInvariantMass->SetTitleSize(0.02, "XY");
   h_DeltaBVSInvariantMass->Draw("colz");
   c40->cd(2);
+  h_DeltaBVSMissingMass->SetLabelSize(0.03, "XY");
+  h_DeltaBVSMissingMass->SetTitleSize(0.02, "XY");
   h_DeltaBVSMissingMass->Draw("colz");
   c40->cd(3);
+  h_DeltaBVSMissingMomentum->SetLabelSize(0.03, "XY");
+  h_DeltaBVSMissingMomentum->SetTitleSize(0.2, "XY");
   h_DeltaBVSMissingMomentum->Draw("colz");
 
   TCanvas *c41 = new TCanvas("c41","Por si las moscas", 1450, 500);
