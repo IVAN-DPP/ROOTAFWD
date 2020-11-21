@@ -1,6 +1,6 @@
 #include "Histograms.h"
 #include "Libraries.h"
-//#include "Miscelaneous.h"
+#include "Miscelaneous.h"
 
 
 #ifndef CODECUTS_H
@@ -23,36 +23,12 @@ void Codecuts::CodeCuts(){
   string fileNamePERP="../List1.txt";
   DataEvent *myDataPERP=new DataEvent(fileNamePERP,treeName, 35);
 
-  /*
+  
   vector<string> filename;
   vector<string> PolTableName;
+
   
-  PolTableName.push_back("./Tables/Beam_3309_CohEdge_1.3_AUTO_and_AMO_PARA_1273.0.fitted2");//1
-  PolTableName.push_back("./Tables/Beam_3309_CohEdge_1.3_AUTO_and_AMO_PARA_1274.0.fitted2");//2
   
-  PolTableName.push_back("./PolTables_ce13_42_PERP.dat");//3
-  PolTableName.push_back("./PolTables_ce15_41_PARA.dat");//4
-  PolTableName.push_back("./PolTables_ce15_41_PERP.dat");//5
-  PolTableName.push_back("./PolTables_ce15_45_PARA.dat");//6
-  PolTableName.push_back("./PolTables_ce15_45_PERP.dat");//7
-  PolTableName.push_back("./PolTables_ce17_41_PARA.dat");//8
-  PolTableName.push_back("./PolTables_ce17_41_PERP.dat");//9
-  PolTableName.push_back("./PolTables_ce17_47_PARA.dat");//10
-  PolTableName.push_back("./PolTables_ce17_47_PERP.dat");//11
-  //PolTableName.push_back("./PolTables_ce19_51_PARA.dat");//12
-  //PolTableName.push_back("./PolTables_ce19_51_PERP.dat");//13
-  PolTableName.push_back("./PolTables_ce19_51_PERPnewTable.dat");//13
-  PolTableName.push_back("./PolTables_ce21_51_PARA.dat");//14
-  PolTableName.push_back("./PolTables_ce21_51_PERP.dat");//15
-  PolTableName.push_back("./PolTables_ce21_52_PARA.dat");//16
-  PolTableName.push_back("./PolTables_ce21_52_PERP.dat");//17
-  PolTableName.push_back("./PolTables_ce23_52_PARA.dat");//18
-  PolTableName.push_back("./PolTables_ce23_52_PERP.dat");//19
-  PolTableName.push_back("./PolTables_ce13_33_PARA.dat");//20
-  PolTableName.push_back("./PolTables_ce13_33_PERP.dat");//21
-  */
-  
-  /*
   ListFilesAtDir("./PARA","root",filename);
   ListFilesAtDir("./PERP","root",filename);
   
@@ -63,17 +39,16 @@ void Codecuts::CodeCuts(){
     myData[i]=new DataEvent(filename.at(i),treeName);
   }
 
-  //ListFilesAtDir("./Tables", PolTableName);
+  ListFilesAtDir("./Tables", PolTableName);
   
   const int NumbOfPolFiles=PolTableName.size();
   for (int i=0;i<NumbOfPolFiles;i++){
     char *cstr = const_cast<char *>(PolTableName[i].c_str());
     cout << cstr << endl;
     LoadPolTable(i,cstr);
+  
   }
-
-  //exit(1);
-  */
+  
 
   while (myDataPERP->getEntry()<myDataPERP->getEntries()){
     myDataPERP->getNextEntry();
@@ -104,17 +79,19 @@ void Codecuts::CodeCuts(){
     for (int i=0;i<myDataPERP->getNum_chargedtracks();i++){
       deltbetacut[i]=myDataPERP->getEVNT_track(i).Beta()-myDataPERP->getEVNT_bem(i);
 
-      
-      if(deltbetacut[0] > 0.05  || deltbetacut[0] < -0.045) continue;
-      if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
       if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue;
+      if(deltbetacut[0] > 0.04  || deltbetacut[0] < -0.04) continue;
+      if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
+      
+      
       h_DeltaBecut[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),deltbeta[i]);
       h_BeVSpcut[i]->Fill(myDataPERP->getEVNT_track(i).Rho(),myDataPERP->getEVNT_bem(i));
     }
-    
-    if(deltbetacut[0] > 0.05  || deltbetacut[0] < -0.045) continue;
+
+    if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue; 
+    if(deltbetacut[0] > 0.04  || deltbetacut[0] < -0.04) continue;
     if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
-    if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue;    //Cut from Delta Beta vs Missingmass,Missing momentum, Invariantmass
+      //Cut from Delta Beta vs Missingmass,Missing momentum, Invariantmass
     
     
     
@@ -227,10 +204,10 @@ void Codecuts::CodeCuts(){
     h_MissingMass_kaonpion->Fill(Wneutron_pion.M());
     h_MissingPvsMass->Fill(Wneutron_kaon.M(),Wneutron_kaon.P());
     
-    Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
+      Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
       +TMath::Power((Wneutron_kaon.M()-offsetx)*sin(angle)-(Wneutron_pion.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
     
-    if(El > 1) continue;
+     if(El > 1) continue;
     
     
     h_MissingMasscut->Fill(Wneutron_kaon.M());
@@ -240,14 +217,17 @@ void Codecuts::CodeCuts(){
     
     h_MissingPvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.P());
     h_MissingMass_vsMissingMasskaonpion->Fill(Wneutron_kaon.M(), Wneutron_pion.M());
+
+
     
     if(Wneutron_kaon.P()<=0.2) continue;                                    //Cut for rescattering
-    
+
+    h_InvariantMass->Fill(Sigma.M());
+    h_LambdaMass->Fill(Lambda.M());
+
     h_MissingPcut->Fill(Wneutron_kaon.P());
     
-    h_InvariantMass->Fill(Sigma.M());
-
-    h_LambdaMass->Fill(Lambda.M());
+   
 
     if ( Lambda.M()>=1.11 && Lambda.M()<=1.122 ) continue;                   //Cut for LamdaMass in +/- 3sigma
     if ( Wneutron_kaon.M()<=0.9 || Wneutron_kaon.M()>=0.96 ) continue;       //Cut from correlation MM
