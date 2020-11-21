@@ -83,7 +83,10 @@ void Codecuts::CodeCuts(){
     for (int i=0;i<myDataList->getNum_chargedtracks();i++){
       deltbetacut[i]=myDataList->getEVNT_track(i).Beta()-myDataList->getEVNT_bem(i);
 
-      if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue;
+      if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue; 
+      if(deltbetacut[0] > 0.04  || deltbetacut[0] < -0.04) continue;
+      if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
+
 
       h_DeltaBecut[i]->Fill(myDataList->getEVNT_track(i).Rho(),deltbeta[i]);
       h_BeVSpcut[i]->Fill(myDataList->getEVNT_track(i).Rho(),myDataList->getEVNT_bem(i));
