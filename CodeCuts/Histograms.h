@@ -36,6 +36,10 @@ protected:
 
   TF1 *BeVSp[3]                             = {};
 
+
+  //---- Get Coherent Edge ---- //
+
+  TH1F *h_TagrEpho[3]                       = {};
   
   //---- Missing mass ----//
   
@@ -172,6 +176,12 @@ void Histograms::DoHistograms(){
   h_eloss[1]=new TH1F("h_eloss_1","Kaon; eloss [MeV]",50, 0, 20);
   h_eloss[2]=new TH1F("h_eloss_2","Pion; eloss [MeV]",50, 0, 20);
 
+  //---- Get Coherent Edge ---- //
+
+  h_TagrEpho[0] = new TH1F("h_Tagrepho1","",100,0,2000);
+  h_TagrEpho[1] = new TH1F("h_Tagrepho2","",100,0,2000);
+  h_TagrEpho[2] = new TH1F("h_Tagrepho3","",100,0,2000);
+  
   //-------------- Reconstruction --------- //
 
   h_MissingMass = new TH1F("h_missingmass",
@@ -469,7 +479,16 @@ void Histograms::DoCanvas(){
   h_eloss[2]->Draw();
   c2->SaveAs("imagenes/Energyloss.eps");
 
-  
+  //---- Get Coherent Edge ---- //
+
+  TCanvas *c20 = new TCanvas("c20","Coh Edge", 900,500);
+  c20->Divide(3);
+  c20->cd(1);
+  h_TagrEpho[0]->Draw();
+  c20->cd(2);
+  h_TagrEpho[1]->Draw();
+  c20->cd(3);
+  h_TagrEpho[2]->Draw();
   
   //-------------- Reconstruction --------- //
   

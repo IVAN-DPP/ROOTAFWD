@@ -1,6 +1,8 @@
 //Author: Edwin Munevar
 
 /* Miscelaneous.C.  */
+#ifndef MISCELANEOUS_H
+#define MISCELANEOUS_H
 
 #include "Miscelaneous.h"
 #include "Libraries.h"
@@ -49,9 +51,10 @@ enum {
   PERP3=5
 };
 
-double polTable[6][500][385][10];  //where its [plane][edge][E_id][field]
-int polTableN[6]={0,0,0,0,0,0};            //No of entries for para and perp
-char polFirstLines[6][500][250];   //to keep the 1st lines if needed (info from files)
+
+double polTable[20][500][385][10];  //where its [plane][edge][E_id][field]
+int polTableN[20]={};            //No of entries for para and perp
+char polFirstLines[20][500][250];   //to keep the 1st lines if needed (info from files)
 
 int edgeEventLow[5000];            //hold the current table of edge positions for event ranges
 int edgeEventHigh[5000];
@@ -125,7 +128,7 @@ int LoadPolTable(int plane, char *PolTableList){
     cout << "Error Couldn't open file: " << PolTableList << endl;
     return -1;
   }
-  
+  cout << "List of Files: " << PolTableList << endl;
   fcount=0; 
   //for each file in the list
   while(fgets(lline,240,fplist) != NULL){
@@ -137,7 +140,7 @@ int LoadPolTable(int plane, char *PolTableList){
       cout << "Error Couldn't open file: " << filename << endl;
       return -1;
     }
-    
+
     fgets(polFirstLines[plane][polTableN[plane]],240,fpfile); //save the 1st line
     //puts(polFirstLines[plane][polTableN[plane]]);  my cent....
     
@@ -145,8 +148,10 @@ int LoadPolTable(int plane, char *PolTableList){
 
     //scan the bit after the last "_" in the filename to get the edge energy
     sscanf(strrchr(filename,'_')+1,"%lg",&polTable[plane][fcount][0][EDGE]);
+
     
     chancount=0;                                             //starting array at 1 for consistency with E_ID
+    
     while((fgets(fline,240,fpfile)) != NULL){
       if((fline[0] == '*')||(fline[0] == '#')) continue;     //skip comments    
       sscanf(fline,"%d",&eid);                               //first get the E_ID
@@ -161,11 +166,13 @@ int LoadPolTable(int plane, char *PolTableList){
 	     &polTable[plane][fcount][eid][PSMOOTH]);
       chancount++; 
     }
+    
     fclose(fpfile); //close the file
     if(chancount!=384){
       cout << "Should be 384 lines in " << filename << " - only got " << chancount << endl;
       return -1;
     }
+
     polTableN[plane]++;
     
     fcount++;
@@ -174,11 +181,12 @@ int LoadPolTable(int plane, char *PolTableList){
   //cout << " polTableN[plane]: " <<  polTableN[plane] << " " << polTable[plane][fcount][eid][ENERGY] << endl; 
 
   fclose(fplist);
-  
+    
   return(0);
 }
 
 
+  /*
 //double GetPol(int plane, double edge, int eid, int poltype = PSMOOTH, double lowThresh=0.2, double highThresh=0.3)
 double GetPol(int plane, double edge, int eid, int poltype, double lowThresh, double highThresh)
 {
@@ -254,3 +262,6 @@ double GetPol(int plane, double edge, double eg, int poltype, double lowThresh, 
   return pol;
   }
 ///////////////////////////////////////////////////////////////////////////////
+*/
+  
+#endif
