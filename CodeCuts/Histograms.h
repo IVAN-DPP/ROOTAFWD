@@ -7,10 +7,11 @@ using namespace std;
 
 //Friends Functions
 void LinesPTCuts();
-
+void NameLinesInv(double, double, int, int);
 class Histograms{
   //Friends Functions
   friend void LinesPTCuts();       //Functions for do the lines in Theta-Phi Correlations
+  friend void NameLinesInv(double, double, int, int);
 
 protected:
 
@@ -51,14 +52,14 @@ protected:
   TH2F *h_MissingMass_vsMissingMasskaonpion = NULL;
 
 
-  TH1F *h_MissingP                        = NULL;
-  TH1F *h_MissingPcut                     = NULL;
-  TH2F *h_MissingPvsMass                  = NULL;
+  TH1F *h_MissingP[2]                      = {};
+  TH1F *h_MissingPcut[2]                   = {};
+  TH2F *h_MissingPvsMass[2]                = {};
   TH2F *h_MissingMassvsSigmaMass          = NULL;
   TH2F *h_MissingPvsSigmaMass             = NULL;
 
   TH1F *h_InvariantMass                   = NULL;
-  TH1F *h_InvariantMasscut                = NULL;
+  TH1F *h_InvariantMasscut[4]                = {};
 
   //---- Lambda and Lambda Fit ---- //
   
@@ -205,16 +206,30 @@ void Histograms::DoHistograms(){
 						 "Missing Mass Correlation; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}];  #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]",
 						 100, 0.7, 1.2, 100, 0.7, 1.2);
   
-  h_MissingP = new TH1F("h_missingp",
+  h_MissingP[0] = new TH1F("h_missingpSigma",
+			"Missing momentum Neutron; Missing momentum [GeV/c]; counts",
+			100, 0.0, 1.);
+  h_MissingP[1] = new TH1F("h_missingpLambda",
 			"Missing momentum Neutron; Missing momentum [GeV/c]; counts",
 			100, 0.0, 1.);
 
-  h_MissingPcut = new TH1F("h_missingpcut",
+  h_MissingPcut[0] = new TH1F("h_missingpcutSigma",
+			"Missing momentum Neutron; Missing momentum [GeV/c]; counts",
+			100, 0.0, 1.5);
+  h_MissingPcut[1] = new TH1F("h_missingpcutLambda",
 			"Missing momentum Neutron; Missing momentum [GeV/c]; counts",
 			100, 0.0, 1.5);
   
-  h_MissingPvsMass = new TH2F("h_missingpvsm",
-			      "Missing Momentum Vs Missing Mass; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Missing Momentum (p) [GeV/c]",
+
+
+
+  
+  h_MissingPvsMass[0] = new TH2F("h_missingpvsmSigma",
+			      "Missing Momentum Vs Missing Mass (Lambda cut); #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Missing Momentum (p) [GeV/c]",
+			      100, 0.7, 1.2, 100, 0.0, 1.5);
+
+  h_MissingPvsMass[1] = new TH2F("h_missingpvsmLambda",
+			      "Missing Momentum Vs Missing Mass (Sigma cut); #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Missing Momentum (p) [GeV/c]",
 			      100, 0.7, 1.2, 100, 0.0, 1.5);
 
 
@@ -234,7 +249,19 @@ void Histograms::DoHistograms(){
 			     100, 1.0, 1.5);
   
   
-  h_InvariantMasscut = new TH1F("h_InvariantMasscut",
+  h_InvariantMasscut[0] = new TH1F("h_InvariantMasscut3Sig",
+			     "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
+			     100, 1.0, 1.5);
+
+  h_InvariantMasscut[1] = new TH1F("h_InvariantMasscut4Sig",
+			     "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
+			     100, 1.0, 1.5);
+
+  h_InvariantMasscut[2] = new TH1F("h_InvariantMasscut5Sig",
+			     "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
+			     100, 1.0, 1.5);
+  
+  h_InvariantMasscut[3] = new TH1F("h_InvariantMasscut_ACP",
 			     "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
 			     100, 1.0, 1.5);
   
@@ -515,13 +542,18 @@ void Histograms::DoCanvas(){
   TLine *MMPL = new TLine(0.2,0,0.2,4300);
   MMPL->SetLineWidth(2);
   MMPL->SetLineColor(kBlue);
-  h_MissingP->SetLabelSize(0.053, "XY");
-  h_MissingP->SetTitleSize(0.047, "XY");
-  h_MissingP->Draw();
+  h_MissingP[0]->SetLabelSize(0.053, "XY");
+  h_MissingP[0]->SetTitleSize(0.047, "XY");
+  h_MissingP[0]->Draw();
+  h_MissingP[1]->SetLabelSize(0.053, "XY");
+  h_MissingP[1]->SetTitleSize(0.047, "XY");
+  h_MissingP[1]->SetFillColor(kRed-7);
+  h_MissingP[1]->Draw("same");
+  /*
   h_MissingPcut->SetFillColor(kBlue-7);
   h_MissingPcut->Draw("same");
   MMPL->Draw("same");
-
+  */
   c310->SaveAs("imagenes/MissingMomentum.eps");
   
   
@@ -536,33 +568,43 @@ void Histograms::DoCanvas(){
   c31->SaveAs("imagenes/Ellipse.eps");
   
   TCanvas *c312=new TCanvas("c312","Missing Momentum vs Missing Mass", 900, 500);
-  TLine *LP= new TLine(0.7, 0.2, 1.2, 0.2);
-  LP->SetLineWidth(2);
-  LP->SetLineColor(2);
+  c312->Divide(2,1);
   c312->cd(1);
-  h_MissingPvsMass->SetLabelSize(0.05, "XY");
-  h_MissingPvsMass->SetTitleSize(0.045, "XY");
-  h_MissingPvsMass->Draw("colz");
-  LP->Draw("same");
+  h_MissingPvsMass[0]->SetLabelSize(0.05, "XY");
+  h_MissingPvsMass[0]->SetTitleSize(0.045, "XY");
+  h_MissingPvsMass[0]->Draw("colz");
+  
+
+  c312->cd(2);
+  h_MissingPvsMass[1]->SetLabelSize(0.05, "XY");
+  h_MissingPvsMass[1]->SetTitleSize(0.045, "XY");
+  h_MissingPvsMass[1]->Draw("colz");
   
   c312->SaveAs("imagenes/MissingMomentumCorrelation.eps");
-  
+
+
+  //-----------------Comparación de sigmas------------------//
   TCanvas *c32=new TCanvas("c32","Invariant mass", 900, 500);
-  // c32->Divide(2,1);
+  c32->Divide(2,1);
   c32->cd(1);
-  h_InvariantMass->SetLabelSize(0.045, "XY");
-  h_InvariantMass->SetTitleSize(0.043, "XY");
-  h_InvariantMass->Draw();
-  h_InvariantMasscut->SetFillColor(kGreen-7);
-  h_InvariantMasscut->Draw("same");
-  /*
-  c32->cd(2);
-  TLine *LAML1= new TLine( 1.11, 0., 1.11, 520);
-  TLine *LAML2= new TLine( 1.122, 0., 1.122 ,520);
+  TLine *LAML1= new TLine( 1.11, 0., 1.11, 4100);
+  TLine *LAML2= new TLine( 1.122, 0., 1.122 ,4100);
+  TLine *LAML3= new TLine( 1.104, 0., 1.104, 4100);
+  TLine *LAML4= new TLine( 1.128, 0., 1.128 ,4100);
+  TLine *LAML5= new TLine( 1.096, 0., 1.096, 4100);
+  TLine *LAML6= new TLine( 1.136, 0., 1.136 ,4100);
   LAML1->SetLineWidth(2);
   LAML2->SetLineWidth(2);
-  LAML1->SetLineColor(2);
-  LAML2->SetLineColor(2);
+  LAML3->SetLineWidth(2);
+  LAML4->SetLineWidth(2);
+  LAML5->SetLineWidth(2);
+  LAML6->SetLineWidth(2);
+  LAML1->SetLineColor(kGreen);
+  LAML2->SetLineColor(kGreen);
+  LAML3->SetLineColor(kBlue);
+  LAML4->SetLineColor(kBlue);
+  LAML5->SetLineColor(kMagenta);
+  LAML6->SetLineColor(kMagenta);
 
   h_LambdaMass->SetLabelSize(0.045, "XY");
   h_LambdaMass->SetTitleSize(0.043, "XY");
@@ -571,7 +613,28 @@ void Histograms::DoCanvas(){
   lamdaMassFit->Draw("same");
   LAML1->Draw("same");
   LAML2->Draw("same");
-  */
+  LAML3->Draw("same");
+  LAML4->Draw("same");
+  LAML5->Draw("same");
+  LAML6->Draw("same");
+  NameLinesInv(1.116, 0.002, 4, 2);
+
+  c32->cd(2);
+  h_InvariantMass->SetLabelSize(0.045, "XY");
+  h_InvariantMass->SetTitleSize(0.043, "XY");
+  h_InvariantMass->Draw();
+  h_InvariantMasscut[0]->SetFillColor(kGreen-7);
+  h_InvariantMasscut[1]->SetFillColor(kBlue-7);
+  h_InvariantMasscut[2]->SetFillColor(kMagenta-7);
+  h_InvariantMasscut[0]->Draw("same");
+  h_InvariantMasscut[1]->Draw("same");
+  h_InvariantMasscut[2]->Draw("same");
+
+
+  
+ 
+  
+  
   
   c32->SaveAs("imagenes/InvariantMass.eps");
 
@@ -674,6 +737,39 @@ void LinesPTCuts(){
     
     lines.at(i)->Draw("same");
     lines.at(i+1)->Draw("same");
+  }
+}
+void NameLinesInv(double Average, double  Sigma, int NSig, int Binning){
+  
+  string NumSig;
+  double Val=0;
+  vector<TPaveText*> ListTPave(NSig*2);
+  vector<TText*> ListTText(NSig*2);
+  for(int i=0; i<2*NSig; i++) {
+    
+    /*
+    if(NSig>0)
+      Val=Average-NSig*Sigma;
+      
+    else if(NSig<0)
+      Val=Average+NSig*Sigma;
+    */
+    //NumSig = static_cast(&(std::ostringstream() << NSig))->str();
+    NumSig = std::to_string(NSig);
+    NumSig.insert(NumSig.size()-1, "#sigma");
+
+    
+    ListTPave.at(i) = new TPaveText(Average-NSig*Sigma,0.94,Average-NSig*Sigma,0.995,"blNDC");
+    ListTPave.at(i)->SetName("title");
+    ListTPave.at(i)->SetBorderSize(0);
+    ListTPave.at(i)->SetFillColor(0);
+    ListTPave.at(i)->SetFillStyle(0);
+    ListTPave.at(i)->SetTextFont(42);
+    ListTPave.at(i)->AddText(NumSig.c_str());
+    ListTPave.at(i)->Draw("same");
+    NSig-=Binning;
+
+
   }
 }
 

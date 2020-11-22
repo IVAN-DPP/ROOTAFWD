@@ -20,6 +20,8 @@
 #include "TVector3.h"
 #include "TObject.h"
 #include "TObjArray.h"
+#include "TPaveText.h"
+#include "TText.h"
 // #include "RooRealVar.h"
 // #include "RooDataSet.h"
 // #include "RooDataHist.h"
