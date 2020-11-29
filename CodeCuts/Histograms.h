@@ -125,7 +125,7 @@ void Histograms::DoHistograms(){
   
   //------- Fits for do cuts in Delta B ----------- //
 
-  FFits[0] = new TF1("DBProtonFit","gaus",0,3);
+  FFits[0] = new TF1("DBProtonFit","0.02",0,3);
   FFits[1] = new TF1("DBKaonFit","0.025", 0, 3);
   FFits[2] = new TF1("DBPionFit","0.05",0,3);
 
@@ -587,12 +587,13 @@ void Histograms::DoCanvas(){
   TCanvas *c32=new TCanvas("c32","Invariant mass", 900, 500);
   c32->Divide(2,1);
   c32->cd(1);
-  TLine *LAML1= new TLine( 1.11, 0., 1.11, 4100);
-  TLine *LAML2= new TLine( 1.122, 0., 1.122 ,4100);
-  TLine *LAML3= new TLine( 1.104, 0., 1.104, 4100);
-  TLine *LAML4= new TLine( 1.128, 0., 1.128 ,4100);
-  TLine *LAML5= new TLine( 1.096, 0., 1.096, 4100);
-  TLine *LAML6= new TLine( 1.136, 0., 1.136 ,4100);
+  /*
+  TLine *LAML1= new TLine( 1.108, 0., 1.108, 4100);
+  TLine *LAML2= new TLine( 1.124, 0., 1.124 ,4100);
+  TLine *LAML3= new TLine( 1.11, 0., 1.11, 4100);
+  TLine *LAML4= new TLine( 1.132, 0., 1.132 ,4100);
+  TLine *LAML5= new TLine( 1.092, 0., 1.092, 4100);
+  TLine *LAML6= new TLine( 1.14, 0., 1.14 ,4100);
   LAML1->SetLineWidth(2);
   LAML2->SetLineWidth(2);
   LAML3->SetLineWidth(2);
@@ -605,20 +606,20 @@ void Histograms::DoCanvas(){
   LAML4->SetLineColor(kBlue);
   LAML5->SetLineColor(kMagenta);
   LAML6->SetLineColor(kMagenta);
-
+  */
   h_LambdaMass->SetLabelSize(0.045, "XY");
   h_LambdaMass->SetTitleSize(0.043, "XY");
   h_LambdaMass->Draw();
   h_LambdaMass->Fit(lamdaMassFit);
   lamdaMassFit->Draw("same");
-  LAML1->Draw("same");
-  LAML2->Draw("same");
-  LAML3->Draw("same");
-  LAML4->Draw("same");
-  LAML5->Draw("same");
-  LAML6->Draw("same");
-  NameLinesInv(1.116, 0.002, 4, 2);
-
+  // LAML1->Draw("same");
+  // LAML2->Draw("same");
+  // LAML3->Draw("same");
+  // LAML4->Draw("same");
+  // LAML5->Draw("same");
+  // LAML6->Draw("same");
+  NameLinesInv(1.116, 0.002, 12, 4);
+  
   c32->cd(2);
   h_InvariantMass->SetLabelSize(0.045, "XY");
   h_InvariantMass->SetTitleSize(0.043, "XY");
@@ -629,12 +630,7 @@ void Histograms::DoCanvas(){
   h_InvariantMasscut[0]->Draw("same");
   h_InvariantMasscut[1]->Draw("same");
   h_InvariantMasscut[2]->Draw("same");
-
-
-  
  
-  
-  
   
   c32->SaveAs("imagenes/InvariantMass.eps");
 
@@ -742,33 +738,26 @@ void LinesPTCuts(){
 void NameLinesInv(double Average, double  Sigma, int NSig, int Binning){
   
   string NumSig;
-  double Val=0;
-  vector<TPaveText*> ListTPave(NSig*2);
-  vector<TText*> ListTText(NSig*2);
-  for(int i=0; i<2*NSig; i++) {
+  double Val=2*NSig;
+  double y1=50, y2=200;
+  TPaveText* ListTPave=NULL;
+  while(true) {
     
-    /*
-    if(NSig>0)
-      Val=Average-NSig*Sigma;
-      
-    else if(NSig<0)
-      Val=Average+NSig*Sigma;
-    */
-    //NumSig = static_cast(&(std::ostringstream() << NSig))->str();
-    NumSig = std::to_string(NSig);
-    NumSig.insert(NumSig.size()-1, "#sigma");
+    NumSig.clear();
+    NumSig=std::to_string(-NSig);
+    NumSig.insert(NumSig.size(), "#sigma");
 
-    
-    ListTPave.at(i) = new TPaveText(Average-NSig*Sigma,0.94,Average-NSig*Sigma,0.995,"blNDC");
-    ListTPave.at(i)->SetName("title");
-    ListTPave.at(i)->SetBorderSize(0);
-    ListTPave.at(i)->SetFillColor(0);
-    ListTPave.at(i)->SetFillStyle(0);
-    ListTPave.at(i)->SetTextFont(42);
-    ListTPave.at(i)->AddText(NumSig.c_str());
-    ListTPave.at(i)->Draw("same");
+
+    ListTPave = new TPaveText((Average-NSig*Sigma)-0.003,y1,(Average-NSig*Sigma)+0.003,y2,"br");
+    ListTPave->SetBorderSize(0);
+    ListTPave->SetFillColor(0);
+    ListTPave->SetFillStyle(0);
+    ListTPave->SetTextFont(42);
+    ListTPave->AddText(NumSig.c_str());
+    ListTPave->Draw();
+
+    if(-NSig==(Val/2)) break;
     NSig-=Binning;
-
 
   }
 }

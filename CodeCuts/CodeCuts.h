@@ -84,7 +84,7 @@ void Codecuts::CodeCuts(){
       deltbetacut[i]=myDataList->getEVNT_track(i).Beta()-myDataList->getEVNT_bem(i);
 
       if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue; 
-      if(deltbetacut[0] > 0.04  || deltbetacut[0] < -0.04) continue;
+      if(deltbetacut[0] > 0.02  || deltbetacut[0] < -0.02) continue;
       if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
 
 
@@ -94,7 +94,7 @@ void Codecuts::CodeCuts(){
     }
 
     if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue; 
-    if(deltbetacut[0] > 0.04  || deltbetacut[0] < -0.04) continue;
+    if(deltbetacut[0] > 0.02  || deltbetacut[0] < -0.02) continue;
     if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
       //Cut from Delta Beta vs Missingmass,Missing momentum, Invariantmass
     
@@ -230,7 +230,7 @@ void Codecuts::CodeCuts(){
      
 
     
-      Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
+    Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
       +TMath::Power((Wneutron_kaon.M()-offsetx)*sin(angle)-(Wneutron_pion.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
     
      if(El > 1) continue;
@@ -249,13 +249,13 @@ void Codecuts::CodeCuts(){
 
 
   //------------------------Comparación de sigmas-------------//
-     if( Lambda.M()<1.11 || Lambda.M()>1.122)
+     if( Lambda.M()<1.108 || Lambda.M()>1.124)
        h_InvariantMasscut[0]->Fill(Sigma.M());
 
-     if( Lambda.M()<1.104 || Lambda.M()>1.128)
+     if( Lambda.M()<1.11 || Lambda.M()>1.132)
        h_InvariantMasscut[1]->Fill(Sigma.M());
 
-     if( Lambda.M()<1.096 || Lambda.M()>1.136)
+     if( Lambda.M()<1.092 || Lambda.M()>1.14)
 	h_InvariantMasscut[2]->Fill(Sigma.M());
 
 
