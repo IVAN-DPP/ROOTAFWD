@@ -186,7 +186,7 @@ int LoadPolTable(int plane, char *PolTableList){
 }
 
 
-  /*
+ 
 //double GetPol(int plane, double edge, int eid, int poltype = PSMOOTH, double lowThresh=0.2, double highThresh=0.3)
 double GetPol(int plane, double edge, int eid, int poltype, double lowThresh, double highThresh)
 {
@@ -262,6 +262,6 @@ double GetPol(int plane, double edge, double eg, int poltype, double lowThresh, 
   return pol;
   }
 ///////////////////////////////////////////////////////////////////////////////
-*/
+
   
 #endif
