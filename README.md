@@ -14,8 +14,7 @@
     <br/>
     
     <h1 align="center">DESCRIPTION OF METHODS</h1>
-    <p align="justify">There are three particles in each event. The first particle is a proton, the second is a positive kaon and the third is a negative pion
- You can access the following info</p>
+    <p>There are three particles in each event. The first particle is a proton, the second is a positive kaon and the third is a negative pion, You can access the following info</p>
 
     
 
