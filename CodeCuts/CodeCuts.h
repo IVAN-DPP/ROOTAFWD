@@ -171,7 +171,7 @@ void Codecuts::CodeCuts(){
       if (myData[k]->getNumph_k()==1)
 	h_DeltaT[0]->Fill(myData[k]->getDelt_t_k(myData[k]->getIndex_k(0)));
       if(myData[k]->getNumph_pi()==1)
-      h_DeltaT[1]->Fill(myData[k]->getDelt_t_pi(myData[k]->getIndex_pi(0)));
+	h_DeltaT[1]->Fill(myData[k]->getDelt_t_pi(myData[k]->getIndex_pi(0)));
       
       if (myData[k]->getNumph_k()!=1) continue;
       //if (myData[k]->getNumph_pi()!=1) continue;
@@ -181,7 +181,7 @@ void Codecuts::CodeCuts(){
       h_eloss[0]->Fill(1000.0*(myData[k]->geteloss_track(0).Rho() - myData[k]->getEVNT_track(0).Rho() ));
       h_eloss[1]->Fill(1000.0*(myData[k]->geteloss_track(1).Rho() - myData[k]->getEVNT_track(1).Rho() ));
       h_eloss[2]->Fill(1000.0*(myData[k]->geteloss_track(2).Rho() - myData[k]->getEVNT_track(2).Rho() ));
-      
+
       //--------------- Coh Edge -------------- //
       
       h_TagrEpho[0]->Fill(myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0);
@@ -197,9 +197,9 @@ void Codecuts::CodeCuts(){
       if (k==NumbOfFiles-1){
 	ik=k+myData[k]->getCoh_plan();
       }
-      //No mover los datos!
       double PhotoPol=GetPol(ik, myData[k]->getCoh_edge(), myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0, 8, 0.2,0.3); 
       if (PhotoPol<0.5) continue;
+      
       
     //-------------- Reconstruction --------- //
       
@@ -289,19 +289,13 @@ void Codecuts::CodeCuts(){
       h_InvariantMasscut[3]->Fill(Sigma.M());
       h_MissingMassvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.M());
       
-      
-      
-      //if( ((Lambda.M()<1.05) || (Lambda.M()>1.20)) && (W.M()>0.9) && (W.M()<1.0) )
-      //if( ((Lambda.M()<1.05) || (Lambda.M()>1.20)) && (W.M()>0.9) )
-      
-      
-      //if(Sigma.M()<1.10 || Sigma.M()>1.40)
-      
-      // Pion - 
+      // Pion -  (Por si las moscas)
       h_DeltaBVSInvariantMass->Fill(Sigma.M(),deltbeta[2]);
       h_DeltaBVSMissingMass->Fill(Wneutron_kaon.M(),deltbeta[2]);
       h_DeltaBVSMissingMomentum->Fill(Wneutron_kaon.P(),deltbeta[2]);
+
       
+            
     }
     cout<<endl;
     

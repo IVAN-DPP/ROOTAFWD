@@ -2,6 +2,7 @@
 #define LIBRARIES_H
 
 #include "../DataEvent.cpp"
+#include "MaxLike.h"
 
 #include "TROOT.h"
 #include "TH1F.h"
