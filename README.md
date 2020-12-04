@@ -9,15 +9,10 @@
       <h1 align="center">CODIGO TRABAJO DE GRADO</h1>
       <h2 align="center">Análisis de datos con ROOT/C++</h2>
     </header>
-
     <hr/>
     <br/>
-    
     <h1 align="center">DESCRIPTION OF METHODS</h1>
     <p>There are three particles in each event. The first particle is a proton, the second is a positive kaon and the third is a negative pion, You can access the following info</p>
-
-    
-
     <ul>
       <li> TLorentzVector getEVNT_track(int i){return loc_EVNT_track->at(i);} //TLorentzVector for proton (i=0) kaon (i=1) and negative pion (i=2). The TlorentzVector has the nominal masses of the tracks.</li>
       <li> int getEVNT_q(int i){return loc_EVNT_q->at(i);} //charge for track i</li>
@@ -76,8 +71,7 @@
       <li> TVector3 getMVRT_vertex(){return *loc_MVRT_vertex;} //MVRT vertex </li>
       <li> int getNextEntry(); </li>
       <li> int getEntry(){return eventno; </li>
-      <li> int getEntries(); </li>
-      
+      <li> int getEntries(); </li>      
     </ul>
 
 
