@@ -544,11 +544,15 @@ void Histograms::DoCanvas(){
   MMPL->SetLineColor(kBlue);
   h_MissingP[0]->SetLabelSize(0.053, "XY");
   h_MissingP[0]->SetTitleSize(0.047, "XY");
+  TLine *LineM= new TLine( 0.2, .0, 0.2 ,72.0);
+  LineM->SetLineWidth(2);
+  LineM->SetLineColor(2);
   h_MissingP[0]->Draw();
   h_MissingP[1]->SetLabelSize(0.053, "XY");
   h_MissingP[1]->SetTitleSize(0.047, "XY");
   h_MissingP[1]->SetFillColor(kRed-7);
   h_MissingP[1]->Draw("same");
+  LineM->Draw("same");
   /*
   h_MissingPcut->SetFillColor(kBlue-7);
   h_MissingPcut->Draw("same");
@@ -567,7 +571,7 @@ void Histograms::DoCanvas(){
   myEllipse->Draw("same");
   c31->SaveAs("imagenes/Ellipse.eps");
   
-  TCanvas *c312=new TCanvas("c312","Missing Momentum vs Missing Mass", 900, 500);
+  TCanvas *c312=new TCanvas("c312","Missing Momentum vs Missing Mass", 1450, 500);
   c312->Divide(2,1);
   c312->cd(1);
   h_MissingPvsMass[0]->SetLabelSize(0.05, "XY");

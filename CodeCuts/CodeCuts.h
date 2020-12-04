@@ -182,8 +182,8 @@ void Codecuts::CodeCuts(){
       h_eloss[1]->Fill(1000.0*(myData[k]->geteloss_track(1).Rho() - myData[k]->getEVNT_track(1).Rho() ));
       h_eloss[2]->Fill(1000.0*(myData[k]->geteloss_track(2).Rho() - myData[k]->getEVNT_track(2).Rho() ));
       
-      //--------------- Coh Edge -------------- //
-      
+    
+      /*
       h_TagrEpho[0]->Fill(myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0);
       if (myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0 > myData[k]->getCoh_edge()) continue;
       h_TagrEpho[1]->Fill(myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0);
@@ -193,13 +193,15 @@ void Codecuts::CodeCuts(){
       if (myData[k]->getTrip_flag()!=0)continue;
       if (myData[k]->getCoh_plan()!=0 && myData[k]->getCoh_plan()!=1)continue;
       
-      int ik=k;
+       int ik=k;
       if (k==NumbOfFiles-1){
 	ik=k+myData[k]->getCoh_plan();
       }
       //No mover los datos!
       double PhotoPol=GetPol(ik, myData[k]->getCoh_edge(), myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0, 8, 0.2,0.3); 
       if (PhotoPol<0.5) continue;
+      */
+
       
     //-------------- Reconstruction --------- //
       
@@ -229,7 +231,7 @@ void Codecuts::CodeCuts(){
       
       //----------Correlación momentums vs missing mass------------------------//
       
-      if( Lambda.M()<1.096 || Lambda.M()>1.136) 
+      if( Lambda.M()<1.11 || Lambda.M()>1.132) 
 	h_MissingPvsMass[0]->Fill(Wneutron_kaon.M(),Wneutron_kaon.P());
       
       if( Sigma.M()<1.08 || Sigma.M()>1.3)
@@ -283,7 +285,7 @@ void Codecuts::CodeCuts(){
       // h_MissingPcut->Fill(Wneutron_kaon.P());
       
       
-      if ( Lambda.M()>=1.096 && Lambda.M()<=1.136) continue;                   //Cut for LamdaMass in +/- 3sigma
+      if ( Lambda.M()>=1.11 && Lambda.M()<=1.132) continue;                   //Cut for LamdaMass in +/- 3sigma
       if ( Wneutron_kaon.M()<=0.9 || Wneutron_kaon.M()>=0.96 ) continue;       //Cut from correlation MM
       
       h_InvariantMasscut[3]->Fill(Sigma.M());
@@ -301,6 +303,11 @@ void Codecuts::CodeCuts(){
       h_DeltaBVSInvariantMass->Fill(Sigma.M(),deltbeta[2]);
       h_DeltaBVSMissingMass->Fill(Wneutron_kaon.M(),deltbeta[2]);
       h_DeltaBVSMissingMomentum->Fill(Wneutron_kaon.P(),deltbeta[2]);
+
+        //--------------- Coh Edge -------------- //
+      
+      
+
       
     }
     cout<<endl;
