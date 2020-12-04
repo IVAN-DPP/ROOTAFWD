@@ -4,16 +4,8 @@
 #ifndef MISCELANEOUS_H
 #define MISCELANEOUS_H
 
-#include "Miscelaneous.h"
-#include "Libraries.h"
-//#include "Histograms.h"
-//#include "/home/emuneva/rootbeer2.2/extra_packages/eloss_rb/eLoss.h"
-//#include "particleDEF.h"  
-//#include "RootBeerUtil.h"
-//#include "KS_XSect_main_split.h"
-//#include "KS_XSect_func_sel01.h"
-//#include "KS_XSect_func_sel02.h"
-//#include "KS_XSect_func_sel03.h"
+#include "../include/Miscelaneous.h"
+#include "../include/Libraries.h"
 
 
 #define PI 3.141592654

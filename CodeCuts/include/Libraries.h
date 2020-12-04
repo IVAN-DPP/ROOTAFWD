@@ -1,7 +1,7 @@
 #ifndef LIBRARIES_H
 #define LIBRARIES_H
 
-#include "../DataEvent.cpp"
+#include "../src/DataEvent.cpp"
 #include "MaxLike.h"
 
 #include "TROOT.h"

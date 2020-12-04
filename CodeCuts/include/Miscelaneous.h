@@ -7,7 +7,7 @@
 #define Miscelaneous_h
 
 #include "Libraries.h"
-#include "Miscelaneous.C"
+#include "../src/Miscelaneous.C"
 
 using namespace std;
 
