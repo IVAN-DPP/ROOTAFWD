@@ -83,6 +83,9 @@ protected:
    //--- Fiduciary cuts ---//
   TH2F *h_ThePhicut[3]                      = {};
   
+  //----Costheta-Kaon Boost-------------------//
+  TH1F *h_KCosThetaCM                     = NULL;
+
   
 public:
   Histograms(){}
@@ -288,6 +291,10 @@ void Histograms::DoHistograms(){
 
 
   myEllipse = new TEllipse(offsetx,offsety,radx,rady,0,360,70);
+
+
+  //--------------KaonCosTheta Boost-------------//
+  h_KCosThetaCM = new TH1F("h_KCosThetaCM","Kaon Cos_Theta Boost", 100, -0.4, 2.);
 }
 
 
@@ -703,6 +710,10 @@ void Histograms::DoCanvas(){
   h_MissingPvsSigmaMass->Draw("colz");
 
   c41->SaveAs("imagenes/CorrelacionesXSIAL.eps");
+
+  TCanvas *c42 = new TCanvas("c42","Theta Kaon Boost", 1450, 500);
+  c42->cd(1);
+  h_KCosThetaCM->Draw();
 }
 
 

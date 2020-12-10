@@ -44,9 +44,9 @@ enum {
 };
 
 
-double polTable[20][500][385][10];  //where its [plane][edge][E_id][field]
-int polTableN[20]={};            //No of entries for para and perp
-char polFirstLines[20][500][250];   //to keep the 1st lines if needed (info from files)
+double polTable[73][500][385][10];  //where its [plane][edge][E_id][field]
+int polTableN[73]={};            //No of entries for para and perp
+char polFirstLines[73][500][250];   //to keep the 1st lines if needed (info from files)
 
 int edgeEventLow[5000];            //hold the current table of edge positions for event ranges
 int edgeEventHigh[5000];

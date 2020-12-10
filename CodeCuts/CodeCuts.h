@@ -184,8 +184,8 @@ void Codecuts::CodeCuts(){
 
       //--------------- Coh Edge -------------- //
     
-      /*
-
+      
+      
       h_TagrEpho[0]->Fill(myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0);
       if (myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0 > myData[k]->getCoh_edge()) continue;
       h_TagrEpho[1]->Fill(myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0);
@@ -195,19 +195,21 @@ void Codecuts::CodeCuts(){
       if (myData[k]->getTrip_flag()!=0)continue;
       if (myData[k]->getCoh_plan()!=0 && myData[k]->getCoh_plan()!=1)continue;
       
-       int ik=k;
-      if (k==NumbOfFiles-1){
+      
+      int ik=k;
+      if (k==NumbOfFiles-1)
 	ik=k+myData[k]->getCoh_plan();
-      }
+
       double PhotoPol=GetPol(ik, myData[k]->getCoh_edge(), myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0, 8, 0.2,0.3); 
       if (PhotoPol<0.5) continue;
-      */
+
+      
 
       
       
     //-------------- Reconstruction --------- //
       
-      TLorentzVector photon, deuteron, kaon, kaonpion, proton, pion, Wneutron_kaon, Wneutron_pion, Sigma, Lambda, Neutron;
+      TLorentzVector photon, deuteron, kaon, kaonpion, proton, pion, Wneutron_kaon, Wneutron_pion, Sigma, Lambda, Neutron, WphotDet;
       photon.SetXYZM(0,0,myData[k]->getTAGR_epho(myData[k]->getIndex_k(0)),0);
       deuteron.SetXYZM(0,0,0,1.8756);
       double Px_kaonpion = myData[k]->getEVNT_track(1).Rho()* sin(myData[k]->getEVNT_track(1).Theta())* cos(myData[k]->getEVNT_track(1).Phi());
@@ -223,6 +225,7 @@ void Codecuts::CodeCuts(){
       Neutron.SetXYZM(Wneutron_kaon.Px(), Wneutron_kaon.Py(), Wneutron_kaon.Pz(), 0.939);
       Sigma = pion + Neutron;
       Lambda = pion + proton;
+      WphotDet = kaon + proton + Sigma; //Para el Boost
       
       Wneutron_pion = photon + deuteron - proton - kaonpion - pion;         // This missing mass is with the Pion-
       
@@ -230,6 +233,8 @@ void Codecuts::CodeCuts(){
       h_MissingMass->Fill(Wneutron_kaon.M());
       h_MissingMass_kaonpion->Fill(Wneutron_pion.M());
       //h_MissingPvsMass->Fill(Wneutron_kaon.M(),Wneutron_kaon.P());
+
+
       
       //----------Correlación momentums vs missing mass------------------------//
       
@@ -297,8 +302,13 @@ void Codecuts::CodeCuts(){
       h_DeltaBVSInvariantMass->Fill(Sigma.M(),deltbeta[2]);
       h_DeltaBVSMissingMass->Fill(Wneutron_kaon.M(),deltbeta[2]);
       h_DeltaBVSMissingMomentum->Fill(Wneutron_kaon.P(),deltbeta[2]);
-      
-            
+
+      //-----------------BOOST------------------------------//
+
+      TVector3 b=WphotDet.BoostVector();
+      kaon.Boost(-b);
+      double KaonCosThetaCM=TMath::Cos(kaon.Theta());
+      h_KCosThetaCM->Fill(KaonCosThetaCM);
     }
     cout<<endl;
     
