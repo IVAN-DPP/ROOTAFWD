@@ -209,7 +209,7 @@ void Codecuts::CodeCuts(){
       
     //-------------- Reconstruction --------- //
       
-      TLorentzVector photon, deuteron, kaon, kaonpion, proton, pion, Wneutron_kaon, Wneutron_pion, Sigma, Lambda, Neutron, WphotDet;
+      TLorentzVector photon, deuteron, kaon, kaonpion, proton, pion, Wneutron_kaon, Wneutron_pion, Sigma, Lambda, Neutron, WBoost;
       photon.SetXYZM(0,0,myData[k]->getTAGR_epho(myData[k]->getIndex_k(0)),0);
       deuteron.SetXYZM(0,0,0,1.8756);
       double Px_kaonpion = myData[k]->getEVNT_track(1).Rho()* sin(myData[k]->getEVNT_track(1).Theta())* cos(myData[k]->getEVNT_track(1).Phi());
@@ -225,7 +225,7 @@ void Codecuts::CodeCuts(){
       Neutron.SetXYZM(Wneutron_kaon.Px(), Wneutron_kaon.Py(), Wneutron_kaon.Pz(), 0.939);
       Sigma = pion + Neutron;
       Lambda = pion + proton;
-      WphotDet = kaon + proton + Sigma; //Para el Boost
+      WBoost = kaon + proton + Sigma; //Para el Boost
       
       Wneutron_pion = photon + deuteron - proton - kaonpion - pion;         // This missing mass is with the Pion-
       
@@ -305,7 +305,7 @@ void Codecuts::CodeCuts(){
 
       //-----------------BOOST------------------------------//
 
-      TVector3 b=WphotDet.BoostVector();
+      TVector3 b=WBoost.BoostVector();
       kaon.Boost(-b);
       double KaonCosThetaCM=TMath::Cos(kaon.Theta());
       h_KCosThetaCM->Fill(KaonCosThetaCM);
