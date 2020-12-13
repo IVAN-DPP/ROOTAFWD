@@ -9,13 +9,13 @@ using namespace std;
 void LinesPTCuts();
 void NameLinesInv(double, double, int, int);
 vector<double> HistoBinning(TH1 *, int, double, double, double,double);
-
+Double_t fitf(Double_t *,Double_t *);
 class Histograms{
   //Friends Functions
   friend void LinesPTCuts();       //Functions for do the lines in Theta-Phi Correlations
   friend void NameLinesInv(double, double, int, int);
   friend vector<double> HistoBinning(TH1 *, int, double, double, double,double); //Function for binning the graphic Cos(Kaon.Theta)
-
+  friend Double_t fitf(Double_t *,Double_t *); //Function for asymmetry compute
 protected:
 
   TH1F *h_Vertex                            = NULL;
@@ -89,7 +89,14 @@ protected:
   //----Costheta-Kaon Boost-------------------//
   TH1F *h_KCosThetaCM                     = NULL;
 
-  
+  //-----Kaon phi-------------------//
+  TH1F *h_KaonPhiCM[2][2]                    = {};
+
+  //---------Function to do asymmetry fit----//
+  TF1 *FuncAsym                            =NULL;
+
+  TH1F *h_Asym[2]                         ={};
+    
 public:
   Histograms(){}
   void DoHistograms();
@@ -298,6 +305,24 @@ void Histograms::DoHistograms(){
 
   //--------------KaonCosTheta Boost-------------//
   h_KCosThetaCM = new TH1F("h_KCosThetaCM","Kaon Cos_Theta Boost", 100, -0.4, 2.);
+
+  
+//-----------------Kaon phi-------------------//
+  h_KaonPhiCM[0][0] = new TH1F("h_KaonPhiCM[0][0]","First partition Kaon_Phi (PARA)", 30, -360, 360);
+  h_KaonPhiCM[1][0] = new TH1F("h_KaonPhiCM[1][0]","Second partition Kaon_Phi (PARA)", 30, -360, 360);
+  h_KaonPhiCM[0][1] = new TH1F("h_KaonPhiCM[0][1]","First partition Kaon_Phi (PERP)", 30, -360, 360);
+  h_KaonPhiCM[1][1] = new TH1F("h_KaonPhiCM[1][1]","Second partition Kaon_Phi (PERP)", 30, -360, 360);
+
+  // Fit to Asymmetry-------
+
+  FuncAsym = new TF1("FuncAsym",fitf,-180,180,4);
+  FuncAsym->SetParameters(1.2,1,0.7,0.5);
+  FuncAsym->SetParNames("FR","PR","Pave","Sigma");
+
+  
+  //Histograms Asymmetry-------
+  h_Asym[0] = new TH1F("h_Asym[0]","Asymmetry first partition", 30, -360, 360);
+   h_Asym[1] = new TH1F("h_Asym[1]","Asymmetry Second partition", 30, -360, 360);
 }
 
 
@@ -717,11 +742,35 @@ void Histograms::DoCanvas(){
   TCanvas *c42 = new TCanvas("c42","Theta Kaon Boost", 1450, 500);
   //Principalhisto,Parts,Firstpoint,step,error,Timeofbreak
   vector<double> Points(3);
-  HistoBinning(h_KCosThetaCM,4,0.5,0.01,0.5,10);
+  HistoBinning(h_KCosThetaCM,2,0.5,0.001,0.5,10);
   c42->cd(1);
   h_KCosThetaCM->Draw();
   c42->SaveAs("imagenes/ThetaKaonBoost.eps");
+
+  
+  TCanvas *c43 = new TCanvas("c43","Phi distribution to Kaon", 1450, 500);
+   c43->Divide(2,2);
+   c43->cd(1);
+   h_KaonPhiCM[0][0]->Draw();
+   c43->cd(2);
+   h_KaonPhiCM[1][0]->Draw();
+   c43->cd(3);
+   h_KaonPhiCM[0][1]->Draw();
+   c43->cd(4);
+   h_KaonPhiCM[1][1]->Draw();
+
+   TCanvas *c44 = new TCanvas("","", 1450, 500);
+   c44->Divide(1,2);
+   c44->cd(1);
+   h_Asym[0]->Fit("FuncAsym","R");
+   h_Asym[0]->Draw();
+   c44->cd(2);
+   h_Asym[1]->Fit("FuncAsym","R");
+   h_Asym[1]->Draw();
 }
+
+
+
 
 
 
@@ -841,10 +890,22 @@ vector<double> HistoBinning(TH1 *PrincipalHisto,
 	 << "********************************************************************\n";
 
     CoordinatesX[j-1]=Point;
+
+   
   }
 
   return CoordinatesX;
   
+}
+
+// Function to assymmetry
+
+Double_t fitf(Double_t *x, Double_t *par){
+    double num=0, denom=0;
+    num=par[0]-1.0-(par[0]*par[1]+1.0)/(par[1]+1.0)*2*par[2]*par[3]*TMath::Cos(2*x[0]*TMath::DegToRad());
+    denom=par[0]+1.0-   (par[0]*par[1]-1.0)/(par[1]+1.0)*2*par[2]*par[3]*TMath::Cos(2*x[0]*TMath::DegToRad());
+    Double_t fitval =num/denom;
+    return fitval;
 }
 
 #endif

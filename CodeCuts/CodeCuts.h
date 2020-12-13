@@ -27,7 +27,8 @@ void Codecuts::CodeCuts(){
   vector<string> PolTableName;
   ListFilesAtDir("./PARA","root",filename);
   ListFilesAtDir("./PERP","root",filename);
-  
+ 
+    
   const int NumbOfFiles=filename.size();
 
   DataEvent *myData[NumbOfFiles];
@@ -46,10 +47,15 @@ void Codecuts::CodeCuts(){
   
   }
   
+  /*
+  fstream ArchivoCoh;
+   ArchivoCoh.open("Salida.dat", ios::out);
+   fstream Archivo2Coh;
+   Archivo2Coh.open("Salida2.dat", ios::out);
+  */
 
   
-
-  //exit(1);
+   //exit(1);
 
   
   for(int k=0;k<NumbOfFiles;k++){
@@ -60,6 +66,8 @@ void Codecuts::CodeCuts(){
 	fprintf (stderr, "Looped over PERP %.2f percent \r", myData[k]->getEntry()*100.0/myData[k]->getEntries());
 	fflush (stderr);
       }
+
+     
       
     //------------------ Delta Beta ---------------//
       double deltbeta[3]     = {};
@@ -195,15 +203,18 @@ void Codecuts::CodeCuts(){
       if (myData[k]->getTrip_flag()!=0)continue;
       if (myData[k]->getCoh_plan()!=0 && myData[k]->getCoh_plan()!=1)continue;
       
-      
+
+
+      // ArchivoCoh<<myData[k]->getCoh_plan()<<endl;
+       
       int ik=k;
       if (k==NumbOfFiles-1)
 	ik=k+myData[k]->getCoh_plan();
 
       double PhotoPol=GetPol(ik, myData[k]->getCoh_edge(), myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0, 8, 0.2,0.3); 
-      if (PhotoPol<0.5) continue;
+      // if (PhotoPol<0.5) continue;
 
-      
+      //Archivo2Coh<<myData[k]->getCoh_plan()<<endl;
 
       
       
@@ -225,7 +236,7 @@ void Codecuts::CodeCuts(){
       Neutron.SetXYZM(Wneutron_kaon.Px(), Wneutron_kaon.Py(), Wneutron_kaon.Pz(), 0.939);
       Sigma = pion + Neutron;
       Lambda = pion + proton;
-      WBoost = kaon + proton + Sigma; //Para el Boost
+      WBoost = photon + deuteron; // to make Boost
       
       Wneutron_pion = photon + deuteron - proton - kaonpion - pion;         // This missing mass is with the Pion-
       
@@ -308,7 +319,36 @@ void Codecuts::CodeCuts(){
       TVector3 b=WBoost.BoostVector();
       kaon.Boost(-b);
       double KaonCosThetaCM=TMath::Cos(kaon.Theta());
+      double KaonPhiCM=kaon.Phi()*TMath::RadToDeg();
       h_KCosThetaCM->Fill(KaonCosThetaCM);
+
+      //---------------Bins Cos Theta Kaon----------------//
+
+      //0 is for PARA
+      //1 is for PERP
+      if (myData[k]->getCoh_plan()==0){
+      if(KaonCosThetaCM < 0.668)
+     	h_KaonPhiCM[0][0]->Fill(KaonPhiCM);
+      
+      else if (KaonCosThetaCM > 0.668)
+	h_KaonPhiCM[1][0]->Fill(KaonPhiCM);
+      }
+      
+      else if (myData[k]->getCoh_plan()==1){
+      if(KaonCosThetaCM < 0.668)
+
+	h_KaonPhiCM[0][1]->Fill(KaonPhiCM);
+      else if (KaonCosThetaCM > 0.668)
+	h_KaonPhiCM[1][1]->Fill(KaonPhiCM);
+      }
+     
+      //---------------Asymmetry compute----------------// 
+      h_Asym[0]=(TH1F*)h_KaonPhiCM[0][0]->GetAsymmetry(h_KaonPhiCM[0][1]);
+      h_Asym[1]=(TH1F*)h_KaonPhiCM[1][0]->GetAsymmetry(h_KaonPhiCM[1][1]);
+      
+      
+
+      
     }
     cout<<endl;
     
