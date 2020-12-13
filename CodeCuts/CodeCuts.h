@@ -48,10 +48,10 @@ void Codecuts::CodeCuts(){
   }
   
   /*
-  fstream ArchivoCoh;
-   ArchivoCoh.open("Salida.dat", ios::out);
-   fstream Archivo2Coh;
-   Archivo2Coh.open("Salida2.dat", ios::out);
+    fstream ArchivoCoh;
+    ArchivoCoh.open("Salida.dat", ios::out);
+    fstream Archivo2Coh;
+    Archivo2Coh.open("Salida2.dat", ios::out);
   */
 
   
@@ -336,13 +336,13 @@ void Codecuts::CodeCuts(){
       
       else if (myData[k]->getCoh_plan()==1){
       if(KaonCosThetaCM < 0.668)
-
 	h_KaonPhiCM[0][1]->Fill(KaonPhiCM);
       else if (KaonCosThetaCM > 0.668)
 	h_KaonPhiCM[1][1]->Fill(KaonPhiCM);
       }
      
-      //---------------Asymmetry compute----------------// 
+      //---------------Asymmetry Analysis----------------//
+      
       h_Asym[0]=(TH1F*)h_KaonPhiCM[0][0]->GetAsymmetry(h_KaonPhiCM[0][1]);
       h_Asym[1]=(TH1F*)h_KaonPhiCM[1][0]->GetAsymmetry(h_KaonPhiCM[1][1]);
       
