@@ -47,23 +47,13 @@ void Codecuts::CodeCuts(){
   
   }
   
-  /*
-  fstream ArchivoCoh;
-   ArchivoCoh.open("Salida.dat", ios::out);
-   fstream Archivo2Coh;
-   Archivo2Coh.open("Salida2.dat", ios::out);
-  */
-
   
-   //exit(1);
-
-  
-  for(int k=0;k<NumbOfFiles;k++){
+    for(int k=0;k<NumbOfFiles;k++){
 
     while (myData[k]->getEntry()<myData[k]->getEntries()){
       myData[k]->getNextEntry();
       if (myData[k]->getEntry() % 1000 == 0){
-	fprintf (stderr, "Looped over PERP %.2f percent \r", myData[k]->getEntry()*100.0/myData[k]->getEntries());
+	fprintf (stderr, "Looped %s : %.2f percent \r", filename.at(k).c_str() ,myData[k]->getEntry()*100.0/myData[k]->getEntries());
 	fflush (stderr);
       }
 
@@ -194,27 +184,22 @@ void Codecuts::CodeCuts(){
     
       
       
-      h_TagrEpho[0]->Fill(myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0);
-      if (myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0 > myData[k]->getCoh_edge()) continue;
-      h_TagrEpho[1]->Fill(myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0);
-      if (myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000< myData[k]->getCoh_edge()-200.0) continue;
-      h_TagrEpho[2]->Fill(myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0);
+      h_TagrEpho[0]->Fill(myData[k]->getTAGR_epho(myData[k]->getIndex_k(0))*1000.0);
+      if (myData[k]->getTAGR_epho(myData[k]->getIndex_k(0))*1000.0 > myData[k]->getCoh_edge()) continue;
+      h_TagrEpho[1]->Fill(myData[k]->getTAGR_epho(myData[k]->getIndex_k(0))*1000.0);
+      if (myData[k]->getTAGR_epho(myData[k]->getIndex_k(0))*1000< myData[k]->getCoh_edge()-200.0) continue;
+      h_TagrEpho[2]->Fill(myData[k]->getTAGR_epho(myData[k]->getIndex_k(0))*1000.0);
       if (fabs(myData[k]->getCoh_edge()-myData[k]->getCoh_edge_nom()*1000)>15)continue;
       if (myData[k]->getTrip_flag()!=0)continue;
       if (myData[k]->getCoh_plan()!=0 && myData[k]->getCoh_plan()!=1)continue;
       
 
 
-      // ArchivoCoh<<myData[k]->getCoh_plan()<<endl;
        
-      int ik=k;
-      if (k==NumbOfFiles-1)
-	ik=k+myData[k]->getCoh_plan();
+      double PhotoPol=GetPol(myData[k]->getCoh_plan(), myData[k]->getCoh_edge(), myData[k]->getTAGR_epho(myData[k]->getIndex_k(0))*1000.0, 8, 0.2,0.3); 
+      if (PhotoPol<0.5) continue;
 
-      double PhotoPol=GetPol(ik, myData[k]->getCoh_edge(), myData[k]->getTAGR_epho(myData[k]->getIndex_pi(0))*1000.0, 8, 0.2,0.3); 
-      // if (PhotoPol<0.5) continue;
-
-      //Archivo2Coh<<myData[k]->getCoh_plan()<<endl;
+      
 
       
       
