@@ -15,7 +15,8 @@ class Histograms{
   friend void LinesPTCuts();       //Functions for do the lines in Theta-Phi Correlations
   friend void NameLinesInv(double, double, int, int);
   friend vector<double> HistoBinning(TH1 *, int, double, double, double,double); //Function for binning the graphic Cos(Kaon.Theta)
-  friend Double_t fitf(Double_t *,Double_t *); //Function for asymmetry compute
+  friend Double_t fitf(Double_t *,Double_t *); //Function to asymmetry compute
+
 protected:
 
   TH1F *h_Vertex                            = NULL;
@@ -313,16 +314,16 @@ void Histograms::DoHistograms(){
   h_KaonPhiCM[0][1] = new TH1F("h_KaonPhiCM[0][1]","First partition Kaon_Phi (PERP)", 30, -360, 360);
   h_KaonPhiCM[1][1] = new TH1F("h_KaonPhiCM[1][1]","Second partition Kaon_Phi (PERP)", 30, -360, 360);
 
-  // Fit to Asymmetry-------
+  //---------------  Fit to Asymmetry ------------//
 
   FuncAsym = new TF1("FuncAsym",fitf,-180,180,4);
   FuncAsym->SetParameters(1.2,1,0.7,0.5);
   FuncAsym->SetParNames("FR","PR","Pave","Sigma");
 
   
-  //Histograms Asymmetry-------
+  //----------------- Histograms Asymmetry -------//
   h_Asym[0] = new TH1F("h_Asym[0]","Asymmetry first partition", 30, -360, 360);
-   h_Asym[1] = new TH1F("h_Asym[1]","Asymmetry Second partition", 30, -360, 360);
+  h_Asym[1] = new TH1F("h_Asym[1]","Asymmetry Second partition", 30, -360, 360);
 }
 
 
@@ -759,7 +760,7 @@ void Histograms::DoCanvas(){
    c43->cd(4);
    h_KaonPhiCM[1][1]->Draw();
 
-   TCanvas *c44 = new TCanvas("","", 1450, 500);
+   TCanvas *c44 = new TCanvas("","Asymmetry", 1450, 500);
    c44->Divide(1,2);
    c44->cd(1);
    h_Asym[0]->Fit("FuncAsym","R");
@@ -898,7 +899,7 @@ vector<double> HistoBinning(TH1 *PrincipalHisto,
   
 }
 
-// Function to assymmetry
+// Function to asymmetry
 
 Double_t fitf(Double_t *x, Double_t *par){
     double num=0, denom=0;
