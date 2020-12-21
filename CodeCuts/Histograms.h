@@ -768,8 +768,10 @@ void Histograms::DoCanvas(){
 
    TCanvas *c44 = new TCanvas("","Asymmetry", 1450, 500);
    c44->Divide(1,2);
+
    for(int i=0; i<MEASGammaP.size(); i++){
-     
+
+     //---------Binning method---------------------
      for(int j=0; j<MEASGammaP.at(i).size(); j++){
        if(MEASGammaP[i][j]>0){
 	 PPara+=MEASGammaP[i][j];
@@ -789,15 +791,24 @@ void Histograms::DoCanvas(){
      c44->cd(i+1);
      h_Asym[i]->Fit("FuncAsym","R");
      h_Asym[i]->Draw();
-    
+
+     //------------MaxLike Method------------
+     ROOT::Math::Minimizer* minim = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
+     MaxLike Min(MEASPhi.at(i), MEASGammaP.at(i));
+     ROOT::Math::Functor f(Min,2);
+     minim->SetFunction(f);
+     minim->SetVariable(0, "Sigma", 0, 0.01);
+     minim->SetVariable(1, "Phi", 0, 0.01);
+     minim->SetPrintLevel(1);
+     minim->Minimize();
+
+     const double *xs = minim->X();
+     std::cout << "minim: f(" << xs[0] << "," << xs[1] <<"): "
+	       << minim->MinValue()  << std::endl;
    }
 
    
 }
-
-
-
-
 
 
 //***************** Friend Functions ******************** //

@@ -23,7 +23,9 @@
 #include "TObjArray.h"
 #include "TPaveText.h"
 #include "TText.h"
-
+#include "Math/Minimizer.h"
+#include "Math/Factory.h"
+#include "Math/Functor.h"
 
 #include <sstream>
 #include <iostream>

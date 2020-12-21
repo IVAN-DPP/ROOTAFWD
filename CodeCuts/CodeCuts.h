@@ -313,10 +313,12 @@ void Codecuts::CodeCuts(){
       //1 is for PERP
       if (myData[k]->getCoh_plan()==0){
 	if(KaonCosThetaCM < 0.668){
+	  MEASPhi.at(0).push_back(KaonPhiCM);
 	  MEASGammaP.at(0).push_back(PhotoPol);
 	  h_KaonPhiCM[0][0]->Fill(KaonPhiCM);
 	}
 	else if (KaonCosThetaCM > 0.668){
+	  MEASPhi.at(1).push_back(KaonPhiCM);
 	  MEASGammaP.at(1).push_back(PhotoPol);
 	  h_KaonPhiCM[1][0]->Fill(KaonPhiCM);
 	}
@@ -324,12 +326,14 @@ void Codecuts::CodeCuts(){
       
       else if (myData[k]->getCoh_plan()==1){
 	if(KaonCosThetaCM < 0.668){
+	  MEASPhi.at(0).push_back(KaonPhiCM);
 	  MEASGammaP.at(0).push_back(-PhotoPol);
-	   h_KaonPhiCM[0][1]->Fill(KaonPhiCM);
+	  h_KaonPhiCM[0][1]->Fill(KaonPhiCM);
 	}
 	else if (KaonCosThetaCM > 0.668){
-	   MEASGammaP.at(1).push_back(-PhotoPol);
-	   h_KaonPhiCM[1][1]->Fill(KaonPhiCM);
+	  MEASPhi.at(1).push_back(KaonPhiCM);
+	  MEASGammaP.at(1).push_back(-PhotoPol);
+	  h_KaonPhiCM[1][1]->Fill(KaonPhiCM);
 	}
       }
      

@@ -2,19 +2,20 @@
 #define MAXLIKE_H
 #include "TVirtualFitter.h"
 #include "TStyle.h"
-#include "TMinuit.h"
-#include "Libraries.h"
 //#include "/usr/local/root/include/Minuit2/FCNBase.h"
 //#include "TFitterMinuit.h"
 #include "TSystem.h" 
 #include "Math/Factory.h"
-#include "Minuit2/FCNBase.h"
+//#include "Minuit2/FCNBase.h"
+#include "Math/Functor.h"
+#include "Math/Minimizer.h"
+#include "Math/IFunction.h"
 #include <vector>
 #include <iostream>
 
 using namespace std;
 
-class MaxLike: public ROOT::Minuit2::FCNBase{
+class MaxLike: public ROOT::Math::Functor{
 
 private:
     vector<double> Phi;
@@ -26,7 +27,7 @@ public:
 	//std::cout << "Phi: " << Phi.at(0) << std::endl; 
 	//std::cout << "Pol: " << GammaP.at(0) << std::endl; 
     }
-    double operator() (const std::vector<double> &x) const {
+    double operator() (const double * x) const {
         double sum=0;
         typedef vector<int>::size_type vec_sz;
         vec_sz m=Phi.size();
