@@ -40,15 +40,15 @@ void Codecuts::CodeCuts(){
   ListFilesAtDir("./ListTables", PolTableName);
 
   
+  
   const int NumbOfPolFiles=PolTableName.size();
   for (int i=0;i<NumbOfPolFiles;i++){
     char *cstr = const_cast<char *>(PolTableName[i].c_str());
     LoadPolTable(i,cstr);
-  
   }
   
   
-    for(int k=0;k<NumbOfFiles;k++){
+  for(int k=0;k<NumbOfFiles;k++){
 
     while (myData[k]->getEntry()<myData[k]->getEntries()){
       myData[k]->getNextEntry();
@@ -312,18 +312,25 @@ void Codecuts::CodeCuts(){
       //0 is for PARA
       //1 is for PERP
       if (myData[k]->getCoh_plan()==0){
-      if(KaonCosThetaCM < 0.668)
-     	h_KaonPhiCM[0][0]->Fill(KaonPhiCM);
-      
-      else if (KaonCosThetaCM > 0.668)
-	h_KaonPhiCM[1][0]->Fill(KaonPhiCM);
+	if(KaonCosThetaCM < 0.668){
+	  MEASGammaP.at(0).push_back(PhotoPol);
+	  h_KaonPhiCM[0][0]->Fill(KaonPhiCM);
+	}
+	else if (KaonCosThetaCM > 0.668){
+	  MEASGammaP.at(1).push_back(PhotoPol);
+	  h_KaonPhiCM[1][0]->Fill(KaonPhiCM);
+	}
       }
       
       else if (myData[k]->getCoh_plan()==1){
-      if(KaonCosThetaCM < 0.668)
-	h_KaonPhiCM[0][1]->Fill(KaonPhiCM);
-      else if (KaonCosThetaCM > 0.668)
-	h_KaonPhiCM[1][1]->Fill(KaonPhiCM);
+	if(KaonCosThetaCM < 0.668){
+	  MEASGammaP.at(0).push_back(-PhotoPol);
+	   h_KaonPhiCM[0][1]->Fill(KaonPhiCM);
+	}
+	else if (KaonCosThetaCM > 0.668){
+	   MEASGammaP.at(1).push_back(-PhotoPol);
+	   h_KaonPhiCM[1][1]->Fill(KaonPhiCM);
+	}
       }
      
       //---------------Asymmetry Analysis----------------//

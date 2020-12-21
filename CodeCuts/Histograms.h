@@ -94,8 +94,10 @@ protected:
   TH1F *h_KaonPhiCM[2][2]                    = {};
 
   //---------Function to do asymmetry fit----//
+  vector<vector<double> > MEASPhi{2}; //2 is the number of binning
+  vector<vector<double> > MEASGammaP{2};
+    
   TF1 *FuncAsym                            =NULL;
-
   TH1F *h_Asym[2]                         ={};
     
 public:
@@ -322,8 +324,8 @@ void Histograms::DoHistograms(){
 
   
   //----------------- Histograms Asymmetry -------//
-  h_Asym[0] = new TH1F("h_Asym[0]","Asymmetry first partition", 30, -360, 360);
-  h_Asym[1] = new TH1F("h_Asym[1]","Asymmetry Second partition", 30, -360, 360);
+  h_Asym[0] = new TH1F("h_Asym[0]","Asymmetry first partition", 150, -360, 360);
+  h_Asym[1] = new TH1F("h_Asym[1]","Asymmetry Second partition", 150, -360, 360);
 }
 
 
@@ -760,14 +762,37 @@ void Histograms::DoCanvas(){
    c43->cd(4);
    h_KaonPhiCM[1][1]->Draw();
 
+
+   double PPara=0, PPerp=0;
+   int iPara=0, iPerp=0;
+
    TCanvas *c44 = new TCanvas("","Asymmetry", 1450, 500);
    c44->Divide(1,2);
-   c44->cd(1);
-   h_Asym[0]->Fit("FuncAsym","R");
-   h_Asym[0]->Draw();
-   c44->cd(2);
-   h_Asym[1]->Fit("FuncAsym","R");
-   h_Asym[1]->Draw();
+   for(int i=0; i<MEASGammaP.size(); i++){
+     
+     for(int j=0; j<MEASGammaP.at(i).size(); j++){
+       if(MEASGammaP[i][j]>0){
+	 PPara+=MEASGammaP[i][j];
+	 iPara++;
+       }
+       else {
+	 PPerp+=abs(MEASGammaP[i][j]);
+	 iPerp++;
+       }
+     }
+     PPara=PPara/iPara;
+     PPerp=PPerp/iPerp;
+     FuncAsym->FixParameter(1,PPara/PPerp);
+     FuncAsym->FixParameter(2,(PPara+PPerp)/2.0);
+     FuncAsym->SetParLimits(3,-1.2,1.2);
+     FuncAsym->SetParLimits(0,0.4,2.4);
+     c44->cd(i+1);
+     h_Asym[i]->Fit("FuncAsym","R");
+     h_Asym[i]->Draw();
+    
+   }
+
+   
 }
 
 
