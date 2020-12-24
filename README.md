@@ -22,10 +22,10 @@
     <br/>
     <h2>Files</h2>
     <ul>
-      <li><a href="CodeCuts/CodeCuts.h"></a> In this file you can change all kinds of cuts and make all physics process, also fill the histograms</li>
-      <li><a href="CodeCuts/Histograms.h"></a> In this file you can declare and define the histograms, also you can make the canvas</li>
-      <li><a href="CodeCuts/include/Libraries.h"></a> In this file, you can put all kinds of #includes</li>
-      <li><a href="CodeCuts/Codigo.C"></a> This file is only for compile</li>
+      <li><a href="./CodeCuts/CodeCuts.h">CodeCuts.h</a> In this file you can change all kinds of cuts and make all physics process, also fill the histograms</li>
+      <li><a href="./CodeCuts/Histograms.h">Histograms.h</a> In this file you can declare and define the histograms, also you can make the canvas</li>
+      <li><a href="./CodeCuts/include/Libraries.h">Libraries.h</a> In this file, you can put all kinds of #includes</li>
+      <li><a href="./CodeCuts/Codigo.C">Codigo.C</a> This file is only for compile</li>
     </ul>
     <hr/>
     <br/>
