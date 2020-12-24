@@ -46,8 +46,9 @@ void Codecuts::CodeCuts(){
     char *cstr = const_cast<char *>(PolTableName[i].c_str());
     LoadPolTable(i,cstr);
   }
-  
-  
+
+  int nthreads=4;
+  ROOT::EnableImplicitMT(nthreads);
   for(int k=0;k<NumbOfFiles;k++){
 
     while (myData[k]->getEntry()<myData[k]->getEntries()){
@@ -349,7 +350,7 @@ void Codecuts::CodeCuts(){
     cout<<endl;
     
   }
-  
+  ROOT::DisableImplicitMT();
   DoCanvas();
   
 }
