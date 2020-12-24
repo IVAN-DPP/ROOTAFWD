@@ -1,4 +1,4 @@
-#include "Histograms.h"
+#include "./Histograms.h"
 #include "./include/Libraries.h"
 #include "./include/Miscelaneous.h"
 
@@ -18,10 +18,7 @@ public:
 void Codecuts::CodeCuts(){
 
   
-  string treeName="g13b";
-  //string fileNamePERP="../List1.txt";
-  //DataEvent *myDataList=new DataEvent(fileNamePERP,treeName, 35);
-  
+  string treeName="g13b";  
   
   vector<string> filename;
   vector<string> PolTableName;

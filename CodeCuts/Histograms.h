@@ -762,17 +762,18 @@ void Histograms::DoCanvas(){
    c43->cd(4);
    h_KaonPhiCM[1][1]->Draw();
 
-
+   c43->SaveAs("imagenes/PhiDistribution.eps");
+   
    double PPara=0, PPerp=0;
    int iPara=0, iPerp=0;
 
    TCanvas *c44 = new TCanvas("","Asymmetry", 1450, 500);
    c44->Divide(1,2);
 
-   for(int i=0; i<MEASGammaP.size(); i++){
+   for(UInt_t i=0; i<MEASGammaP.size(); i++){
 
      //---------Binning method---------------------
-     for(int j=0; j<MEASGammaP.at(i).size(); j++){
+     for(UInt_t j=0; j<MEASGammaP.at(i).size(); j++){
        if(MEASGammaP[i][j]>0){
 	 PPara+=MEASGammaP[i][j];
 	 iPara++;
@@ -807,6 +808,7 @@ void Histograms::DoCanvas(){
 	       << minim->MinValue()  << std::endl;
    }
 
+   c44->SaveAs("imagenes/Asymmetry.eps");
    
 }
 
