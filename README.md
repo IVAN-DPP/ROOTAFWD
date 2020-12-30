@@ -31,7 +31,7 @@
     <br/>
     <p>To compile you need the version ROOTv6, and you can do it with two diffetent forms:</p>
     <ol>
-      <li><em>root -l -t -b Codigo.C</em>, "-t" active the number of cores that you need (This line is in CodeCuts.h), and "-b" do it in the background (it doesn't show the graphics, but save them)</li>
+      <li><em>root -l -t -b Codigo.C</em>, "-t" active the number of cores that your pc has, and "-b" do it in the background (it doesn't show the graphics, but save them)</li>
       <li><em>root -l Codigo.C</em> This option would do if you have a good RAM</li>
     </ol>
     <br/>
