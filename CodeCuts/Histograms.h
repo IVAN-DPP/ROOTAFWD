@@ -167,6 +167,7 @@ void Histograms::DoHistograms(){
 
  //-------------Fiducial cuts-------------------------//
 
+  
   h_ThePhicut[0] = new TH2F("h_ThePhi_protoncut","Proton ;#theta #circ; #phi #circ;",200, -180, 180, 200, 0, 150);
   h_ThePhicut[1] = new TH2F("h_ThePhi_kaoncut","Kaon ; #theta #circ; #phi #circ;",200,  -180, 180, 200, 0, 150);
   h_ThePhicut[2] = new TH2F("h_ThePhi_pioncut","Pion ; #theta #circ; #phi #circ", 200,  -180, 180, 200, 0, 150);
@@ -311,10 +312,36 @@ void Histograms::DoHistograms(){
 
   
 //-----------------Kaon phi-------------------//
-  h_KaonPhiCM[0][0] = new TH1F("h_KaonPhiCM[0][0]","First partition Kaon_Phi (PARA)", 30, -360, 360);
-  h_KaonPhiCM[1][0] = new TH1F("h_KaonPhiCM[1][0]","Second partition Kaon_Phi (PARA)", 30, -360, 360);
-  h_KaonPhiCM[0][1] = new TH1F("h_KaonPhiCM[0][1]","First partition Kaon_Phi (PERP)", 30, -360, 360);
-  h_KaonPhiCM[1][1] = new TH1F("h_KaonPhiCM[1][1]","Second partition Kaon_Phi (PERP)", 30, -360, 360);
+
+//========================
+  //Number of bins in phi
+  //========================
+  int BinsFid=2;//#of bins/fiducial region. This number has to be edited!! 
+  int NSector=6; //# of CLAS sectors
+  int TotBins=(BinsFid*NSector)+NSector+1; //Size of the array xlow{}
+  float Width=(float)50/BinsFid; //Width of each bin within fiducial region
+  int const Tot=TotBins;
+  //cout << "###############################" << endl;
+  //cout << "WIDTH: " << Width << endl;
+  //cout << "Number of Bins: " << BinsFid << endl;
+  //cout << "TotBins: " << TotBins << endl;
+  //cout << "###############################" << endl;
+  //Filling histograms
+  float xlow[Tot]; xlow[0]=-180;
+  for(int i=1;i<Tot;i++){
+    if((i%(BinsFid+1)) == 0)//Coils regions
+      xlow[i]=xlow[i-1]+10;
+    else
+      xlow[i]=xlow[i-1]+Width; //Fiducial regions
+    //cout << "XLOW" << i << "= " << xlow[i] << endl;
+  }
+  //=======================================================
+  
+  
+  h_KaonPhiCM[0][0] = new TH1F("h_KaonPhiCM[0][0]","First partition Kaon_Phi (PARA)", (Tot-1), xlow);
+  h_KaonPhiCM[1][0] = new TH1F("h_KaonPhiCM[1][0]","Second partition Kaon_Phi (PARA)", (Tot-1), xlow);
+  h_KaonPhiCM[0][1] = new TH1F("h_KaonPhiCM[0][1]","First partition Kaon_Phi (PERP)", (Tot-1), xlow);
+  h_KaonPhiCM[1][1] = new TH1F("h_KaonPhiCM[1][1]","Second partition Kaon_Phi (PERP)", (Tot-1), xlow);
 
   //---------------  Fit to Asymmetry ------------//
 
@@ -324,8 +351,11 @@ void Histograms::DoHistograms(){
 
   
   //----------------- Histograms Asymmetry -------//
-  h_Asym[0] = new TH1F("h_Asym[0]","Asymmetry first partition", 150, -360, 360);
-  h_Asym[1] = new TH1F("h_Asym[1]","Asymmetry Second partition", 150, -360, 360);
+
+  
+  
+  h_Asym[0] = new TH1F("h_Asym[0]","Asymmetry first partition", (Tot-1), xlow);
+  h_Asym[1] = new TH1F("h_Asym[1]","Asymmetry Second partition",(Tot-1), xlow);
 }
 
 
