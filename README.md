@@ -6,11 +6,36 @@
   </head>
   <body>		
     <header>	
-      <h1 align="center">CODIGO TRABAJO DE GRADO</h1>
-      <h2 align="center">Análisis de datos con ROOT/C++</h2>
+      <h1 align="center">FINAL WORK</h1>
+      <h2 align="center">Data Analysis With ROOT/C++</h2>
     </header>
     <hr/>
     <br/>
+    <h1 align="center">¿How Use This Code?</h1>
+    <p>To use this code you need has the directories into <em>CodeCuts</em>: </p>
+    <ul>
+      <li><em>Tables</em>, it has the polarization tables</li>
+      <li><em>PARA</em> and <em>PERP</em> skims with the form <em>include/DataEvent.h</em></li>
+    </ul>
+    <img src="./READMEPIC/Dirs.png" align="center"/>
+    <hr/>
+    <br/>
+    <h2>Files</h2>
+    <ul>
+      <li><a href="./CodeCuts/CodeCuts.h">CodeCuts.h</a> In this file you can change all kinds of cuts and make all physics process, also fill the histograms</li>
+      <li><a href="./CodeCuts/Histograms.h">Histograms.h</a> In this file you can declare and define the histograms, also you can make the canvas</li>
+      <li><a href="./CodeCuts/include/Libraries.h">Libraries.h</a> In this file, you can put all kinds of #includes</li>
+      <li><a href="./CodeCuts/Codigo.C">Codigo.C</a> This file is only for compile</li>
+    </ul>
+    <hr/>
+    <br/>
+    <p>To compile you need the version ROOTv6, and you can do it with two diffetent forms:</p>
+    <ol>
+      <li><em>root -l -t -b Codigo.C</em>, "-t" active the number of cores that you need (This line is in CodeCuts.h), and "-b" do it in the background (it doesn't show the graphics, but save them)</li>
+      <li><em>root -l Codigo.C</em> This option would do if you have a good RAM</li>
+    </ol>
+    <br/>
+    <hr/>
     <h1 align="center">DESCRIPTION OF METHODS</h1>
     <p>There are three particles in each event. The first particle is a proton, the second is a positive kaon and the third is a negative pion, You can access the following info</p>
     <ul>
@@ -70,7 +95,7 @@
       <li> TVector3 getEVNT_vertex(int i){return loc_EVNT_vertex->at(i);} //EVNT vertex of i track </li>
       <li> TVector3 getMVRT_vertex(){return *loc_MVRT_vertex;} //MVRT vertex </li>
       <li> int getNextEntry(); </li>
-      <li> int getEntry(){return eventno; </li>
+      <li> int getEntry(){return eventno;} </li>
       <li> int getEntries(); </li>      
     </ul>
 

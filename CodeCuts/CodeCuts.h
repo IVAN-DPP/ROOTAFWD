@@ -1,4 +1,4 @@
-#include "Histograms.h"
+#include "./Histograms.h"
 #include "./include/Libraries.h"
 #include "./include/Miscelaneous.h"
 
@@ -18,10 +18,7 @@ public:
 void Codecuts::CodeCuts(){
 
   
-  string treeName="g13b";
-  //string fileNamePERP="../List1.txt";
-  //DataEvent *myDataList=new DataEvent(fileNamePERP,treeName, 35);
-  
+  string treeName="g13b";  
   
   vector<string> filename;
   vector<string> PolTableName;
@@ -46,8 +43,9 @@ void Codecuts::CodeCuts(){
     char *cstr = const_cast<char *>(PolTableName[i].c_str());
     LoadPolTable(i,cstr);
   }
-  
-  
+
+  int nthreads=4;
+  ROOT::EnableImplicitMT(nthreads);
   for(int k=0;k<NumbOfFiles;k++){
 
     while (myData[k]->getEntry()<myData[k]->getEntries()){
@@ -349,7 +347,7 @@ void Codecuts::CodeCuts(){
     cout<<endl;
     
   }
-  
+  ROOT::DisableImplicitMT();
   DoCanvas();
   
 }
