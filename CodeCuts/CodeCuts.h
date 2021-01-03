@@ -111,20 +111,21 @@ void Codecuts::CodeCuts(){
     if( (phiproton_cut >= 145)   && (phiproton_cut <= 155)  ) continue;
       
     h_ThePhicut[0]->Fill(phiproton_cut, myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg());
-      
+        
     //kaon cuts
-      
     Double_t phikaon_cut;
     phikaon_cut= myDataList->getEVNT_track(1).Phi()*TMath::RadToDeg();
-      
+        
     if( (phikaon_cut <= -25)   && (phikaon_cut >= -35)  ) continue;
     if( (phikaon_cut <= -85)   && (phikaon_cut >= -95)  ) continue;
     if( (phikaon_cut <= -145)  && (phikaon_cut >= -155) ) continue;
     if( (phikaon_cut >= 25)    && (phikaon_cut <= 35)   ) continue;
     if( (phikaon_cut >= 85)    && (phikaon_cut <= 95)   ) continue;
     if( (phikaon_cut >= 145)   && (phikaon_cut <= 155)  ) continue;
-      
-    h_ThePhicut[1]->Fill(phikaon_cut, myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg());
+
+       h_ThePhicut[1]->Fill(phikaon_cut, myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg());
+
+   
       
     //Pion cuts
     
@@ -289,6 +290,8 @@ void Codecuts::CodeCuts(){
     h_DeltaBVSMissingMass->Fill(Wneutron_kaon.M(),deltbeta[2]);
     h_DeltaBVSMissingMomentum->Fill(Wneutron_kaon.P(),deltbeta[2]);
 
+
+   
     //-----------------BOOST------------------------------//
 
     TVector3 b=WBoost.BoostVector();
@@ -305,12 +308,12 @@ void Codecuts::CodeCuts(){
       if(KaonCosThetaCM < 0.668){
 	MEASPhi.at(0).push_back(KaonPhiCM);
 	MEASGammaP.at(0).push_back(PhotoPol);
-	h_KaonPhiCM[0][0]->Fill(KaonPhiCM);
+	h_kaonPhiPA[0]->Fill(KaonPhiCM);
       }
       else if (KaonCosThetaCM > 0.668){
 	MEASPhi.at(1).push_back(KaonPhiCM);
 	MEASGammaP.at(1).push_back(PhotoPol);
-	h_KaonPhiCM[1][0]->Fill(KaonPhiCM);
+	h_kaonPhiPA[1]->Fill(KaonPhiCM);
       }
     }
       
@@ -318,19 +321,19 @@ void Codecuts::CodeCuts(){
       if(KaonCosThetaCM < 0.668){
 	MEASPhi.at(0).push_back(KaonPhiCM);
 	MEASGammaP.at(0).push_back(-PhotoPol);
-	h_KaonPhiCM[0][1]->Fill(KaonPhiCM);
+	h_kaonPhiPE[0]->Fill(KaonPhiCM);
       }
       else if (KaonCosThetaCM > 0.668){
 	MEASPhi.at(1).push_back(KaonPhiCM);
 	MEASGammaP.at(1).push_back(-PhotoPol);
-	h_KaonPhiCM[1][1]->Fill(KaonPhiCM);
+	h_kaonPhiPE[1]->Fill(KaonPhiCM);
       }
     }
      
     //---------------Asymmetry Analysis----------------//
       
-    h_Asym[0]=(TH1F*)h_KaonPhiCM[0][0]->GetAsymmetry(h_KaonPhiCM[0][1]);
-    h_Asym[1]=(TH1F*)h_KaonPhiCM[1][0]->GetAsymmetry(h_KaonPhiCM[1][1]);
+    h_Asym[0]=(TH1F*)h_kaonPhiPA[0]->GetAsymmetry(h_kaonPhiPE[0]);
+    h_Asym[1]=(TH1F*)h_kaonPhiPA[1]->GetAsymmetry(h_kaonPhiPE[1]);
       
       
 

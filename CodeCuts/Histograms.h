@@ -20,7 +20,7 @@ class Histograms{
 protected:
 
   TH1F *h_Vertex                            = NULL;
-  
+   
   TH2F *h_DeltaBe[3]                        = {};
   TH2F *h_BeVSp[3]                          = {};
   TH2F *h_BeVSpT                            = NULL;
@@ -91,8 +91,9 @@ protected:
   TH1F *h_KCosThetaCM                     = NULL;
 
   //-----Kaon phi-------------------//
-  TH1F *h_KaonPhiCM[2][2]                    = {};
-
+  TH1F *h_kaonPhiPA[2]                      = {};
+  TH1F *h_kaonPhiPE[2]                      = {};
+    
   //---------Function to do asymmetry fit----//
   vector<vector<double> > MEASPhi{2}; //2 is the number of binning
   vector<vector<double> > MEASGammaP{2};
@@ -110,6 +111,8 @@ public:
 void Histograms::DoHistograms(){
 
   h_Vertex = new TH1F("h_Vertex","Vertex; distance [cm]; counts",200,0,-40);
+
+  
   
   //------------------ Delta Beta ---------------//
   
@@ -337,12 +340,16 @@ void Histograms::DoHistograms(){
   }
   //=======================================================
   
-  
-  h_KaonPhiCM[0][0] = new TH1F("h_KaonPhiCM[0][0]","First partition Kaon_Phi (PARA)", (Tot-1), xlow);
-  h_KaonPhiCM[1][0] = new TH1F("h_KaonPhiCM[1][0]","Second partition Kaon_Phi (PARA)", (Tot-1), xlow);
-  h_KaonPhiCM[0][1] = new TH1F("h_KaonPhiCM[0][1]","First partition Kaon_Phi (PERP)", (Tot-1), xlow);
-  h_KaonPhiCM[1][1] = new TH1F("h_KaonPhiCM[1][1]","Second partition Kaon_Phi (PERP)", (Tot-1), xlow);
-
+  h_kaonPhiPA[0] = new TH1F("h_kaonPhiPA[0]","First partition Kaon_Phi (PARA)",200, -180, 180);
+  h_kaonPhiPA[1] = new TH1F("h_kaonPhiPA[1]","Second partition Kaon_Phi (PARA)",200, -180, 180);
+  h_kaonPhiPE[0] = new TH1F("h_kaonPhiPE[0]","First partition Kaon_Phi (PERP)",200, -180, 180);
+  h_kaonPhiPE[1] = new TH1F("h_kaonPhiPE[1]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
+  /*
+  h_KaonPhiCM_PARA[0] = new TH1F("h_KaonPhiCM_PARA[0]","First partition Kaon_Phi (PARA)", (Tot-1), xlow);
+   h_KaonPhiCM_PARA[1] = new TH1F("h_KaonPhiCM_PARA[1]","Second partition Kaon_Phi (PARA)", (Tot-1), xlow);
+  h_KaonPhiCM_PERP[0] = new TH1F("h_KaonPhiCM_PERP[0]","First partition Kaon_Phi (PERP)", (Tot-1), xlow);
+  h_KaonPhiCM_PERP[1] = new TH1F("h_KaonPhiCM_PERP[1]","Second partition Kaon_Phi (PERP)", (Tot-1), xlow);
+  */
   //---------------  Fit to Asymmetry ------------//
 
   FuncAsym = new TF1("FuncAsym",fitf,-180,180,4);
@@ -354,8 +361,8 @@ void Histograms::DoHistograms(){
 
   
   
-  h_Asym[0] = new TH1F("h_Asym[0]","Asymmetry first partition", (Tot-1), xlow);
-  h_Asym[1] = new TH1F("h_Asym[1]","Asymmetry Second partition",(Tot-1), xlow);
+  h_Asym[0] = new TH1F("h_Asym[0]","Asymmetry first partition", 100, -180, 180);
+  h_Asym[1] = new TH1F("h_Asym[1]","Asymmetry Second partition",100, -180, 180);
 }
 
 
@@ -410,7 +417,9 @@ void Histograms::DoCanvas(){
   h_BeVSpcut[0]->Draw("colz");  
   BeVSp[0]->Draw("same");
   c0->SaveAs("imagenes/ProtonDB_VS_P.eps");
-  //-------------------------------------------------------------------------- 
+  //--------------------------------------------------------------------------
+
+  
   TCanvas *c01=new TCanvas("c01","Delta Beta y Beta", 700, 1000);
   c01->Divide(1,2);
   c01->cd(1);
@@ -745,10 +754,8 @@ void Histograms::DoCanvas(){
   h_ThePhicut[2]->SetLabelSize(0.1, "XY");
   h_ThePhicut[2]->SetTitleSize(0.05, "XY");
   h_ThePhicut[2]->Draw("colz");  
-  
 
-  
-  TCanvas *c40 = new TCanvas("c40","Delta Beta Vs Missing mass and Invariantmass", 900, 500);
+   TCanvas *c40 = new TCanvas("c40","Delta Beta Vs Missing mass and Invariantmass", 900, 500);
   c40->Divide(3,1);
   c40->cd(1);
   h_DeltaBVSInvariantMass->SetLabelSize(0.03, "XY");
@@ -780,19 +787,34 @@ void Histograms::DoCanvas(){
   h_KCosThetaCM->Draw();
   c42->SaveAs("imagenes/ThetaKaonBoost.eps");
 
+
+  TCanvas *c28 = new TCanvas("","Phi distribution to Kaon", 1450, 500);
+   c28->Divide(2,2);
+   c28->cd(1);
+   h_kaonPhiPA[0]->Draw();
+   c28->cd(2);
+   h_kaonPhiPA[1]->Draw();
+   c28->cd(3);
+   h_kaonPhiPE[0]->Draw();
+   c28->cd(4);
+   h_kaonPhiPE[1]->Draw();
   
-  TCanvas *c43 = new TCanvas("c43","Phi distribution to Kaon", 1450, 500);
+   c28->SaveAs("imagenes/PhiDistribution.eps");
+  
+   /*
+   TCanvas *c43 = new TCanvas("c43","Phi distribution to Kaon", 1450, 500);
    c43->Divide(2,2);
    c43->cd(1);
-   h_KaonPhiCM[0][0]->Draw();
+   h_KaonPhiCM_PARA[0]->Draw();
    c43->cd(2);
-   h_KaonPhiCM[1][0]->Draw();
+   h_KaonPhiCM_PARA[1]->Draw();
    c43->cd(3);
-   h_KaonPhiCM[0][1]->Draw();
+   h_KaonPhiCM_PERP[0]->Draw();
    c43->cd(4);
-   h_KaonPhiCM[1][1]->Draw();
+   h_KaonPhiCM_PERP[1]->Draw();
 
-   c43->SaveAs("imagenes/PhiDistribution.eps");
+   c43->SaveAs("imagenes/Phi1Distribution.eps");
+   */
    
    double PPara=0, PPerp=0;
    int iPara=0, iPerp=0;
