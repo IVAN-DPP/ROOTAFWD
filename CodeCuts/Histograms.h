@@ -80,11 +80,11 @@ protected:
   TEllipse *myEllipse                     = NULL;
   double radx=0.034, rady=0.02, offsetx=0.937, offsety=1.047, angle=70*TMath::DegToRad();
   
-   //-----Correlation Theta-Phi, ----------//
+  //-----Correlation Theta-Phi, ----------//
  
   TH2F *h_ThePhi[3]                         = {};
 
-   //--- Fiduciary cuts ---//
+  //--- Fiduciary cuts ---//
   TH2F *h_ThePhicut[3]                      = {};
   
   //----Costheta-Kaon Boost-------------------//
@@ -162,13 +162,13 @@ void Histograms::DoHistograms(){
   h_BeVSpcut[1] = new TH2F("h_BeVSp_1cut","Kaon ;p [GeV/c];#beta;",200, 0, 3, 200, 0, 1);
   h_BeVSpcut[2] = new TH2F("h_BeVSp_2cut","Pion ;p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
 
-   //-----Correlation Theta-Phi, ----------//
+  //-----Correlation Theta-Phi, ----------//
 
   h_ThePhi[0] = new TH2F("h_ThePhi_proton","Proton ;#theta #circ; #phi #circ;",200, -180, 180, 200, 0, 150);
   h_ThePhi[1] = new TH2F("h_ThePhi_kaon","Kaon ;#theta #circ; #phi #circ;",200,  -180, 180, 200, 0, 150);
   h_ThePhi[2] = new TH2F("h_ThePhi_pion","Pion ;#theta #circ; #phi #circ;", 200,  -180, 180, 200, 0, 150);
 
- //-------------Fiducial cuts-------------------------//
+  //-------------Fiducial cuts-------------------------//
 
   
   h_ThePhicut[0] = new TH2F("h_ThePhi_protoncut","Proton ;#theta #circ; #phi #circ;",200, -180, 180, 200, 0, 150);
@@ -214,12 +214,12 @@ void Histograms::DoHistograms(){
 				    100, 0.7, 1.2);
 
   h_MissingMasscut = new TH1F("h_missingmasscut",
-			   "Missing mass Neutron; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; counts",
-			   100, 0.7, 1.2);
+			      "Missing mass Neutron; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; counts",
+			      100, 0.7, 1.2);
   
   h_MissingMass_kaonpioncut = new TH1F("h_missingmass_kaonpioncut",
-				    "Missing mass Neutron ; #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]; counts",
-				    100, 0.7, 1.2);
+				       "Missing mass Neutron ; #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]; counts",
+				       100, 0.7, 1.2);
 
   
   h_MissingMass_vsMissingMasskaonpion = new TH2F("MissingMass_correlation",
@@ -227,30 +227,30 @@ void Histograms::DoHistograms(){
 						 100, 0.7, 1.2, 100, 0.7, 1.2);
   
   h_MissingP[0] = new TH1F("h_missingpSigma",
-			"Missing momentum Neutron; Missing momentum [GeV/c]; counts",
-			100, 0.0, 1.);
+			   "Missing momentum Neutron; Missing momentum [GeV/c]; counts",
+			   100, 0.0, 1.);
   h_MissingP[1] = new TH1F("h_missingpLambda",
-			"Missing momentum Neutron; Missing momentum [GeV/c]; counts",
-			100, 0.0, 1.);
+			   "Missing momentum Neutron; Missing momentum [GeV/c]; counts",
+			   100, 0.0, 1.);
 
   h_MissingPcut[0] = new TH1F("h_missingpcutSigma",
-			"Missing momentum Neutron; Missing momentum [GeV/c]; counts",
-			100, 0.0, 1.5);
+			      "Missing momentum Neutron; Missing momentum [GeV/c]; counts",
+			      100, 0.0, 1.5);
   h_MissingPcut[1] = new TH1F("h_missingpcutLambda",
-			"Missing momentum Neutron; Missing momentum [GeV/c]; counts",
-			100, 0.0, 1.5);
+			      "Missing momentum Neutron; Missing momentum [GeV/c]; counts",
+			      100, 0.0, 1.5);
   
 
 
 
   
   h_MissingPvsMass[0] = new TH2F("h_missingpvsmSigma",
-			      "Missing Momentum Vs Missing Mass (Lambda cut); #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Missing Momentum (p) [GeV/c]",
-			      100, 0.7, 1.2, 100, 0.0, 1.5);
+				 "Missing Momentum Vs Missing Mass (Lambda cut); #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Missing Momentum (p) [GeV/c]",
+				 100, 0.7, 1.2, 100, 0.0, 1.5);
 
   h_MissingPvsMass[1] = new TH2F("h_missingpvsmLambda",
-			      "Missing Momentum Vs Missing Mass (Sigma cut); #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Missing Momentum (p) [GeV/c]",
-			      100, 0.7, 1.2, 100, 0.0, 1.5);
+				 "Missing Momentum Vs Missing Mass (Sigma cut); #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Missing Momentum (p) [GeV/c]",
+				 100, 0.7, 1.2, 100, 0.0, 1.5);
 
 
   // ------- This aren't important -------- //
@@ -262,7 +262,7 @@ void Histograms::DoHistograms(){
 				   "Invariant Mass Sigma vs Missing Momentum Neutron (Kaon); Mass [GeV/c^{2}]; p [GeV/c] ",
 				   100,1.0,1.5, 100, 0.0, 1.5);
   
-    // ----------------------------------- //
+  // ----------------------------------- //
 
   h_InvariantMass = new TH1F("h_InvariantMass",
 			     "Invariant mass ; Mass [GeV/c^{2}]; counts ",
@@ -270,20 +270,20 @@ void Histograms::DoHistograms(){
   
   
   h_InvariantMasscut[0] = new TH1F("h_InvariantMasscut3Sig",
-			     "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
-			     100, 1.0, 1.5);
+				   "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
+				   100, 1.0, 1.5);
 
   h_InvariantMasscut[1] = new TH1F("h_InvariantMasscut4Sig",
-			     "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
-			     100, 1.0, 1.5);
+				   "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
+				   100, 1.0, 1.5);
 
   h_InvariantMasscut[2] = new TH1F("h_InvariantMasscut5Sig",
-			     "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
-			     100, 1.0, 1.5);
+				   "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
+				   100, 1.0, 1.5);
   
   h_InvariantMasscut[3] = new TH1F("h_InvariantMasscut_ACP",
-			     "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
-			     100, 1.0, 1.5);
+				   "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
+				   100, 1.0, 1.5);
   
   //-------- Lambda and Lambda Fit ------ //
   
@@ -314,7 +314,7 @@ void Histograms::DoHistograms(){
   h_KCosThetaCM = new TH1F("h_KCosThetaCM","Kaon Cos_Theta Boost", 100, -0.4, 2.);
 
   
-//-----------------Kaon phi-------------------//
+  //-----------------Kaon phi-------------------//
   
   h_kaonPhiPA[0] = new TH1F("h_kaonPhiPA[0]","First partition Kaon_Phi (PARA)",200, -180, 180);
   h_kaonPhiPA[1] = new TH1F("h_kaonPhiPA[1]","Second partition Kaon_Phi (PARA)",200, -180, 180);
@@ -376,13 +376,13 @@ void Histograms::DoCanvas(){
   FFitsminus[0]->Draw("same");
   
   /*
-  c0->cd(2);
-  h_DeltaBecut[0]->SetLabelSize(0.045, "XY");
-  h_DeltaBecut[0]->SetTitleSize(0.043, "XY");
-  h_DeltaBecut[0]->Draw("colz");
+    c0->cd(2);
+    h_DeltaBecut[0]->SetLabelSize(0.045, "XY");
+    h_DeltaBecut[0]->SetTitleSize(0.043, "XY");
+    h_DeltaBecut[0]->Draw("colz");
   */
 
-   c0->cd(2);
+  c0->cd(2);
   h_BeVSpcut[0]->SetLabelSize(0.06, "XY");
   h_BeVSpcut[0]->SetTitleSize(0.047, "XY");
   h_BeVSpcut[0]->Draw("colz");  
@@ -406,10 +406,10 @@ void Histograms::DoCanvas(){
   FFitsminus[1]->Draw("same");
 
   /*
-  c01->cd(2);
-  h_DeltaBecut[1]->SetLabelSize(0.045, "XY");
-  h_DeltaBecut[1]->SetTitleSize(0.043, "XY"); 
-  h_DeltaBecut[1]->Draw("colz");
+    c01->cd(2);
+    h_DeltaBecut[1]->SetLabelSize(0.045, "XY");
+    h_DeltaBecut[1]->SetTitleSize(0.043, "XY"); 
+    h_DeltaBecut[1]->Draw("colz");
   */
   c01->cd(2);
   h_BeVSpcut[1]->SetLabelSize(0.06, "XY");
@@ -434,10 +434,10 @@ void Histograms::DoCanvas(){
   FFitsminus[2]->Draw("same");
 
   /*
-  c02->cd(2);
-  h_DeltaBecut[2]->SetLabelSize(0.045, "XY");
-  h_DeltaBecut[2]->SetTitleSize(0.043, "XY");
-  h_DeltaBecut[2]->Draw("colz");
+    c02->cd(2);
+    h_DeltaBecut[2]->SetLabelSize(0.045, "XY");
+    h_DeltaBecut[2]->SetTitleSize(0.043, "XY");
+    h_DeltaBecut[2]->Draw("colz");
   */
   c02->cd(2);
   h_BeVSpcut[2]->SetLabelSize(0.06, "XY");
@@ -462,29 +462,29 @@ void Histograms::DoCanvas(){
   c0cut->SaveAs("imagenes/Be_VS_P.eps");
   
   /*
-  TCanvas *c01cut=new TCanvas("c01cut","Delta Beta and Beta with Cuts", 1450, 500);
-  //c01cut->Divide(2,1);
-  c01cut->cd(1);
-  h_BeVSpT->SetLabelSize(0.045, "XY");
-  h_BeVSpT->SetTitleSize(0.043, "XY");
-  h_BeVSpT->Draw("colz");
-  BeVSp[0]->Draw("same");
-  BeVSp[1]->Draw("same");
-  BeVSp[2]->Draw("same");
+    TCanvas *c01cut=new TCanvas("c01cut","Delta Beta and Beta with Cuts", 1450, 500);
+    //c01cut->Divide(2,1);
+    c01cut->cd(1);
+    h_BeVSpT->SetLabelSize(0.045, "XY");
+    h_BeVSpT->SetTitleSize(0.043, "XY");
+    h_BeVSpT->Draw("colz");
+    BeVSp[0]->Draw("same");
+    BeVSp[1]->Draw("same");
+    BeVSp[2]->Draw("same");
  
-  c01cut->SaveAs("imagenes/KaonB_VS_P.eps");
+    c01cut->SaveAs("imagenes/KaonB_VS_P.eps");
   
-  TCanvas *c02cut=new TCanvas("c02cut","Delta Beta and Beta with Cuts", 1450, 500);
-  //c02cut->Divide(2,1);
-  c02cut->cd(1);
-  h_BeVSpT->SetLabelSize(0.045, "XY");
-  h_BeVSpT->SetTitleSize(0.043, "XY");
-  h_BeVSpT->Draw("colz");
-  BeVSp[0]->Draw("same");
-  BeVSp[1]->Draw("same");
-  BeVSp[2]->Draw("same");
+    TCanvas *c02cut=new TCanvas("c02cut","Delta Beta and Beta with Cuts", 1450, 500);
+    //c02cut->Divide(2,1);
+    c02cut->cd(1);
+    h_BeVSpT->SetLabelSize(0.045, "XY");
+    h_BeVSpT->SetTitleSize(0.043, "XY");
+    h_BeVSpT->Draw("colz");
+    BeVSp[0]->Draw("same");
+    BeVSp[1]->Draw("same");
+    BeVSp[2]->Draw("same");
   
-  c02cut->SaveAs("imagenes/PionB_VS_P.eps");
+    c02cut->SaveAs("imagenes/PionB_VS_P.eps");
 
   */
 
@@ -492,20 +492,20 @@ void Histograms::DoCanvas(){
   //------------------ Delta de T without Cuts ---------------- //
 
   /*
-  TCanvas *c1=new TCanvas("c1","Delta T", 900, 500);
-  c1->Divide(2,1);
-  c1->cd(1);
-  h_DeltaT[0]->Draw(); 
-  c1->cd(2);
-  h_DeltaT[1]->Draw();
+    TCanvas *c1=new TCanvas("c1","Delta T", 900, 500);
+    c1->Divide(2,1);
+    c1->cd(1);
+    h_DeltaT[0]->Draw(); 
+    c1->cd(2);
+    h_DeltaT[1]->Draw();
 
   
-  TCanvas *c11=new TCanvas("c11","Delta T", 900, 500);
-  c11->Divide(2,1);
-  c11->cd(1);
-  h_DeltaTallvsp[0]->Draw("colz"); 
-  c11->cd(2);
-  h_DeltaTallvsp[1]->Draw("colz");
+    TCanvas *c11=new TCanvas("c11","Delta T", 900, 500);
+    c11->Divide(2,1);
+    c11->cd(1);
+    h_DeltaTallvsp[0]->Draw("colz"); 
+    c11->cd(2);
+    h_DeltaTallvsp[1]->Draw("colz");
   */
 
   TCanvas *c12=new TCanvas("c12","Delta T", 1450, 500);
@@ -602,9 +602,9 @@ void Histograms::DoCanvas(){
   h_MissingP[1]->Draw("same");
   LineM->Draw("same");
   /*
-  h_MissingPcut->SetFillColor(kBlue-7);
-  h_MissingPcut->Draw("same");
-  MMPL->Draw("same");
+    h_MissingPcut->SetFillColor(kBlue-7);
+    h_MissingPcut->Draw("same");
+    MMPL->Draw("same");
   */
   c310->SaveAs("imagenes/MissingMomentum.eps");
   
@@ -640,24 +640,24 @@ void Histograms::DoCanvas(){
   c32->Divide(2,1);
   c32->cd(1);
   /*
-  TLine *LAML1= new TLine( 1.108, 0., 1.108, 4100);
-  TLine *LAML2= new TLine( 1.124, 0., 1.124 ,4100);
-  TLine *LAML3= new TLine( 1.11, 0., 1.11, 4100);
-  TLine *LAML4= new TLine( 1.132, 0., 1.132 ,4100);
-  TLine *LAML5= new TLine( 1.092, 0., 1.092, 4100);
-  TLine *LAML6= new TLine( 1.14, 0., 1.14 ,4100);
-  LAML1->SetLineWidth(2);
-  LAML2->SetLineWidth(2);
-  LAML3->SetLineWidth(2);
-  LAML4->SetLineWidth(2);
-  LAML5->SetLineWidth(2);
-  LAML6->SetLineWidth(2);
-  LAML1->SetLineColor(kGreen);
-  LAML2->SetLineColor(kGreen);
-  LAML3->SetLineColor(kBlue);
-  LAML4->SetLineColor(kBlue);
-  LAML5->SetLineColor(kMagenta);
-  LAML6->SetLineColor(kMagenta);
+    TLine *LAML1= new TLine( 1.108, 0., 1.108, 4100);
+    TLine *LAML2= new TLine( 1.124, 0., 1.124 ,4100);
+    TLine *LAML3= new TLine( 1.11, 0., 1.11, 4100);
+    TLine *LAML4= new TLine( 1.132, 0., 1.132 ,4100);
+    TLine *LAML5= new TLine( 1.092, 0., 1.092, 4100);
+    TLine *LAML6= new TLine( 1.14, 0., 1.14 ,4100);
+    LAML1->SetLineWidth(2);
+    LAML2->SetLineWidth(2);
+    LAML3->SetLineWidth(2);
+    LAML4->SetLineWidth(2);
+    LAML5->SetLineWidth(2);
+    LAML6->SetLineWidth(2);
+    LAML1->SetLineColor(kGreen);
+    LAML2->SetLineColor(kGreen);
+    LAML3->SetLineColor(kBlue);
+    LAML4->SetLineColor(kBlue);
+    LAML5->SetLineColor(kMagenta);
+    LAML6->SetLineColor(kMagenta);
   */
   h_LambdaMass->SetLabelSize(0.045, "XY");
   h_LambdaMass->SetTitleSize(0.043, "XY");
@@ -726,7 +726,7 @@ void Histograms::DoCanvas(){
   h_ThePhicut[2]->SetTitleSize(0.05, "XY");
   h_ThePhicut[2]->Draw("colz");  
 
-   TCanvas *c40 = new TCanvas("c40","Delta Beta Vs Missing mass and Invariantmass", 900, 500);
+  TCanvas *c40 = new TCanvas("c40","Delta Beta Vs Missing mass and Invariantmass", 900, 500);
   c40->Divide(3,1);
   c40->cd(1);
   h_DeltaBVSInvariantMass->SetLabelSize(0.03, "XY");
@@ -760,78 +760,78 @@ void Histograms::DoCanvas(){
 
 
   TCanvas *c28 = new TCanvas("","Phi distribution to Kaon", 1450, 500);
-   c28->Divide(2,2);
-   c28->cd(1);
-   h_kaonPhiPA[0]->Draw();
-   c28->cd(2);
-   h_kaonPhiPA[1]->Draw();
-   c28->cd(3);
-   h_kaonPhiPE[0]->Draw();
-   c28->cd(4);
-   h_kaonPhiPE[1]->Draw();
+  c28->Divide(2,2);
+  c28->cd(1);
+  h_kaonPhiPA[0]->Draw();
+  c28->cd(2);
+  h_kaonPhiPA[1]->Draw();
+  c28->cd(3);
+  h_kaonPhiPE[0]->Draw();
+  c28->cd(4);
+  h_kaonPhiPE[1]->Draw();
   
-   c28->SaveAs("imagenes/PhiDistribution.eps");
+  c28->SaveAs("imagenes/PhiDistribution.eps");
   
-   /*
-   TCanvas *c43 = new TCanvas("c43","Phi distribution to Kaon", 1450, 500);
-   c43->Divide(2,2);
-   c43->cd(1);
-   h_KaonPhiCM_PARA[0]->Draw();
-   c43->cd(2);
-   h_KaonPhiCM_PARA[1]->Draw();
-   c43->cd(3);
-   h_KaonPhiCM_PERP[0]->Draw();
-   c43->cd(4);
-   h_KaonPhiCM_PERP[1]->Draw();
+  /*
+    TCanvas *c43 = new TCanvas("c43","Phi distribution to Kaon", 1450, 500);
+    c43->Divide(2,2);
+    c43->cd(1);
+    h_KaonPhiCM_PARA[0]->Draw();
+    c43->cd(2);
+    h_KaonPhiCM_PARA[1]->Draw();
+    c43->cd(3);
+    h_KaonPhiCM_PERP[0]->Draw();
+    c43->cd(4);
+    h_KaonPhiCM_PERP[1]->Draw();
 
-   c43->SaveAs("imagenes/Phi1Distribution.eps");
-   */
+    c43->SaveAs("imagenes/Phi1Distribution.eps");
+  */
    
-   double PPara=0, PPerp=0;
-   int iPara=0, iPerp=0;
+  double PPara=0, PPerp=0;
+  int iPara=0, iPerp=0;
 
-   TCanvas *c44 = new TCanvas("","Asymmetry", 1450, 500);
-   c44->Divide(1,2);
+  TCanvas *c44 = new TCanvas("","Asymmetry", 1450, 500);
+  c44->Divide(1,2);
 
-   for(UInt_t i=0; i<MEASGammaP.size(); i++){
+  for(UInt_t i=0; i<MEASGammaP.size(); i++){
 
-     //---------Binning method---------------------
-     for(UInt_t j=0; j<MEASGammaP.at(i).size(); j++){
-       if(MEASGammaP[i][j]>0){
-	 PPara+=MEASGammaP[i][j];
-	 iPara++;
-       }
-       else {
-	 PPerp+=abs(MEASGammaP[i][j]);
-	 iPerp++;
-       }
-     }
-     PPara=PPara/iPara;
-     PPerp=PPerp/iPerp;
-     FuncAsym->FixParameter(1,PPara/PPerp);
-     FuncAsym->FixParameter(2,(PPara+PPerp)/2.0);
-     FuncAsym->SetParLimits(3,-1.2,1.2);
-     FuncAsym->SetParLimits(0,0.4,2.4);
-     c44->cd(i+1);
-     h_Asym[i]->Fit("FuncAsym","R");
-     h_Asym[i]->Draw();
+    //---------Binning method---------------------
+    for(UInt_t j=0; j<MEASGammaP.at(i).size(); j++){
+      if(MEASGammaP[i][j]>0){
+	PPara+=MEASGammaP[i][j];
+	iPara++;
+      }
+      else {
+	PPerp+=abs(MEASGammaP[i][j]);
+	iPerp++;
+      }
+    }
+    PPara=PPara/iPara;
+    PPerp=PPerp/iPerp;
+    FuncAsym->FixParameter(1,PPara/PPerp);
+    FuncAsym->FixParameter(2,(PPara+PPerp)/2.0);
+    FuncAsym->SetParLimits(3,-1.2,1.2);
+    FuncAsym->SetParLimits(0,0.4,2.4);
+    c44->cd(i+1);
+    h_Asym[i]->Fit("FuncAsym","R");
+    h_Asym[i]->Draw();
 
-     //------------MaxLike Method------------
-     ROOT::Math::Minimizer* minim = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
-     MaxLike Min(MEASPhi.at(i), MEASGammaP.at(i));
-     ROOT::Math::Functor f(Min,2);
-     minim->SetFunction(f);
-     minim->SetVariable(0, "Sigma", 0, 0.01);
-     minim->SetVariable(1, "Phi", 0, 0.01);
-     minim->SetPrintLevel(1);
-     minim->Minimize();
+    //------------MaxLike Method------------
+    ROOT::Math::Minimizer* minim = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
+    MaxLike Min(MEASPhi.at(i), MEASGammaP.at(i));
+    ROOT::Math::Functor f(Min,2);
+    minim->SetFunction(f);
+    minim->SetVariable(0, "Sigma", 0, 0.01);
+    minim->SetVariable(1, "Phi", 0, 0.01);
+    minim->SetPrintLevel(1);
+    minim->Minimize();
 
-     const double *xs = minim->X();
-     std::cout << "minim: f(" << xs[0] << "," << xs[1] <<"): "
-	       << minim->MinValue()  << std::endl;
-   }
+    const double *xs = minim->X();
+    std::cout << "minim: f(" << xs[0] << "," << xs[1] <<"): "
+	      << minim->MinValue()  << std::endl;
+  }
 
-   c44->SaveAs("imagenes/Asymmetry.eps");
+  c44->SaveAs("imagenes/Asymmetry.eps");
    
 }
 
@@ -963,11 +963,11 @@ vector<double> HistoBinning(TH1 *PrincipalHisto,
 // Function to asymmetry
 
 Double_t fitf(Double_t *x, Double_t *par){
-    double num=0, denom=0;
-    num=par[0]-1.0-(par[0]*par[1]+1.0)/(par[1]+1.0)*2*par[2]*par[3]*TMath::Cos(2*x[0]*TMath::DegToRad());
-    denom=par[0]+1.0-   (par[0]*par[1]-1.0)/(par[1]+1.0)*2*par[2]*par[3]*TMath::Cos(2*x[0]*TMath::DegToRad());
-    Double_t fitval =num/denom;
-    return fitval;
+  double num=0, denom=0;
+  num=par[0]-1.0-(par[0]*par[1]+1.0)/(par[1]+1.0)*2*par[2]*par[3]*TMath::Cos(2*x[0]*TMath::DegToRad());
+  denom=par[0]+1.0-   (par[0]*par[1]-1.0)/(par[1]+1.0)*2*par[2]*par[3]*TMath::Cos(2*x[0]*TMath::DegToRad());
+  Double_t fitval =num/denom;
+  return fitval;
 }
 
 #endif
