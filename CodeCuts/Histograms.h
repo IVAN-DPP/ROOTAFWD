@@ -315,41 +315,12 @@ void Histograms::DoHistograms(){
 
   
 //-----------------Kaon phi-------------------//
-
-//========================
-  //Number of bins in phi
-  //========================
-  int BinsFid=2;//#of bins/fiducial region. This number has to be edited!! 
-  int NSector=6; //# of CLAS sectors
-  int TotBins=(BinsFid*NSector)+NSector+1; //Size of the array xlow{}
-  float Width=(float)50/BinsFid; //Width of each bin within fiducial region
-  int const Tot=TotBins;
-  //cout << "###############################" << endl;
-  //cout << "WIDTH: " << Width << endl;
-  //cout << "Number of Bins: " << BinsFid << endl;
-  //cout << "TotBins: " << TotBins << endl;
-  //cout << "###############################" << endl;
-  //Filling histograms
-  float xlow[Tot]; xlow[0]=-180;
-  for(int i=1;i<Tot;i++){
-    if((i%(BinsFid+1)) == 0)//Coils regions
-      xlow[i]=xlow[i-1]+10;
-    else
-      xlow[i]=xlow[i-1]+Width; //Fiducial regions
-    //cout << "XLOW" << i << "= " << xlow[i] << endl;
-  }
-  //=======================================================
   
   h_kaonPhiPA[0] = new TH1F("h_kaonPhiPA[0]","First partition Kaon_Phi (PARA)",200, -180, 180);
   h_kaonPhiPA[1] = new TH1F("h_kaonPhiPA[1]","Second partition Kaon_Phi (PARA)",200, -180, 180);
   h_kaonPhiPE[0] = new TH1F("h_kaonPhiPE[0]","First partition Kaon_Phi (PERP)",200, -180, 180);
   h_kaonPhiPE[1] = new TH1F("h_kaonPhiPE[1]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
-  /*
-  h_KaonPhiCM_PARA[0] = new TH1F("h_KaonPhiCM_PARA[0]","First partition Kaon_Phi (PARA)", (Tot-1), xlow);
-   h_KaonPhiCM_PARA[1] = new TH1F("h_KaonPhiCM_PARA[1]","Second partition Kaon_Phi (PARA)", (Tot-1), xlow);
-  h_KaonPhiCM_PERP[0] = new TH1F("h_KaonPhiCM_PERP[0]","First partition Kaon_Phi (PERP)", (Tot-1), xlow);
-  h_KaonPhiCM_PERP[1] = new TH1F("h_KaonPhiCM_PERP[1]","Second partition Kaon_Phi (PERP)", (Tot-1), xlow);
-  */
+  
   //---------------  Fit to Asymmetry ------------//
 
   FuncAsym = new TF1("FuncAsym",fitf,-180,180,4);

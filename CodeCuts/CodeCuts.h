@@ -123,7 +123,7 @@ void Codecuts::CodeCuts(){
     if( (phikaon_cut >= 85)    && (phikaon_cut <= 95)   ) continue;
     if( (phikaon_cut >= 145)   && (phikaon_cut <= 155)  ) continue;
 
-       h_ThePhicut[1]->Fill(phikaon_cut, myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg());
+    h_ThePhicut[1]->Fill(phikaon_cut, myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg());
 
    
       
