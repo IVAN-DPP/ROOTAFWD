@@ -127,18 +127,14 @@ int LoadPolTable(int plane, char *PolTableList){
     if((lline[0] == '*')||(lline[0] == '#')) continue; //skip comments
     sscanf(lline,"%s",filename);                       //read in filename
     
-    //cout << "opening " << filename << "   " << endl;
+
     if((fpfile=fopen(filename,"r"))==NULL){              //open file
       cout << "Error Couldn't open file: " << filename << endl;
       return -1;
     }
 
-    fgets(polFirstLines[plane][polTableN[plane]],240,fpfile); //save the 1st line
-    //puts(polFirstLines[plane][polTableN[plane]]);  my cent....
-    
-    //cout << polFirstLines[0][polTableN[0]] << endl; 
-
-    //scan the bit after the last "_" in the filename to get the edge energy
+    if(fgets(polFirstLines[plane][polTableN[plane]],240,fpfile) == NULL)
+      perror("There isn't file"); //save the 1st line
     sscanf(strrchr(filename,'_')+1,"%lg",&polTable[plane][fcount][0][EDGE]);
 
     
@@ -169,8 +165,6 @@ int LoadPolTable(int plane, char *PolTableList){
     
     fcount++;
   }
-  
-  //cout << " polTableN[plane]: " <<  polTableN[plane] << " " << polTable[plane][fcount][eid][ENERGY] << endl; 
 
   fclose(fplist);
     
@@ -186,37 +180,16 @@ double GetPol(int plane, double edge, int eid, int poltype, double lowThresh, do
   
   int eIndex=0;
   double pol=-1.0;
-  //cout << "#####################" << endl;
-  //cout << "I am here: " << pol << endl;  
-  //Check edge in in range of tables
-  //cout << "edge: " << edge << endl;
-  //cout << "EDGE: " << EDGE << endl;
-  //cout << "E-Counter#: " << eid << endl;
-  //cout << "polTable[plane][1][0][EDGE]: " << polTable[plane][1][0][EDGE] << endl;
-  //cout << "polTable[plane][polTableN[plane]-1][0][EDGE]: " << polTable[plane][polTableN[plane]-1][0][EDGE] << endl;
   if((edge<polTable[plane][1][0][EDGE])||(edge>polTable[plane][polTableN[plane]-1][0][EDGE])) return -1.0;
-  
-  //cout << "In range" << endl;
   
   //find index
   for(eIndex=0;eIndex<polTableN[plane];eIndex++){
-    //cout << "eIndex: " << eIndex << endl; 
-    //cout << "polTable[plane][eIndex][0][EDGE]: " << polTable[plane][eIndex][0][EDGE] << endl;
     if(polTable[plane][eIndex][0][EDGE]>=edge) break;
   }
-  //cout << "Index = " << eIndex << endl;
-  
-  //cout << "polTable[plane][eIndex][eid][poltype]: " << polTable[plane][eIndex][eid][poltype] << endl;
-  //cout << "PLANE: " << plane << endl;
-  //cout << "eIndex 2: " << eIndex << endl;
-  //cout << "eid: " << eid << endl;
-  //cout << "poltype: " << poltype << endl;
 
   pol=polTable[plane][eIndex][eid][poltype];
   
 
-  //cout << "POL2 : " << pol << endl;
-  //cout << "************" << endl;
   if((polTable[plane][eIndex][0][ENERGY]<edge)&&(pol<lowThresh)) pol = -1.0;
   if((polTable[plane][eIndex][0][ENERGY]>edge)&&(pol<highThresh)) pol = -1.0;
   
@@ -238,22 +211,19 @@ double GetPol(int plane, double edge, double eg, int poltype, double lowThresh, 
   for(int eIndex=0;eIndex<polTableN[plane];eIndex++){
     if(polTable[plane][eIndex][0][EDGE]>=edge) break;
   }
-  //cout << "Index = " << eIndex << endl;
   
   //find eid
   for(eid=1;eid<=384;eid++){
     if(polTable[plane][eIndex][eid][ENERGY]<=eg) break;
   }
-  //cout << "eid = " << eid <<endl;
   
   pol=polTable[plane][eIndex][eid][poltype];
-  //cout << "POL3 : " << pol << endl;
   if((polTable[plane][eIndex][0][ENERGY]<edge)&&(pol<lowThresh)) pol = -1.0;
   if((polTable[plane][eIndex][0][ENERGY]>edge)&&(pol<highThresh)) pol = -1.0;
   
   return pol;
-  }
-///////////////////////////////////////////////////////////////////////////////
+}
+
 
   
 #endif
