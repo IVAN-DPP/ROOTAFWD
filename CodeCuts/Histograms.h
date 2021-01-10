@@ -8,15 +8,17 @@ using namespace std;
 //Friends Functions
 void LinesPTCuts();
 void NameLinesInv(double, double, int, int);
+void TPaveStateModify(TH1*,TH1*);
 vector<double> HistoBinning(TH1 *, int, double, double, double,double);
 Double_t fitf(Double_t *,Double_t *);
 class Histograms{
   //Friends Functions
   friend void LinesPTCuts();       //Functions for do the lines in Theta-Phi Correlations
   friend void NameLinesInv(double, double, int, int);
+  friend void TPaveStateModify(TH1*,TH1*);
   friend vector<double> HistoBinning(TH1 *, int, double, double, double,double); //Function for binning the graphic Cos(Kaon.Theta)
   friend Double_t fitf(Double_t *,Double_t *); //Function to asymmetry compute
-
+  
 protected:
 
   TH1F *h_Vertex                            = NULL;
@@ -53,7 +55,7 @@ protected:
   TH1F *h_MissingMasscut                  = NULL;
   TH1F *h_MissingMass_kaonpioncut         = NULL;
   
-  TH2F *h_MissingMass_vsMissingMasskaonpion = NULL;
+  TH2F *h_MissingMass_vsMissingMasskaonpion[2] = {};
 
 
   TH1F *h_MissingP[2]                      = {};
@@ -193,9 +195,9 @@ void Histograms::DoHistograms(){
 
   //--------------- Energy loss ----------- //
 
-  h_eloss[0]=new TH1F("h_eloss_0","Proton; eloss [MeV]",50, 0, 100);
-  h_eloss[1]=new TH1F("h_eloss_1","Kaon; eloss [MeV]",50, 0, 20);
-  h_eloss[2]=new TH1F("h_eloss_2","Pion; eloss [MeV]",50, 0, 20);
+  h_eloss[0]=new TH1F("h_eloss_0","Proton; eloss [MeV];counts;",50, 0, 100);
+  h_eloss[1]=new TH1F("h_eloss_1","Kaon; eloss [MeV];counts;",50, 0, 20);
+  h_eloss[2]=new TH1F("h_eloss_2","Pion; eloss [MeV];counts;",50, 0, 20);
 
   //---- Get Coherent Edge ---- //
 
@@ -222,9 +224,13 @@ void Histograms::DoHistograms(){
 				       100, 0.7, 1.2);
 
   
-  h_MissingMass_vsMissingMasskaonpion = new TH2F("MissingMass_correlation",
-						 "Missing Mass Correlation; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}];  #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]",
-						 100, 0.7, 1.2, 100, 0.7, 1.2);
+  h_MissingMass_vsMissingMasskaonpion[0] = new TH2F("MissingMass_correlation",
+						    "Missing Mass Correlation; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}];  #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]",
+						    100, 0.7, 1.2, 100, 0.7, 1.2);
+
+  h_MissingMass_vsMissingMasskaonpion[1] = new TH2F("MissingMass_correlation_Cut",
+						    "Missing Mass Correlation; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}];  #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]",
+						    100, 0.7, 1.2, 100, 0.7, 1.2);
   
   h_MissingP[0] = new TH1F("h_missingpSigma",
 			   "Missing momentum Neutron; Missing momentum [GeV/c]; counts",
@@ -339,14 +345,17 @@ void Histograms::DoHistograms(){
 
 void Histograms::DoCanvas(){
 
-  TCanvas *c00 = new TCanvas("c00","Vertex",900,500);
+  gStyle->SetOptStat("e");
+  gStyle->SetStatX(0.9);
+  gStyle->SetStatY(0.9);
+  
+  TCanvas *c00 = new TCanvas("c00","Vertex",950,500);
   c00->cd(0);
-  h_Vertex->SetLabelSize(0.05, "XY");
-  h_Vertex->SetTitleSize(0.045, "XY");
+  h_Vertex->SetTitleSize(0.047, "xy");
   h_Vertex->Draw();
   TLine *VertexLines[2]={};
-  VertexLines[0] = new TLine(-1.0,16000,-1.0,0);
-  VertexLines[1] = new TLine(-39.0,16000,-39.0,0);
+  VertexLines[0] = new TLine(-1.0,h_Vertex->GetMaximum(),-1.0,0);
+  VertexLines[1] = new TLine(-39.0,h_Vertex->GetMaximum(),-39.0,0);
 
   VertexLines[0]->SetLineWidth(2);
   VertexLines[1]->SetLineWidth(2);
@@ -360,11 +369,11 @@ void Histograms::DoCanvas(){
 
   //---------------- Delta B With/out Cuts ----------------- //
 
-
-  TCanvas *c0=new TCanvas("c0","Delta Beta y Beta", 700, 1000);
-  c0->Divide(1,2);
-  c0->cd(1);
-  h_DeltaBe[0]->SetLabelSize(0.056, "XY");
+  //------ Proton ------//
+  
+  TCanvas *c0DB=new TCanvas("c0DB","Delta Beta Without Cuts", 1000, 500);
+  c0DB->cd(1);
+  //h_DeltaBe[0]->SetLabelSize(0.056, "XY");
   h_DeltaBe[0]->SetTitleSize(0.047, "XY");
   h_DeltaBe[0]->Draw("colz");
   h_DeltaBe[0]->Fit(FFits[0]);
@@ -374,119 +383,124 @@ void Histograms::DoCanvas(){
   FFitsminus[0] = new TF1("DBProtonFitminus",FFname[0].c_str(),0,3);
   FFits[0]->Draw("same");
   FFitsminus[0]->Draw("same");
+  c0DB->SaveAs("imagenes/ProtonDB_VS_P.eps");
   
-  /*
-    c0->cd(2);
-    h_DeltaBecut[0]->SetLabelSize(0.045, "XY");
-    h_DeltaBecut[0]->SetTitleSize(0.043, "XY");
-    h_DeltaBecut[0]->Draw("colz");
-  */
+  TCanvas *c0DBC=new TCanvas("c0DBC","Delta Beta With Cuts", 1000, 500);
+  c0DBC->cd(1);
+  h_DeltaBecut[0]->SetTitleSize(0.047, "XY");
+  h_DeltaBecut[0]->Draw("colz");
+  c0DBC->SaveAs("imagenes/ProtonDB_VS_P_C.eps");
 
-  c0->cd(2);
-  h_BeVSpcut[0]->SetLabelSize(0.06, "XY");
-  h_BeVSpcut[0]->SetTitleSize(0.047, "XY");
-  h_BeVSpcut[0]->Draw("colz");  
-  BeVSp[0]->Draw("same");
-  c0->SaveAs("imagenes/ProtonDB_VS_P.eps");
-  //--------------------------------------------------------------------------
-
+  //------ Kaon ------//
   
-  TCanvas *c01=new TCanvas("c01","Delta Beta y Beta", 700, 1000);
-  c01->Divide(1,2);
-  c01->cd(1);
-  h_DeltaBe[1]->SetLabelSize(0.056, "XY");
+  TCanvas *c1DB=new TCanvas("c1DB","Delta Beta Without Cuts", 1000, 500);
+  c1DB->cd(1);
   h_DeltaBe[1]->SetTitleSize(0.047, "XY");
   h_DeltaBe[1]->Draw("colz");
   h_DeltaBe[1]->Fit(FFits[1]);
   //Fit functions
   FFname[1]=FFits[1]->GetName();
   FFname[1].insert(0,"-1.0*");
-  FFitsminus[1] = new TF1("DBProtonFitminus",FFname[1].c_str(),0,3);
+  FFitsminus[1] = new TF1("DBKaonFitminus",FFname[0].c_str(),0,3);
   FFits[1]->Draw("same");
   FFitsminus[1]->Draw("same");
+  c1DB->SaveAs("imagenes/KaonDB_VS_P.eps");
 
-  /*
-    c01->cd(2);
-    h_DeltaBecut[1]->SetLabelSize(0.045, "XY");
-    h_DeltaBecut[1]->SetTitleSize(0.043, "XY"); 
-    h_DeltaBecut[1]->Draw("colz");
-  */
-  c01->cd(2);
-  h_BeVSpcut[1]->SetLabelSize(0.06, "XY");
-  h_BeVSpcut[1]->SetTitleSize(0.047, "XY");
-  h_BeVSpcut[1]->Draw("colz");
+  TCanvas *c1DBC=new TCanvas("c1DBC","Delta Beta With Cuts", 1000, 500);
+  c1DBC->cd(1);
+  h_DeltaBecut[1]->SetTitleSize(0.047, "XY");
+  h_DeltaBecut[1]->Draw("colz");
+  c0DBC->SaveAs("imagenes/KaonDB_VS_P_C.eps");
 
-  BeVSp[1]->Draw("same");
-  c01->SaveAs("imagenes/KaonDB_VS_P.eps");
   
-  TCanvas *c02=new TCanvas("c02","Delta Beta y Beta", 700, 1000);
-  c02->Divide(1,2);
-  c02->cd(1);
-  h_DeltaBe[2]->SetLabelSize(0.056, "XY");
+  //------ Pion ------//
+  
+  TCanvas *c2DB=new TCanvas("c2DB","Delta Beta Without Cuts", 1000, 500);
+  c2DB->cd(1);
   h_DeltaBe[2]->SetTitleSize(0.047, "XY");
   h_DeltaBe[2]->Draw("colz");
   h_DeltaBe[2]->Fit(FFits[2]);
   //Fit functions
-  FFname[2]=FFits[2]->GetName();
+  FFname[2]=FFits[1]->GetName();
   FFname[2].insert(0,"-1.0*");
-  FFitsminus[2] = new TF1("DBProtonFitminus",FFname[2].c_str(),0,3);
+  FFitsminus[2] = new TF1("DBPionFitminus",FFname[0].c_str(),0,3);
   FFits[2]->Draw("same");
   FFitsminus[2]->Draw("same");
+  c2DB->SaveAs("imagenes/PionDB_VS_P.eps");
 
-  /*
-    c02->cd(2);
-    h_DeltaBecut[2]->SetLabelSize(0.045, "XY");
-    h_DeltaBecut[2]->SetTitleSize(0.043, "XY");
-    h_DeltaBecut[2]->Draw("colz");
-  */
-  c02->cd(2);
-  h_BeVSpcut[2]->SetLabelSize(0.06, "XY");
-  h_BeVSpcut[2]->SetTitleSize(0.047, "XY");
-  h_BeVSpcut[2]->Draw("colz");
-  BeVSp[2]->Draw("same");
-  c02->SaveAs("imagenes/PionDB_VS_P.eps");
-  
-  
+  TCanvas *c2DBC=new TCanvas("c2DBC","Delta Beta With Cuts", 1000, 500);
+  c2DBC->cd(1);
+  h_DeltaBecut[2]->SetTitleSize(0.047, "XY");
+  h_DeltaBecut[2]->Draw("colz");
+  c2DBC->SaveAs("imagenes/PionDB_VS_P_C.eps");
+
+
   //---------------- B With/out Cuts ----------------- //
 
-  TCanvas *c0cut=new TCanvas("c0cut","Delta Beta and Beta with Cuts", 900, 500);
-  //c0cut->Divide(2,1);
-  c0cut->cd(1);
-  h_BeVSpT->SetLabelSize(0.045, "XY");
+  gStyle->SetStatY(0.94);
+  //------ Proton ------//
+  
+  TCanvas *c0B=new TCanvas("c0B","Beta Without Cuts", 1000, 500);
+  c0B->cd(1);
+  h_BeVSp[0]->SetTitleSize(0.047, "XY");
+  h_BeVSp[0]->Draw("colz");  
+  BeVSp[0]->Draw("same");
+  c0B->SaveAs("imagenes/ProtonB_VS_P.eps");
+
+  TCanvas *c0BC=new TCanvas("c0BC","Beta With Cuts", 1000, 500);
+  c0BC->cd(1);
+  h_BeVSpcut[0]->SetTitleSize(0.047, "XY");
+  h_BeVSpcut[0]->Draw("colz");  
+  BeVSp[0]->Draw("same");
+  
+  c0BC->SaveAs("imagenes/ProtonB_VS_P_C.eps");
+
+  //------ Kaon ------//
+  
+  TCanvas *c1B=new TCanvas("c1B","Beta Without Cuts", 1000, 500);
+  c1B->cd(1);
+  h_BeVSp[1]->SetTitleSize(0.047, "XY");
+  h_BeVSp[1]->Draw("colz");  
+  BeVSp[1]->Draw("same");
+  c0B->SaveAs("imagenes/KaonB_VS_P.eps");
+
+  TCanvas *c1BC=new TCanvas("c1BC","Beta With Cuts", 1000, 500);
+  c1BC->cd(1);
+  h_BeVSpcut[1]->SetTitleSize(0.047, "XY");
+  h_BeVSpcut[1]->Draw("colz");  
+  BeVSp[1]->Draw("same");
+  
+  c1BC->SaveAs("imagenes/KaonB_VS_P_C.eps");
+
+  
+  //------ Pion ------//
+  
+  TCanvas *c2B=new TCanvas("c2B","Beta Without Cuts", 1000, 500);
+  c2B->cd(1);
+  h_BeVSp[2]->SetTitleSize(0.047, "XY");
+  h_BeVSp[2]->Draw("colz");  
+  BeVSp[2]->Draw("same");
+  c2B->SaveAs("imagenes/PionB_VS_P.eps");
+  TCanvas *c2BC=new TCanvas("c2BC","Beta With Cuts", 1000, 500);
+  c2BC->cd(1);
+  h_BeVSpcut[2]->SetTitleSize(0.047, "XY");
+  h_BeVSpcut[2]->Draw("colz");  
+  BeVSp[2]->Draw("same");
+  
+  c2BC->SaveAs("imagenes/PionB_VS_P_C.eps");
+
+  // B Total
+
+  TCanvas *cB=new TCanvas("cB","Beta without Cuts", 1000, 500);
+  cB->cd(1);
   h_BeVSpT->SetTitleSize(0.043, "XY");
   h_BeVSpT->Draw("colz");
   BeVSp[0]->Draw("same");
   BeVSp[1]->Draw("same");
   BeVSp[2]->Draw("same");
-   
-  c0cut->SaveAs("imagenes/Be_VS_P.eps");
   
-  /*
-    TCanvas *c01cut=new TCanvas("c01cut","Delta Beta and Beta with Cuts", 1450, 500);
-    //c01cut->Divide(2,1);
-    c01cut->cd(1);
-    h_BeVSpT->SetLabelSize(0.045, "XY");
-    h_BeVSpT->SetTitleSize(0.043, "XY");
-    h_BeVSpT->Draw("colz");
-    BeVSp[0]->Draw("same");
-    BeVSp[1]->Draw("same");
-    BeVSp[2]->Draw("same");
- 
-    c01cut->SaveAs("imagenes/KaonB_VS_P.eps");
+  cB->SaveAs("imagenes/B_VS_P.eps");
   
-    TCanvas *c02cut=new TCanvas("c02cut","Delta Beta and Beta with Cuts", 1450, 500);
-    //c02cut->Divide(2,1);
-    c02cut->cd(1);
-    h_BeVSpT->SetLabelSize(0.045, "XY");
-    h_BeVSpT->SetTitleSize(0.043, "XY");
-    h_BeVSpT->Draw("colz");
-    BeVSp[0]->Draw("same");
-    BeVSp[1]->Draw("same");
-    BeVSp[2]->Draw("same");
-  
-    c02cut->SaveAs("imagenes/PionB_VS_P.eps");
-
-  */
 
   
   //------------------ Delta de T without Cuts ---------------- //
@@ -508,51 +522,175 @@ void Histograms::DoCanvas(){
     h_DeltaTallvsp[1]->Draw("colz");
   */
 
-  TCanvas *c12=new TCanvas("c12","Delta T", 1450, 500);
-  TLine *DTL1= new TLine( -1.0, 0., -1.0 ,57000);
-  TLine *DTL2= new TLine( 1.0, 0., 1.0 ,57000);
+  gStyle->SetStatY(0.9);
+  //--- DT Kaon ---//
+
+  TCanvas *c0T=new TCanvas("c0T","Delta T", 1200, 500);
+  TLine *DTL1= new TLine( -1.0, 0., -1.0 ,h_DeltaTall[0]->GetMaximum());
+  TLine *DTL2= new TLine( 1.0, 0., 1.0 ,h_DeltaTall[0]->GetMaximum());
   DTL1->SetLineWidth(2);
   DTL2->SetLineWidth(2);
   DTL1->SetLineColor(2);
   DTL2->SetLineColor(2);
-  c12->Divide(2,1);
-  c12->cd(1);
+  c0T->cd(1);
   h_DeltaTall[0]->SetLabelSize(0.045, "XY");
   h_DeltaTall[0]->SetTitleSize(0.043, "XY");
   h_DeltaTall[0]->Draw();
   DTL1->Draw("same");
   DTL2->Draw("same");
-  c12->cd(2);
+  c0T->SaveAs("imagenes/DeltaTcut_Kaon.eps");
+
+  //--- DT Pion ---//
+  
+  TCanvas *c1T=new TCanvas("c1T","Delta T", 1200, 500);
+  c1T->cd(1);
   h_DeltaTall[1]->SetLabelSize(0.045, "XY");
   h_DeltaTall[1]->SetTitleSize(0.043, "XY");
   h_DeltaTall[1]->Draw();
-  TLine *DTL1Pion= new TLine( -1.0, 0., -1.0 ,45000);
-  TLine *DTL2Pion= new TLine( 1.0, 0., 1.0 ,45000);
+  TLine *DTL1Pion= new TLine( -1.0, 0., -1.0 ,h_DeltaTall[1]->GetMaximum());
+  TLine *DTL2Pion= new TLine( 1.0, 0., 1.0 ,h_DeltaTall[1]->GetMaximum());
   DTL1Pion->SetLineWidth(2);
   DTL2Pion->SetLineWidth(2);
   DTL1Pion->SetLineColor(2);
   DTL2Pion->SetLineColor(2);
   DTL1Pion->Draw("same");
   DTL2Pion->Draw("same");
-  c12->SaveAs("imagenes/DeltaTcut.eps");
+  c1T->SaveAs("imagenes/DeltaTcut_Pion.eps");
 
-  // ------------- Energy Loss ---------------- //
+
+  //----- Detector geometry (Fiduciary cuts)---------//
+
+  gStyle->SetStatY(0.94);
+    
+  //------ Proton ------//
   
-  TCanvas *c2=new TCanvas("c2","Delta Energy loss", 1450, 500);
-  c2->Divide(3,1);
-  c2->cd(1);
-  h_eloss[0]->SetLabelSize(0.038, "XY");
+  TCanvas *c0TP=new TCanvas("c0TP","Theta-Phi correlation", 1200, 500);
+  c0TP->cd(1);
+  h_ThePhi[0]->SetTitleSize(0.05, "XY");
+  h_ThePhi[0]->Draw("colz");
+  LinesPTCuts();
+  c0TP->SaveAs("imagenes/Fiduciary_Proton.eps");
+  
+  //------ Kaon ------//
+  
+  TCanvas *c1TP=new TCanvas("c1TP","Theta-Phi correlation", 1200, 500);
+  c1TP->cd(1);
+  h_ThePhi[1]->SetTitleSize(0.05, "XY");
+  h_ThePhi[1]->Draw("colz");
+  LinesPTCuts();
+  c1TP->SaveAs("imagenes/Fiduciary_Kaon.eps");
+
+  //------ Pion ------//
+  
+  TCanvas *c2TP=new TCanvas("c2TP","Theta-Phi correlation", 1200, 500);
+  c2TP->cd(1);
+  h_ThePhi[2]->SetTitleSize(0.05, "XY");
+  h_ThePhi[2]->Draw("colz");
+  LinesPTCuts();
+  c2TP->SaveAs("imagenes/Fiduciary_Pion.eps");
+
+  // 3 in 1
+
+  TCanvas *c3TP=new TCanvas("c3TP","Theta-Phi correlation", 1200, 500);
+  c3TP->Divide(1,3);
+  c3TP->cd(1);
+  h_ThePhi[0]->SetLabelSize(0.1, "XY");
+  h_ThePhi[0]->SetTitleSize(0.05, "XY");
+  h_ThePhi[0]->Draw("colz");
+  LinesPTCuts();
+  
+  c3TP->cd(2);
+  h_ThePhi[1]->SetLabelSize(0.1, "XY");
+  h_ThePhi[1]->SetTitleSize(0.05, "XY");
+  h_ThePhi[1]->Draw("colz");
+  
+  LinesPTCuts();
+
+  c3TP->cd(3);
+  h_ThePhi[2]->SetLabelSize(0.1, "XY");
+  h_ThePhi[2]->SetTitleSize(0.05, "XY");
+  h_ThePhi[2]->Draw("colz");
+  LinesPTCuts();
+  
+  c3TP->SaveAs("imagenes/Fiduciary.eps");
+
+  
+  //-----Cuts due to detector geometry (Fiduciary cuts)---------//
+
+  
+  //------ Proton ------//
+  
+  TCanvas *c0TPC=new TCanvas("c0TPC","Fiduciary cuts", 1200, 500);
+  c0TPC->cd(1);
+  h_ThePhicut[0]->SetTitleSize(0.05, "XY");
+  h_ThePhicut[0]->Draw("colz");
+  LinesPTCuts();
+  c0TPC->SaveAs("imagenes/Fiduciarycuts_Proton.eps");
+  
+  //------ Kaon ------//
+  
+  TCanvas *c1TPC=new TCanvas("c1TPC","Fiduciary cuts", 1200, 500);
+  c1TPC->cd(1);
+  h_ThePhicut[1]->SetTitleSize(0.05, "XY");
+  h_ThePhicut[1]->Draw("colz");
+  LinesPTCuts();
+  c1TPC->SaveAs("imagenes/Fiduciarycuts_Kaon.eps");
+
+  //------ Pion ------//
+  
+  TCanvas *c2TPC=new TCanvas("c2TPC","Fiduciary cuts", 1200, 500);
+  c2TPC->cd(1);
+  h_ThePhicut[2]->SetTitleSize(0.05, "XY");
+  h_ThePhicut[2]->Draw("colz");
+  LinesPTCuts();
+  c2TPC->SaveAs("imagenes/Fiduciarycuts_Pion.eps");
+
+  // 3 in 1
+  
+  TCanvas *c3TPC=new TCanvas("c3TPC","Fiduciary cuts", 1200, 500);
+  c3TPC->Divide(1,3);
+  c3TPC->cd(1);
+  h_ThePhicut[0]->SetLabelSize(0.1, "XY");
+  h_ThePhicut[0]->SetTitleSize(0.05, "XY");
+  h_ThePhicut[0]->Draw("colz");
+  c3TPC->cd(2);
+  h_ThePhicut[1]->SetLabelSize(0.1, "XY");
+  h_ThePhicut[1]->SetTitleSize(0.05, "XY");
+  h_ThePhicut[1]->Draw("colz");
+  c3TPC->cd(3);
+  h_ThePhicut[2]->SetLabelSize(0.1, "XY");
+  h_ThePhicut[2]->SetTitleSize(0.05, "XY");
+  h_ThePhicut[2]->Draw("colz");  
+  
+  c3TPC->SaveAs("imagenes/Fiduciarycuts.eps");
+
+  
+  //-------------------- Energy Loss -------------------- //
+
+  gStyle->SetStatY(0.9);
+
+  //------ Proton ------//
+  
+  TCanvas *c0EL=new TCanvas("c0EL","Delta Energy loss", 1200, 500);
+  c0EL->cd(1);
   h_eloss[0]->SetTitleSize(0.04, "XY");
   h_eloss[0]->Draw();
-  c2->cd(2);
-  h_eloss[1]->SetLabelSize(0.038, "XY");
+  c0EL->SaveAs("imagenes/Energyloss_Proton.eps");
+
+  //------ Kaon ------//
+  
+  TCanvas *c1EL=new TCanvas("c1EL","Delta Energy loss", 1200, 500);
+  c1EL->cd(1);
   h_eloss[1]->SetTitleSize(0.04, "XY");
   h_eloss[1]->Draw();
-  c2->cd(3);
-  h_eloss[2]->SetLabelSize(0.038, "XY");
+  c1EL->SaveAs("imagenes/Energyloss_Kaon.eps");
+
+  //------ Pion ------//
+  
+  TCanvas *c2EL=new TCanvas("c2EL","Delta Energy loss", 1200, 500);
   h_eloss[2]->SetTitleSize(0.04, "XY");
   h_eloss[2]->Draw();
-  c2->SaveAs("imagenes/Energyloss.eps");
+  c2EL->SaveAs("imagenes/Energyloss_Pion.eps");
 
   //---- Get Coherent Edge ---- //
 
@@ -565,26 +703,93 @@ void Histograms::DoCanvas(){
   c20->cd(3);
   h_TagrEpho[2]->Draw();
   
-  //-------------- Reconstruction --------- //
+  //******************* Reconstruction **********************//
+
+  //----------- MM before Cuts for MM correlation ------- //
+
+  //------ Kaon ------//
   
-  TCanvas *c3=new TCanvas("c3","Missing mass", 1450, 500);
-  c3->Divide(2,1);
-  c3->cd(1);
+  TCanvas *c0MM=new TCanvas("c0MM","Missing mass", 1200, 500);
+  c0MM->cd(1);
+  h_MissingMass->SetTitleSize(0.043, "XY");
+  h_MissingMass->Draw();
+  c0MM->SaveAs("imagenes/MissingMass.eps");
+
+  //---------- MM Correlation without cut ---------------//
+  
+  TCanvas *c0ELL=new TCanvas("c0ELL","Correlation of MM", 900, 500);
+  c0ELL->cd(1);
+  h_MissingMass_vsMissingMasskaonpion[0]->SetTitleSize(0.045, "XY");  
+  h_MissingMass_vsMissingMasskaonpion[0]->Draw("colz");
+  myEllipse->SetFillStyle(0);
+  myEllipse->SetLineColor(kRed);
+  myEllipse->Draw("same");
+  c0ELL->SaveAs("imagenes/Ellipse.eps");
+
+  //---------- MM Correlation with cut ---------------//
+  
+  TCanvas *c0ELLC=new TCanvas("c0ELLC","Correlation of MM", 900, 500);
+  c0ELLC->cd(1);
+  h_MissingMass_vsMissingMasskaonpion[1]->SetTitleSize(0.045, "XY");  
+  h_MissingMass_vsMissingMasskaonpion[1]->Draw("colz");
+  myEllipse->SetFillStyle(0);
+  myEllipse->SetLineColor(kRed);
+  myEllipse->Draw("same");
+  c0ELLC->SaveAs("imagenes/Ellipse_C.eps");
+
+  //----------- MM After Cuts for MM correlation ------- //
+
+
+  //------ Kaon ------//
+ 
+  
+  TCanvas *c0MMC=new TCanvas("c0MMC","Missing mass", 1200, 500);
+  c0MMC->cd(1);
+  
   h_MissingMass->SetLabelSize(0.045, "XY");
   h_MissingMass->SetTitleSize(0.043, "XY");
   h_MissingMass->Draw();
+  TPaveStateModify(h_MissingMass,h_MissingMasscut);
+  // gPad->Update();
+
+  // TPaveStats *ps = (TPaveStats*)h_MissingMass->FindObject("stats");
+  // ps->SetName("mystats");
+  // TList *listOfLines = ps->GetListOfLines();
+
+  // ostringstream streamObj;
+  // streamObj << std::fixed;
+  // streamObj << std::setprecision(0);
+  // streamObj << h_MissingMasscut->GetEntries();
+  // string StrObj = streamObj.str();
+
+  // string EntriesCut = "Entries = " + StrObj;
+  // TLatex *myt = new TLatex(0,0,EntriesCut.c_str());
+  // myt ->SetTextFont(42);
+  // //myt ->SetTextSize(0.02);
+  // myt ->SetTextColor(kRed);
+  // listOfLines->Add(myt);
+
+  // ps->SetTextSize(0.1);
+  // h_MissingMass->SetStats(0);
+  
   h_MissingMasscut->SetFillColor(kRed-7);
   h_MissingMasscut->Draw("same");
+  
+  c0MMC->SaveAs("imagenes/MissingMass_Kaon.eps");
 
-  c3->cd(2);
+  //------ Pion + ------//
+  TCanvas *c1MMC=new TCanvas("c1MMC","Missing mass", 1200, 500);
+  c1MMC->cd(1);
   h_MissingMass_kaonpion->SetLabelSize(0.045, "XY");
   h_MissingMass_kaonpion->SetTitleSize(0.043, "XY");
   h_MissingMass_kaonpion->Draw();
+  TPaveStateModify(h_MissingMass_kaonpion,h_MissingMass_kaonpioncut);
   h_MissingMass_kaonpioncut->SetFillColor(kRed-7);
   h_MissingMass_kaonpioncut->Draw("same");
 
-  c3->SaveAs("imagenes/MissingMass.eps");
+  c1MMC->SaveAs("imagenes/MissingMass_Pion.eps");
 
+  
   TCanvas *c310=new TCanvas("c31","Missing Momentum", 1450, 500);
   c310->cd(1);
   TLine *MMPL = new TLine(0.2,0,0.2,4300);
@@ -609,15 +814,6 @@ void Histograms::DoCanvas(){
   c310->SaveAs("imagenes/MissingMomentum.eps");
   
   
-  TCanvas *c31=new TCanvas("c31","Correlation of MM", 900, 500);
-  c31->cd(1);
-  h_MissingMass_vsMissingMasskaonpion->SetLabelSize(0.05, "XY");
-  h_MissingMass_vsMissingMasskaonpion->SetTitleSize(0.045, "XY");  
-  h_MissingMass_vsMissingMasskaonpion->Draw("colz");
-  myEllipse->SetFillStyle(0);
-  myEllipse->SetLineColor(kRed);
-  myEllipse->Draw("same");
-  c31->SaveAs("imagenes/Ellipse.eps");
   
   TCanvas *c312=new TCanvas("c312","Missing Momentum vs Missing Mass", 1450, 500);
   c312->Divide(2,1);
@@ -686,45 +882,6 @@ void Histograms::DoCanvas(){
   
   c32->SaveAs("imagenes/InvariantMass.eps");
 
-  TCanvas *c4=new TCanvas("c4","Theta-Phi correlation", 900, 500);
-  c4->Divide(1,3);
-  c4->cd(1);
-  h_ThePhi[0]->SetLabelSize(0.1, "XY");
-  h_ThePhi[0]->SetTitleSize(0.05, "XY");
-  h_ThePhi[0]->Draw("colz");
-  LinesPTCuts();
- 
-  c4->cd(2);
-  h_ThePhi[1]->SetLabelSize(0.1, "XY");
-  h_ThePhi[1]->SetTitleSize(0.05, "XY");
-  h_ThePhi[1]->Draw("colz");
-  
-  LinesPTCuts();
-
-  c4->cd(3);
-  h_ThePhi[2]->SetLabelSize(0.1, "XY");
-  h_ThePhi[2]->SetTitleSize(0.05, "XY");
-  h_ThePhi[2]->Draw("colz");
-  LinesPTCuts();
-  
-  c4->SaveAs("imagenes/Fiduciarycuts.eps");
-
-  
-
-  TCanvas *c5=new TCanvas("c5","Fiduciary cuts", 900, 500);
-  c5->Divide(1,3);
-  c5->cd(1);
-  h_ThePhicut[0]->SetLabelSize(0.1, "XY");
-  h_ThePhicut[0]->SetTitleSize(0.05, "XY");
-  h_ThePhicut[0]->Draw("colz");
-  c5->cd(2);
-  h_ThePhicut[1]->SetLabelSize(0.1, "XY");
-  h_ThePhicut[1]->SetTitleSize(0.05, "XY");
-  h_ThePhicut[1]->Draw("colz");
-  c5->cd(3);
-  h_ThePhicut[2]->SetLabelSize(0.1, "XY");
-  h_ThePhicut[2]->SetTitleSize(0.05, "XY");
-  h_ThePhicut[2]->Draw("colz");  
 
   TCanvas *c40 = new TCanvas("c40","Delta Beta Vs Missing mass and Invariantmass", 900, 500);
   c40->Divide(3,1);
@@ -893,6 +1050,52 @@ void NameLinesInv(double Average, double  Sigma, int NSig, int Binning){
     NSig-=Binning;
 
   }
+}
+
+// TPaveState Modified
+void TPaveStateModify(TH1 *h1,TH1 *h2){
+  gStyle->SetOptStat("me");
+  gPad->Update();
+
+  TPaveStats *ps = (TPaveStats*)h1->FindObject("stats");
+  ps->SetName("mystats");
+  TList *listOfLines = ps->GetListOfLines();
+  ostringstream streamObj1;
+  streamObj1 << std::fixed;
+  streamObj1 << std::setprecision(0);
+  streamObj1 << h2->GetEntries();
+  string StrObj1 = streamObj1.str();
+
+
+  ostringstream streamObj2;
+  streamObj2 << std::fixed;
+  streamObj2 << std::setprecision(3);
+  streamObj2 << h2->GetMean();
+  string StrObj2 = streamObj2.str();
+
+  string EntriesCut = "Entries = " + StrObj1;
+  string MeanCut = "Mean = " + StrObj2;
+  TLatex *myt = new TLatex(0,0,EntriesCut.c_str());
+  TLatex *MeanCutTex = new TLatex(0,0,MeanCut.c_str());
+  myt->SetTextFont(42);
+  myt->SetTextSize(0.04);
+  myt->SetTextColor(kRed);
+  listOfLines->Add(myt);
+
+  MeanCutTex->SetTextFont(42);
+  MeanCutTex->SetTextSize(0.04);
+  MeanCutTex->SetTextColor(kRed);
+  listOfLines->Add(MeanCutTex);
+
+  
+  ps->SetTextSize(0.04);
+  ps->SetX1NDC(0.6);
+  ps->SetY1NDC(0.75);
+  h1->SetStats(0);
+  gPad->Modified();
+
+  gStyle->SetOptStat("e");
+  
 }
 
 vector<double> HistoBinning(TH1 *PrincipalHisto,
