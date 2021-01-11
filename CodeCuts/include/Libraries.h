@@ -3,6 +3,7 @@
 
 #include "../src/DataEvent.cpp"
 #include "MaxLike.h"
+//#include "TPaveStateModify.h"
 
 #include "TROOT.h"
 #include "TH1F.h"
@@ -14,6 +15,8 @@
 #include "TLine.h"
 #include "TPad.h"
 #include "TStyle.h"
+#include "TPaveStats.h"
+#include "TLatex.h"
 #include "TGraphErrors.h"
 #include "TProfile.h"
 #include "TEllipse.h"
@@ -29,6 +32,7 @@
 
 #include <sstream>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <cstdlib>
 #include <cstdio>
