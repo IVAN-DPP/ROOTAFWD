@@ -111,22 +111,22 @@ public:
 
 void Histograms::DoHistograms(){
 
-  h_Vertex = new TH1F("h_Vertex","Vertex; distance [cm]; counts",200,0,-40);
+  h_Vertex = new TH1F("h_Vertex","; Distancia [cm]; Conteo",200,0,-40);
 
   
   
   //------------------ Delta Beta ---------------//
   
-  h_DeltaBe[0]=new TH2F("h_DeltaBe_0","Proton ;p [GeV/c];#Delta #beta;",200, 0, 3, 200, -0.2, 0.2);
-  h_DeltaBe[1]=new TH2F("h_DeltaBe_1","Kaon ;p [GeV/c];#Delta #beta;",200, 0, 3, 200, -0.15, 0.15);
-  h_DeltaBe[2]=new TH2F("h_DeltaBe_2","Pion ;p [GeV/c];#Delta #beta;",200, 0, 3, 200, -0.2, 0.2);
+  h_DeltaBe[0]=new TH2F("h_DeltaBe_0"," ;p [GeV/c];#Delta #beta;",200, 0, 3, 200, -0.2, 0.2);
+  h_DeltaBe[1]=new TH2F("h_DeltaBe_1"," ;p [GeV/c];#Delta #beta;",200, 0, 3, 200, -0.15, 0.15);
+  h_DeltaBe[2]=new TH2F("h_DeltaBe_2"," ;p [GeV/c];#Delta #beta;",200, 0, 3, 200, -0.2, 0.2);
 
   
-  h_BeVSp[0]=new TH2F("h_BeVSp_0","Proton ;p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
-  h_BeVSp[1]=new TH2F("h_BeVSp_1","Kaon ;p [GeV/c];#beta;",200, 0, 3, 200, 0, 1);
-  h_BeVSp[2]=new TH2F("h_BeVSp_2","Pion ;p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
+  h_BeVSp[0]=new TH2F("h_BeVSp_0"," ;p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
+  h_BeVSp[1]=new TH2F("h_BeVSp_1"," ;p [GeV/c];#beta;",200, 0, 3, 200, 0, 1);
+  h_BeVSp[2]=new TH2F("h_BeVSp_2"," ;p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
 
-  h_BeVSpT = new TH2F("h_BeVSpT","Particles ;Momentum (p) [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
+  h_BeVSpT = new TH2F("h_BeVSpT"," ; p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
 
   //--> Beta vs P with PDG MASSES
 
@@ -155,48 +155,48 @@ void Histograms::DoHistograms(){
   //-------- Delta Beta Cuts ------- //
 
   
-  h_DeltaBecut[0] = new TH2F("h_DeltaBe_0cut","Proton ;p [GeV/c];#Delta #beta;",200, 0, 3, 200, -0.2, 0.2);
-  h_DeltaBecut[1] = new TH2F("h_DeltaBe_1cut","Kaon ;p [GeV/c];#Delta #beta;",200, 0, 3, 200, -0.15, 0.15);
-  h_DeltaBecut[2] = new TH2F("h_DeltaBe_2cut","Pion ;p [GeV/c];#Delta #beta;",200, 0, 3, 200, -0.2, 0.2);
+  h_DeltaBecut[0] = new TH2F("h_DeltaBe_0cut"," ;p [GeV/c];#Delta #beta;",200, 0, 3, 200, -0.2, 0.2);
+  h_DeltaBecut[1] = new TH2F("h_DeltaBe_1cut"," ;p [GeV/c];#Delta #beta;",200, 0, 3, 200, -0.15, 0.15);
+  h_DeltaBecut[2] = new TH2F("h_DeltaBe_2cut"," ;p [GeV/c];#Delta #beta;",200, 0, 3, 200, -0.2, 0.2);
   
-  h_BeVSpcut[0] = new TH2F("h_BeVSp_0cut","Proton ;p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
-  h_BeVSpcut[1] = new TH2F("h_BeVSp_1cut","Kaon ;p [GeV/c];#beta;",200, 0, 3, 200, 0, 1);
-  h_BeVSpcut[2] = new TH2F("h_BeVSp_2cut","Pion ;p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
+  h_BeVSpcut[0] = new TH2F("h_BeVSp_0cut"," ;p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
+  h_BeVSpcut[1] = new TH2F("h_BeVSp_1cut"," ;p [GeV/c];#beta;",200, 0, 3, 200, 0, 1);
+  h_BeVSpcut[2] = new TH2F("h_BeVSp_2cut"," ;p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
 
   //-----Correlation Theta-Phi, ----------//
 
-  h_ThePhi[0] = new TH2F("h_ThePhi_proton","Proton ;#theta #circ; #phi #circ;",200, -180, 180, 200, 0, 150);
-  h_ThePhi[1] = new TH2F("h_ThePhi_kaon","Kaon ;#theta #circ; #phi #circ;",200,  -180, 180, 200, 0, 150);
-  h_ThePhi[2] = new TH2F("h_ThePhi_pion","Pion ;#theta #circ; #phi #circ;", 200,  -180, 180, 200, 0, 150);
+  h_ThePhi[0] = new TH2F("h_ThePhi_proton"," ;#theta #circ; #phi #circ;",200, -180, 180, 200, 0, 150);
+  h_ThePhi[1] = new TH2F("h_ThePhi_kaon"," ;#theta #circ; #phi #circ;",200,  -180, 180, 200, 0, 150);
+  h_ThePhi[2] = new TH2F("h_ThePhi_pion"," ;#theta #circ; #phi #circ;", 200,  -180, 180, 200, 0, 150);
 
   //-------------Fiducial cuts-------------------------//
 
   
-  h_ThePhicut[0] = new TH2F("h_ThePhi_protoncut","Proton ;#theta #circ; #phi #circ;",200, -180, 180, 200, 0, 150);
-  h_ThePhicut[1] = new TH2F("h_ThePhi_kaoncut","Kaon ; #theta #circ; #phi #circ;",200,  -180, 180, 200, 0, 150);
-  h_ThePhicut[2] = new TH2F("h_ThePhi_pioncut","Pion ; #theta #circ; #phi #circ", 200,  -180, 180, 200, 0, 150);
+  h_ThePhicut[0] = new TH2F("h_ThePhi_protoncut"," ;#theta #circ; #phi #circ;",200, -180, 180, 200, 0, 150);
+  h_ThePhicut[1] = new TH2F("h_ThePhi_kaoncut"," ; #theta #circ; #phi #circ;",200,  -180, 180, 200, 0, 150);
+  h_ThePhicut[2] = new TH2F("h_ThePhi_pioncut"," ; #theta #circ; #phi #circ", 200,  -180, 180, 200, 0, 150);
 
 
   
   //------------------ Photons, Delta T  ------------------ // 
   
-  h_DeltaTall[0]=new TH1F("h_DeltaTall_0","Kaon ;#Delta t [ns];counts;", 200, -10, 10);
-  h_DeltaTall[1]=new TH1F("h_DeltaTall_1","Pion ;#Delta t [ns];counts;", 200, -10, 10);
+  h_DeltaTall[0]=new TH1F("h_DeltaTall_0"," ;#Delta t [ns];Conteo;", 200, -10, 10);
+  h_DeltaTall[1]=new TH1F("h_DeltaTall_1"," ;#Delta t [ns];Conteo;", 200, -10, 10);
 
 
-  h_DeltaTallvsp[0]=new TH2F("h_DeltaTallvsp_0","Kaon ;p [GeV/c];#Delta t [ns];", 200, 0, 3, 200, -10, 10);
-  h_DeltaTallvsp[1]=new TH2F("h_DeltaTallvsp_1","Pion ;p [GeV/c];#Delta t [ns];", 200, 0, 3, 200, -10, 10);
+  h_DeltaTallvsp[0]=new TH2F("h_DeltaTallvsp_0"," ;p [GeV/c];#Delta t [ns];", 200, 0, 3, 200, -10, 10);
+  h_DeltaTallvsp[1]=new TH2F("h_DeltaTallvsp_1"," ;p [GeV/c];#Delta t [ns];", 200, 0, 3, 200, -10, 10);
 
   //------------Delta T with Cuts ----------- //
   
-  h_DeltaT[0]=new TH1F("h_DeltaT_0","Kaon ;#Delta t [ns];counts;", 200, -10, 10);
-  h_DeltaT[1]=new TH1F("h_DeltaT_1","Pion ;#Delta t [ns];counts;", 200, -10, 10);
+  h_DeltaT[0]=new TH1F("h_DeltaT_0"," ;#Delta t [ns];Conteo;", 200, -10, 10);
+  h_DeltaT[1]=new TH1F("h_DeltaT_1"," ;#Delta t [ns];Conteo;", 200, -10, 10);
 
   //--------------- Energy loss ----------- //
 
-  h_eloss[0]=new TH1F("h_eloss_0","Proton; eloss [MeV];counts;",50, 0, 100);
-  h_eloss[1]=new TH1F("h_eloss_1","Kaon; eloss [MeV];counts;",50, 0, 20);
-  h_eloss[2]=new TH1F("h_eloss_2","Pion; eloss [MeV];counts;",50, 0, 20);
+  h_eloss[0]=new TH1F("h_eloss_0","; Energ#tilde{i}a [MeV];Conteo;",50, 0, 100);
+  h_eloss[1]=new TH1F("h_eloss_1","; Enegr#tilde{i}a [MeV];Conteo;",50, 0, 20);
+  h_eloss[2]=new TH1F("h_eloss_2","; Energ#tilde{i}a [MeV];Conteo;",50, 0, 20);
 
   //---- Get Coherent Edge ---- //
 
@@ -207,42 +207,42 @@ void Histograms::DoHistograms(){
   //-------------- Reconstruction --------- //
 
   h_MissingMass = new TH1F("h_missingmass",
-			   "Missing mass Neutron; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; counts",
+			   "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Conteo",
 			   100, 0.7, 1.2);
   
   h_MissingMass_kaonpion = new TH1F("h_missingmass_kaonpion",
-				    "Missing mass Neutron ; #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]; counts",
+				    "; #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]; Conteo",
 				    100, 0.7, 1.2);
 
   h_MissingMasscut = new TH1F("h_missingmasscut",
-			      "Missing mass Neutron; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; counts",
+			      "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Conteo",
 			      100, 0.7, 1.2);
   
   h_MissingMass_kaonpioncut = new TH1F("h_missingmass_kaonpioncut",
-				       "Missing mass Neutron ; #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]; counts",
+				       " ; #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]; Conteo",
 				       100, 0.7, 1.2);
 
   
   h_MissingMass_vsMissingMasskaonpion[0] = new TH2F("MissingMass_correlation",
-						    "Missing Mass Correlation; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}];  #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]",
+						    "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}];  #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]",
 						    100, 0.7, 1.2, 100, 0.7, 1.2);
 
   h_MissingMass_vsMissingMasskaonpion[1] = new TH2F("MissingMass_correlation_Cut",
-						    "Missing Mass Correlation; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}];  #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]",
+						    "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}];  #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]",
 						    100, 0.7, 1.2, 100, 0.7, 1.2);
   
   h_MissingP[0] = new TH1F("h_missingpSigma",
-			   "Missing momentum Neutron; Missing momentum [GeV/c]; counts",
+			   "; Missing momentum [GeV/c]; Conteo",
 			   100, 0.0, 1.);
   h_MissingP[1] = new TH1F("h_missingpLambda",
-			   "Missing momentum Neutron; Missing momentum [GeV/c]; counts",
+			   "; Missing momentum [GeV/c]; Conteo",
 			   100, 0.0, 1.);
 
   h_MissingPcut[0] = new TH1F("h_missingpcutSigma",
-			      "Missing momentum Neutron; Missing momentum [GeV/c]; counts",
+			      "; Missing momentum [GeV/c]; Conteo",
 			      100, 0.0, 1.5);
   h_MissingPcut[1] = new TH1F("h_missingpcutLambda",
-			      "Missing momentum Neutron; Missing momentum [GeV/c]; counts",
+			      "; Missing momentum [GeV/c]; Conteo",
 			      100, 0.0, 1.5);
   
 
@@ -250,50 +250,50 @@ void Histograms::DoHistograms(){
 
   
   h_MissingPvsMass[0] = new TH2F("h_missingpvsmSigma",
-				 "Missing Momentum Vs Missing Mass (Lambda cut); #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Missing Momentum (p) [GeV/c]",
+				 "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Missing Momentum (p) [GeV/c]",
 				 100, 0.7, 1.2, 100, 0.0, 1.5);
 
   h_MissingPvsMass[1] = new TH2F("h_missingpvsmLambda",
-				 "Missing Momentum Vs Missing Mass (Sigma cut); #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Missing Momentum (p) [GeV/c]",
+				 "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Missing Momentum (p) [GeV/c]",
 				 100, 0.7, 1.2, 100, 0.0, 1.5);
 
 
   // ------- This aren't important -------- //
   h_MissingMassvsSigmaMass = new TH2F("h_missingmvsSigma",
-				      "Invariant Mass Sigma vs Missing Mass Neutron (Kaon); Invariant Mass (#pi^{-} n) [GeV/c^{2}]; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]",
+				      "; Masa Invariante (#pi^{-} n) [GeV/c^{2}]; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]",
 				      100,1.0,1.5, 100, 0.7, 1.2);
   
   h_MissingPvsSigmaMass = new TH2F("h_missingPvsSigma",
-				   "Invariant Mass Sigma vs Missing Momentum Neutron (Kaon); Mass [GeV/c^{2}]; p [GeV/c] ",
+				   "; Masa [GeV/c^{2}]; p [GeV/c] ",
 				   100,1.0,1.5, 100, 0.0, 1.5);
   
   // ----------------------------------- //
 
   h_InvariantMass = new TH1F("h_InvariantMass",
-			     "Invariant mass ; Mass [GeV/c^{2}]; counts ",
+			     "; Masa [GeV/c^{2}]; Conteo ",
 			     100, 1.0, 1.5);
   
   
   h_InvariantMasscut[0] = new TH1F("h_InvariantMasscut3Sig",
-				   "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
+				   "; Masa [GeV/c^{2}]; Conteo ",
 				   100, 1.0, 1.5);
 
   h_InvariantMasscut[1] = new TH1F("h_InvariantMasscut4Sig",
-				   "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
+				   "; Masa [GeV/c^{2}]; Conteo ",
 				   100, 1.0, 1.5);
 
   h_InvariantMasscut[2] = new TH1F("h_InvariantMasscut5Sig",
-				   "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
+				   "; Masa [GeV/c^{2}]; Conteo ",
 				   100, 1.0, 1.5);
   
   h_InvariantMasscut[3] = new TH1F("h_InvariantMasscut_ACP",
-				   "Invariant mass Sigma With Cuts; Mass [GeV/c^{2}]; counts ",
+				   "; Masa [GeV/c^{2}]; Conteo ",
 				   100, 1.0, 1.5);
   
   //-------- Lambda and Lambda Fit ------ //
   
   h_LambdaMass = new TH1F("h_LambdaMass",
-			  "Invariant mass Lambda With Cuts; Mass [GeV/c^{2}]; counts ",
+			  "; Masa [GeV/c^{2}]; Conteo ",
 			  100, 1.08, 1.16);
 
   lamdaMassFit = new TF1("lamdaMassFit","gaus",1.08,1.16);
