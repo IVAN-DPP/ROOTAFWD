@@ -1,21 +1,20 @@
-#include "include/Libraries.h"
-
 #ifndef HISTOGRAMS_C
 #define HISTOGRAMS_C
+
+#include "include/Libraries.h"
+#include "src/TPaveStateModify.C"
 
 using namespace std;
 
 //Friends Functions
 void LinesPTCuts();
 void NameLinesInv(double, double, int, int);
-void TPaveStateModify(TH1*,TH1*);
 vector<double> HistoBinning(TH1 *, int, double, double, double,double);
 Double_t fitf(Double_t *,Double_t *);
 class Histograms{
   //Friends Functions
   friend void LinesPTCuts();       //Functions for do the lines in Theta-Phi Correlations
   friend void NameLinesInv(double, double, int, int);
-  friend void TPaveStateModify(TH1*,TH1*);
   friend vector<double> HistoBinning(TH1 *, int, double, double, double,double); //Function for binning the graphic Cos(Kaon.Theta)
   friend Double_t fitf(Double_t *,Double_t *); //Function to asymmetry compute
   
@@ -740,80 +739,75 @@ void Histograms::DoCanvas(){
   //----------- MM After Cuts for MM correlation ------- //
 
 
-  //------ Kaon ------//
- 
+  //------ Kaon ------//  
   
   TCanvas *c0MMC=new TCanvas("c0MMC","Missing mass", 1200, 500);
   c0MMC->cd(1);
-  
   h_MissingMass->SetLabelSize(0.045, "XY");
   h_MissingMass->SetTitleSize(0.043, "XY");
   h_MissingMass->Draw();
-  TPaveStateModify(h_MissingMass,h_MissingMasscut);
-  // gPad->Update();
-
-  // TPaveStats *ps = (TPaveStats*)h_MissingMass->FindObject("stats");
-  // ps->SetName("mystats");
-  // TList *listOfLines = ps->GetListOfLines();
-
-  // ostringstream streamObj;
-  // streamObj << std::fixed;
-  // streamObj << std::setprecision(0);
-  // streamObj << h_MissingMasscut->GetEntries();
-  // string StrObj = streamObj.str();
-
-  // string EntriesCut = "Entries = " + StrObj;
-  // TLatex *myt = new TLatex(0,0,EntriesCut.c_str());
-  // myt ->SetTextFont(42);
-  // //myt ->SetTextSize(0.02);
-  // myt ->SetTextColor(kRed);
-  // listOfLines->Add(myt);
-
-  // ps->SetTextSize(0.1);
-  // h_MissingMass->SetStats(0);
-  
   h_MissingMasscut->SetFillColor(kRed-7);
+  vector<TH1*> LHMM;
+  LHMM.push_back(h_MissingMass);
+  LHMM.push_back(h_MissingMasscut);
+  gStyle->SetOptStat(110);
+  TPaveStateModify MMC0(h_MissingMass,h_MissingMasscut);
+  MMC0.BoxPosition(1.05, h_MissingMass->GetMaximum()/2, 1.2, h_MissingMass->GetMaximum()+100);
+  MMC0.BoxTextSize(0.045);
+  MMC0.BoxOptStat("em",2);
+  MMC0.SaveChanges();
   h_MissingMasscut->Draw("same");
-  
-  c0MMC->SaveAs("imagenes/MissingMass_Kaon.eps");
 
+  c0MMC->SaveAs("imagenes/MissingMass_Kaon.eps");
+  
   //------ Pion + ------//
+
+  gStyle->SetOptStat("me");
+   
   TCanvas *c1MMC=new TCanvas("c1MMC","Missing mass", 1200, 500);
   c1MMC->cd(1);
   h_MissingMass_kaonpion->SetLabelSize(0.045, "XY");
   h_MissingMass_kaonpion->SetTitleSize(0.043, "XY");
   h_MissingMass_kaonpion->Draw();
-  TPaveStateModify(h_MissingMass_kaonpion,h_MissingMass_kaonpioncut);
   h_MissingMass_kaonpioncut->SetFillColor(kRed-7);
+  TPaveStateModify MMC1(h_MissingMass_kaonpion,h_MissingMass_kaonpioncut);
+  MMC1.BoxOptStat("em");
+  MMC1.BoxSize(0.7,0.7);
+  MMC1.BoxPosition(0.75,(h_MissingMass_kaonpion->GetMaximum()/2),0.85,h_MissingMass_kaonpion->GetMaximum()+100);
+  MMC1.BoxTextSize(0.04);
+  MMC1.SaveChanges();
   h_MissingMass_kaonpioncut->Draw("same");
 
   c1MMC->SaveAs("imagenes/MissingMass_Pion.eps");
 
+  //------------ Missing Momentum -----------------//
   
-  TCanvas *c310=new TCanvas("c31","Missing Momentum", 1450, 500);
-  c310->cd(1);
+  TCanvas *MMP=new TCanvas("MMP","Missing Momentum", 1450, 500);
+  MMP->cd(1);
   TLine *MMPL = new TLine(0.2,0,0.2,4300);
   MMPL->SetLineWidth(2);
   MMPL->SetLineColor(kBlue);
   h_MissingP[0]->SetLabelSize(0.053, "XY");
   h_MissingP[0]->SetTitleSize(0.047, "XY");
-  TLine *LineM= new TLine( 0.2, .0, 0.2 ,72.0);
+  TLine *LineM= new TLine( 0.2, .0, 0.2 ,h_MissingP[0]->GetMaximum());
   LineM->SetLineWidth(2);
   LineM->SetLineColor(2);
   h_MissingP[0]->Draw();
+  gStyle->SetOptStat("e");
   h_MissingP[1]->SetLabelSize(0.053, "XY");
   h_MissingP[1]->SetTitleSize(0.047, "XY");
   h_MissingP[1]->SetFillColor(kRed-7);
+  TPaveStateModify MMPStat(h_MissingP[0],h_MissingP[1]);
+  MMPStat.BoxOptStat("e");
+  MMPStat.BoxPosition(0.75,0.85*h_MissingP[0]->GetMaximum(),1,h_MissingP[0]->GetMaximum());
+  MMPStat.BoxTextSize(0.04);
+  MMPStat.SaveChanges();
   h_MissingP[1]->Draw("same");
   LineM->Draw("same");
-  /*
-    h_MissingPcut->SetFillColor(kBlue-7);
-    h_MissingPcut->Draw("same");
-    MMPL->Draw("same");
-  */
-  c310->SaveAs("imagenes/MissingMomentum.eps");
+
+  MMP->SaveAs("imagenes/MissingMomentum.eps");
   
-  
+
   
   TCanvas *c312=new TCanvas("c312","Missing Momentum vs Missing Mass", 1450, 500);
   c312->Divide(2,1);
@@ -831,58 +825,66 @@ void Histograms::DoCanvas(){
   c312->SaveAs("imagenes/MissingMomentumCorrelation.eps");
 
 
-  //-----------------Comparación de sigmas------------------//
-  TCanvas *c32=new TCanvas("c32","Invariant mass", 900, 500);
-  c32->Divide(2,1);
-  c32->cd(1);
-  /*
-    TLine *LAML1= new TLine( 1.108, 0., 1.108, 4100);
-    TLine *LAML2= new TLine( 1.124, 0., 1.124 ,4100);
-    TLine *LAML3= new TLine( 1.11, 0., 1.11, 4100);
-    TLine *LAML4= new TLine( 1.132, 0., 1.132 ,4100);
-    TLine *LAML5= new TLine( 1.092, 0., 1.092, 4100);
-    TLine *LAML6= new TLine( 1.14, 0., 1.14 ,4100);
-    LAML1->SetLineWidth(2);
-    LAML2->SetLineWidth(2);
-    LAML3->SetLineWidth(2);
-    LAML4->SetLineWidth(2);
-    LAML5->SetLineWidth(2);
-    LAML6->SetLineWidth(2);
-    LAML1->SetLineColor(kGreen);
-    LAML2->SetLineColor(kGreen);
-    LAML3->SetLineColor(kBlue);
-    LAML4->SetLineColor(kBlue);
-    LAML5->SetLineColor(kMagenta);
-    LAML6->SetLineColor(kMagenta);
-  */
+  //-----------------Std Desviation Comparation------------------//
+
+  //------ Lambda -------//
+  
+  TCanvas *STDC = new TCanvas("STDC","Invariant mass", 900, 500);
+  STDC->cd(1);
   h_LambdaMass->SetLabelSize(0.045, "XY");
   h_LambdaMass->SetTitleSize(0.043, "XY");
   h_LambdaMass->Draw();
   h_LambdaMass->Fit(lamdaMassFit);
+  gStyle->SetOptFit(111);
   lamdaMassFit->Draw("same");
-  // LAML1->Draw("same");
-  // LAML2->Draw("same");
-  // LAML3->Draw("same");
-  // LAML4->Draw("same");
-  // LAML5->Draw("same");
-  // LAML6->Draw("same");
   NameLinesInv(1.116, 0.002, 12, 4);
-  
-  c32->cd(2);
+
+  STDC->SaveAs("imagenes/InvariantMassComparation_Lambda.eps");
+
+  //----- Sigma ------//
+
+  TCanvas *IVM = new TCanvas("IVM","Invariant mass", 900, 500);
+  IVM->cd(1);
   h_InvariantMass->SetLabelSize(0.045, "XY");
   h_InvariantMass->SetTitleSize(0.043, "XY");
   h_InvariantMass->Draw();
+  gStyle->SetOptStat("me");
   h_InvariantMasscut[0]->SetFillColor(kGreen-7);
   h_InvariantMasscut[1]->SetFillColor(kBlue-7);
   h_InvariantMasscut[2]->SetFillColor(kMagenta-7);
+  vector<TH1*> IVMHistos;
+  IVMHistos.push_back(h_InvariantMasscut[0]);
+  IVMHistos.push_back(h_InvariantMasscut[1]);
+  IVMHistos.push_back(h_InvariantMasscut[2]);
+  TPaveStateModify IVMStat(h_InvariantMass,IVMHistos);
+  IVMStat.BoxOptStat("em", 2);
+  IVMStat.BoxTextSize(0.04);
+  IVMStat.BoxPosition(1.35,0.4*h_InvariantMass->GetMaximum(),1.5,h_InvariantMass->GetMaximum());
+  IVMStat.SaveChanges();
   h_InvariantMasscut[0]->Draw("same");
   h_InvariantMasscut[1]->Draw("same");
   h_InvariantMasscut[2]->Draw("same");
  
   
-  c32->SaveAs("imagenes/InvariantMass.eps");
+  IVM->SaveAs("imagenes/InvariantMassComparation_Sigma.eps");
+
+  //------------ Final Invarian Mass ---------------//
+  
+  TCanvas *IVMF = new TCanvas("IVMF","Invariant mass", 900, 500);
+  IVMF->cd(1);
+  h_InvariantMass->SetLabelSize(0.045, "XY");
+  h_InvariantMass->SetTitleSize(0.043, "XY");
+  h_InvariantMass->Draw();
+  gStyle->SetOptStat("me");
+  h_InvariantMasscut[3]->SetFillColor(kGreen-7);
+  h_InvariantMasscut[3]->Draw("same");
+ 
+  
+  IVMF->SaveAs("imagenes/InvariantMassFinall_Sigma.eps");
 
 
+  //------------- Others ---------------- //
+  
   TCanvas *c40 = new TCanvas("c40","Delta Beta Vs Missing mass and Invariantmass", 900, 500);
   c40->Divide(3,1);
   c40->cd(1);
@@ -907,6 +909,8 @@ void Histograms::DoCanvas(){
 
   c41->SaveAs("imagenes/CorrelacionesXSIAL.eps");
 
+  //-----------
+  
   TCanvas *c42 = new TCanvas("c42","Theta Kaon Boost", 1450, 500);
   //Principalhisto,Parts,Firstpoint,step,error,Timeofbreak
   vector<double> Points(3);
@@ -1050,52 +1054,6 @@ void NameLinesInv(double Average, double  Sigma, int NSig, int Binning){
     NSig-=Binning;
 
   }
-}
-
-// TPaveState Modified
-void TPaveStateModify(TH1 *h1,TH1 *h2){
-  gStyle->SetOptStat("me");
-  gPad->Update();
-
-  TPaveStats *ps = (TPaveStats*)h1->FindObject("stats");
-  ps->SetName("mystats");
-  TList *listOfLines = ps->GetListOfLines();
-  ostringstream streamObj1;
-  streamObj1 << std::fixed;
-  streamObj1 << std::setprecision(0);
-  streamObj1 << h2->GetEntries();
-  string StrObj1 = streamObj1.str();
-
-
-  ostringstream streamObj2;
-  streamObj2 << std::fixed;
-  streamObj2 << std::setprecision(3);
-  streamObj2 << h2->GetMean();
-  string StrObj2 = streamObj2.str();
-
-  string EntriesCut = "Entries = " + StrObj1;
-  string MeanCut = "Mean = " + StrObj2;
-  TLatex *myt = new TLatex(0,0,EntriesCut.c_str());
-  TLatex *MeanCutTex = new TLatex(0,0,MeanCut.c_str());
-  myt->SetTextFont(42);
-  myt->SetTextSize(0.04);
-  myt->SetTextColor(kRed);
-  listOfLines->Add(myt);
-
-  MeanCutTex->SetTextFont(42);
-  MeanCutTex->SetTextSize(0.04);
-  MeanCutTex->SetTextColor(kRed);
-  listOfLines->Add(MeanCutTex);
-
-  
-  ps->SetTextSize(0.04);
-  ps->SetX1NDC(0.6);
-  ps->SetY1NDC(0.75);
-  h1->SetStats(0);
-  gPad->Modified();
-
-  gStyle->SetOptStat("e");
-  
 }
 
 vector<double> HistoBinning(TH1 *PrincipalHisto,
