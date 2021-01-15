@@ -20,7 +20,7 @@ protected:
   double K;
   double s;
   double S;
-  double *i         = NULL;
+  double i;
   double o;
   double u;
   double r;

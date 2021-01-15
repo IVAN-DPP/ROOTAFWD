@@ -28,9 +28,9 @@ void TPaveStateModify::BoxOptStatActive(int it){
   K = Histos.at(it)->GetKurtosis(11);
   s = Histos.at(it)->GetSkewness();
   S = Histos.at(it)->GetSkewness(11);
-  i = Histos.at(it)->GetIntegral();
-  o;
-  u;
+  i = Histos.at(it)->Integral();
+  o = abs(Histos.at(it)->Integral(Histos.at(it)->GetNbinsX(),Histos.at(it)->GetNbinsX()+1));
+  u = abs(Histos.at(it)->Integral(0,Histos.at(it)->GetNbinsX())-Histos.at(it)->Integral());
   r = Histos.at(it)->GetRMS();
   R = Histos.at(it)->GetRMSError();;
   m = Histos.at(it)->GetMean();
@@ -114,9 +114,49 @@ void TPaveStateModify::BoxOptStat(string TS,int Precision){
 	myt ->SetTextColor(Histos.at(it)->GetFillColor());
 	ListText->Add(myt);
     
-      case 'i': break;
-      case 'o': break;
-      case 'u': break;
+
+      case 'i':
+	
+	Obj << int(i);
+	StrObj = Obj.str();
+	
+	STR = "Integral = " + StrObj;
+	myt = new TLatex(0,0,STR.c_str());
+	myt ->SetTextFont(42);
+	myt ->SetTextSize(TextSize);
+	myt ->SetTextColor(Histos.at(it)->GetFillColor());
+	ListText->Add(myt);
+	
+	break;
+	
+      case 'o':
+	
+	Obj << int(o);
+	StrObj = Obj.str();
+
+	STR = "Overflow = " + StrObj;
+	myt = new TLatex(0,0,STR.c_str());
+	myt ->SetTextFont(42);
+	myt ->SetTextSize(TextSize);
+	myt ->SetTextColor(Histos.at(it)->GetFillColor());
+	ListText->Add(myt);
+	
+	break;
+	
+      case 'u':
+	
+	Obj << int(u);
+	StrObj = Obj.str();
+
+	STR = "Underflow = " + StrObj;
+	myt = new TLatex(0,0,STR.c_str());
+	myt ->SetTextFont(42);
+	myt ->SetTextSize(TextSize);
+	myt ->SetTextColor(Histos.at(it)->GetFillColor());
+	ListText->Add(myt);
+	
+	break;
+
       case 'r':
     
 	Obj << std::fixed;
