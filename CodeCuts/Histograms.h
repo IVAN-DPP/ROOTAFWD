@@ -664,6 +664,7 @@ void Histograms::DoCanvas(){
   c3TPC->SaveAs("imagenes/Fiduciarycuts.eps");
 
   
+
   //-------------------- Energy Loss -------------------- //
 
   gStyle->SetStatY(0.9);
@@ -741,6 +742,7 @@ void Histograms::DoCanvas(){
 
   //------ Kaon ------//  
   
+
   TCanvas *c0MMC=new TCanvas("c0MMC","Missing mass", 1200, 500);
   c0MMC->cd(1);
   h_MissingMass->SetLabelSize(0.045, "XY");
@@ -872,11 +874,8 @@ void Histograms::DoCanvas(){
   
   TCanvas *IVMF = new TCanvas("IVMF","Invariant mass", 900, 500);
   IVMF->cd(1);
-  h_InvariantMass->SetLabelSize(0.045, "XY");
-  h_InvariantMass->SetTitleSize(0.043, "XY");
-  h_InvariantMass->Draw();
+
   gStyle->SetOptStat("me");
-  h_InvariantMasscut[3]->SetFillColor(kGreen-7);
   h_InvariantMasscut[3]->Draw("same");
  
   
