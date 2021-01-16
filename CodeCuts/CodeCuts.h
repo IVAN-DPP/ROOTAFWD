@@ -64,10 +64,17 @@ void Codecuts::CodeCuts(){
       h_DeltaBe[i]->Fill(myDataList->getEVNT_track(i).Rho(),deltbeta[i]);
       h_BeVSp[i]->Fill(myDataList->getEVNT_track(i).Rho(),myDataList->getEVNT_bem(i));
       h_BeVSpT->Fill(myDataList->getEVNT_track(i).Rho(),myDataList->getEVNT_bem(i));
+
+      if(i == 0 || i == 1)
+	h_Mass[0]->Fill(myDataList->getEVNT_track(i).Mt());
+      else
+	h_Mass[1]->Fill(myDataList->getEVNT_track(i).Mt());
     }
-      
+
+    
+    
     //------------------ Delta Beta with Cuts ---------------//
-      
+    
     for (int i=0;i<myDataList->getNum_chargedtracks();i++){
       deltbetacut[i]=myDataList->getEVNT_track(i).Beta()-myDataList->getEVNT_bem(i);
 	

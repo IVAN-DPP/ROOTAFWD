@@ -21,7 +21,9 @@ class Histograms{
 protected:
 
   TH1F *h_Vertex                            = NULL;
-   
+
+  TH1F *h_Mass[2]                           = {};
+  
   TH2F *h_DeltaBe[3]                        = {};
   TH2F *h_BeVSp[3]                          = {};
   TH2F *h_BeVSpT                            = NULL;
@@ -113,7 +115,8 @@ void Histograms::DoHistograms(){
 
   h_Vertex = new TH1F("h_Vertex","; Distancia [cm]; Conteo",200,0,-40);
 
-  
+  h_Mass[0] = new TH1F("","; Masa [GeV/c^{2}]; Conteo",200,0,-1.5);
+  h_Mass[1] = new TH1F("","; Masa [GeV/c^{2}]; Conteo",200,0,-1.5);
   
   //------------------ Delta Beta ---------------//
   
@@ -366,6 +369,15 @@ void Histograms::DoCanvas(){
 
   c00->SaveAs("imagenes/Vertex.eps");
 
+  
+  TCanvas *cMt0 = new TCanvas("cMt0","Positive Particles",950,500);
+  cMt0->cd(1);
+  h_Mass[0]->Draw();
+  cMt0->SaveAs("imagenes/MassPos.eps");
+  TCanvas *cMt1 = new TCanvas("cMt1","Negative Paricles",950,500);
+  cMt1->cd(1);
+  h_Mass[1]->Draw();
+  cMt1->SaveAs("imagenes/MassNeg.eps");
   //---------------- Delta B With/out Cuts ----------------- //
 
   //------ Proton ------//
