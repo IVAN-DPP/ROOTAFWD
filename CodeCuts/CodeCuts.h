@@ -166,10 +166,24 @@ void Codecuts::CodeCuts(){
     //if (myDataList->getNumph_pi()!=1) continue;
       
     //--------------- Energy loss ----------- //
+    double CorrElossKa, CorrElossPr, CorrElossPi;
+
+    CorrElossKa=(myDataList->geteloss_track(0).Rho() - myDataList->getEVNT_track(0).Rho() )/myDataList->getEVNT_track(0).Rho();
+    CorrElossPr=(myDataList->geteloss_track(1).Rho() - myDataList->getEVNT_track(1).Rho() )/myDataList->getEVNT_track(1).Rho();
+    CorrElossPi=(myDataList->geteloss_track(2).Rho() - myDataList->getEVNT_track(2).Rho() )/myDataList->getEVNT_track(2).Rho();
       
-    h_eloss[0]->Fill(1000.0*(myDataList->geteloss_track(0).Rho() - myDataList->getEVNT_track(0).Rho() ));
-    h_eloss[1]->Fill(1000.0*(myDataList->geteloss_track(1).Rho() - myDataList->getEVNT_track(1).Rho() ));
-    h_eloss[2]->Fill(1000.0*(myDataList->geteloss_track(2).Rho() - myDataList->getEVNT_track(2).Rho() ));
+    h_eloss[0]->Fill(CorrElossKa);
+    h_eloss[1]->Fill(CorrElossPr);
+    h_eloss[2]->Fill(CorrElossPi);
+
+    h_Celoss[0]->Fill(myDataList->getEVNT_track(0).Rho(), CorrElossKa);
+    h_Celoss[1]->Fill(myDataList->getEVNT_track(1).Rho(), CorrElossPr);
+    h_Celoss[2]->Fill(myDataList->getEVNT_track(2).Rho(), CorrElossPi);
+    
+    
+
+
+    
 
     //--------------- Coh Edge -------------- //
     

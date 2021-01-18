@@ -37,6 +37,7 @@ protected:
   TH2F *h_DeltaTallvsp[2]                   = {};
   TH1F *h_DeltaT[2]                         = {};
   TH1F *h_eloss[3]                          = {};
+  TH2F *h_Celoss[3]                         = {};
   
   //--> Beta vs P with PDG MASSES  
 
@@ -194,9 +195,12 @@ void Histograms::DoHistograms(){
 
   //--------------- Energy loss ----------- //
 
-  h_eloss[0]=new TH1F("h_eloss_0","; Energ#tilde{i}a [MeV];Conteo;",50, 0, 100);
-  h_eloss[1]=new TH1F("h_eloss_1","; Enegr#tilde{i}a [MeV];Conteo;",50, 0, 20);
-  h_eloss[2]=new TH1F("h_eloss_2","; Energ#tilde{i}a [MeV];Conteo;",50, 0, 20);
+  h_eloss[0]=new TH1F("h_eloss_0","; (P_{eloss}-P_{med})/P_{med};Conteo;",50, 0, 0.05);
+  h_eloss[1]=new TH1F("h_eloss_1","; (P_{eloss}-P_{med})/P_{med};Conteo;",50, 0, .05);
+  h_eloss[2]=new TH1F("h_eloss_2","; (P_{eloss}-P_{med})/P_{med};Conteo",50, 0, .05);
+  h_Celoss[0]=new TH2F("h_Celoss_0"," ;P_{med} GeV/c];(P_{eloss}-P_{med})/P_{med};", 200, 0, 2.5, 200, 0, 0.25);
+  h_Celoss[1]=new TH2F("h_Celoss_1"," ;P_{med} [GeV/c];(P_{eloss}-P_{med})/P_{med};", 200, 0, 3, 200, 0, 0.15);
+  h_Celoss[2]=new TH2F("h_Celoss_2"," ;P_{med} [GeV/c];(P_{eloss}-P_{med})/P_{med};", 200, 0, 2.5, 200, 0, 0.25);
 
   //---- Get Coherent Edge ---- //
 
@@ -677,6 +681,13 @@ void Histograms::DoCanvas(){
   h_eloss[0]->Draw();
   c0EL->SaveAs("imagenes/Energyloss_Proton.eps");
 
+  TCanvas *c0CEL=new TCanvas("c0CEL","Correlation Energy loss", 1200, 500);
+  c0CEL->cd(1);
+  h_Celoss[0]->SetTitleSize(0.04, "XY");
+  h_Celoss[0]->Draw("colz");
+  c0CEL->SaveAs("imagenes/CorrelationEnergyloss_Proton.eps");
+
+ 
   //------ Kaon ------//
   
   TCanvas *c1EL=new TCanvas("c1EL","Delta Energy loss", 1200, 500);
@@ -685,12 +696,24 @@ void Histograms::DoCanvas(){
   h_eloss[1]->Draw();
   c1EL->SaveAs("imagenes/Energyloss_Kaon.eps");
 
+  TCanvas *c1CEL=new TCanvas("c1CEL","Correlation Energy loss", 1200, 500);
+  c1CEL->cd(1);
+  h_Celoss[1]->SetTitleSize(0.04, "XY");
+  h_Celoss[1]->Draw("colz");
+  c1CEL->SaveAs("imagenes/CorrelationEnergyloss_Kaon.eps");
+
   //------ Pion ------//
   
   TCanvas *c2EL=new TCanvas("c2EL","Delta Energy loss", 1200, 500);
   h_eloss[2]->SetTitleSize(0.04, "XY");
   h_eloss[2]->Draw();
   c2EL->SaveAs("imagenes/Energyloss_Pion.eps");
+
+  TCanvas *c2CEL=new TCanvas("c2CEL","Correlation Energy loss", 1200, 500);
+  c2CEL->cd(1);
+  h_Celoss[2]->SetTitleSize(0.04, "XY");
+  h_Celoss[2]->Draw("colz");
+  c2CEL->SaveAs("imagenes/CorrelationEnergyloss_Pion.eps");
 
   //---- Get Coherent Edge ---- //
 
