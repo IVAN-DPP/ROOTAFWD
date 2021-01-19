@@ -86,7 +86,8 @@ protected:
   //-----Correlation Theta-Phi, ----------//
  
   TH2F *h_ThePhi[3]                         = {};
-
+  TF1 *F_ThePhiProt[7]                      = {};
+  
   //--- Fiduciary cuts ---//
   TH2F *h_ThePhicut[3]                      = {};
   
@@ -168,16 +169,24 @@ void Histograms::DoHistograms(){
 
   //-----Correlation Theta-Phi, ----------//
 
-  h_ThePhi[0] = new TH2F("h_ThePhi_proton"," ;#theta #circ; #phi #circ;",200, -180, 180, 200, 0, 150);
-  h_ThePhi[1] = new TH2F("h_ThePhi_kaon"," ;#theta #circ; #phi #circ;",200,  -180, 180, 200, 0, 150);
-  h_ThePhi[2] = new TH2F("h_ThePhi_pion"," ;#theta #circ; #phi #circ;", 200,  -180, 180, 200, 0, 150);
+  h_ThePhi[0] = new TH2F("h_ThePhi_proton"," ; #phi #circ; #theta #circ;",200, -180, 180, 200, 0, 150);
+  h_ThePhi[1] = new TH2F("h_ThePhi_kaon"," ; #phi #circ;#theta #circ;",200,  -180, 180, 200, 0, 150);
+  h_ThePhi[2] = new TH2F("h_ThePhi_pion"," ; #phi #circ;#theta #circ;", 200,  -180, 180, 200, 0, 150);
 
+  F_ThePhiProt[0] = new TF1("F_ThePhiProt[0]","-1/(0.01*(TMath::Abs(x-180)-28))+10",150,180);
+  F_ThePhiProt[1] = new TF1("F_ThePhiProt[0]","-1/(0.01*(TMath::Abs(x-120)-28))+10",90,150);
+  F_ThePhiProt[2] = new TF1("F_ThePhiProt[0]","-1/(0.01*(TMath::Abs(x-60)-28))+10",30,90);
+  F_ThePhiProt[3] = new TF1("F_ThePhiProt[0]","-1/(0.01*(TMath::Abs(x-(0))-28))+10",-30,30);
+  F_ThePhiProt[4] = new TF1("F_ThePhiProt[0]","-1/(0.01*(TMath::Abs(x-(-60))-28))+10",-90,-30);
+  F_ThePhiProt[5] = new TF1("F_ThePhiProt[0]","-1/(0.01*(TMath::Abs(x-(-120))-28))+10",-157,-90);
+  F_ThePhiProt[6] = new TF1("F_ThePhiProt[0]","-1/(0.01*(TMath::Abs(x-(-180))-28))+10",-180,-143);
+  
   //-------------Fiducial cuts-------------------------//
 
   
-  h_ThePhicut[0] = new TH2F("h_ThePhi_protoncut"," ;#theta #circ; #phi #circ;",200, -180, 180, 200, 0, 150);
-  h_ThePhicut[1] = new TH2F("h_ThePhi_kaoncut"," ; #theta #circ; #phi #circ;",200,  -180, 180, 200, 0, 150);
-  h_ThePhicut[2] = new TH2F("h_ThePhi_pioncut"," ; #theta #circ; #phi #circ", 200,  -180, 180, 200, 0, 150);
+  h_ThePhicut[0] = new TH2F("h_ThePhi_protoncut"," ; #phi #circ;#theta #circ;",200, -180, 180, 200, 0, 150);
+  h_ThePhicut[1] = new TH2F("h_ThePhi_kaoncut"," ; #phi #circ;#theta #circ;",200,  -180, 180, 200, 0, 150);
+  h_ThePhicut[2] = new TH2F("h_ThePhi_pioncut"," ;  #phi #circ;#theta #circ;", 200,  -180, 180, 200, 0, 150);
 
 
   
@@ -579,6 +588,14 @@ void Histograms::DoCanvas(){
   c0TP->cd(1);
   h_ThePhi[0]->SetTitleSize(0.05, "XY");
   h_ThePhi[0]->Draw("colz");
+  F_ThePhiProt[0]->Draw("same");
+  F_ThePhiProt[1]->Draw("same");
+  F_ThePhiProt[2]->Draw("same");
+  F_ThePhiProt[3]->Draw("same");
+  F_ThePhiProt[4]->Draw("same");
+  F_ThePhiProt[5]->Draw("same");
+  F_ThePhiProt[6]->Draw("same");
+
   LinesPTCuts();
   c0TP->SaveAs("imagenes/Fiduciary_Proton.eps");
   
@@ -588,6 +605,14 @@ void Histograms::DoCanvas(){
   c1TP->cd(1);
   h_ThePhi[1]->SetTitleSize(0.05, "XY");
   h_ThePhi[1]->Draw("colz");
+  F_ThePhiProt[0]->Draw("same");
+  F_ThePhiProt[1]->Draw("same");
+  F_ThePhiProt[2]->Draw("same");
+  F_ThePhiProt[3]->Draw("same");
+  F_ThePhiProt[4]->Draw("same");
+  F_ThePhiProt[5]->Draw("same");
+  F_ThePhiProt[6]->Draw("same");
+
   LinesPTCuts();
   c1TP->SaveAs("imagenes/Fiduciary_Kaon.eps");
 
@@ -597,6 +622,15 @@ void Histograms::DoCanvas(){
   c2TP->cd(1);
   h_ThePhi[2]->SetTitleSize(0.05, "XY");
   h_ThePhi[2]->Draw("colz");
+  F_ThePhiProt[0]->Draw("same");
+  F_ThePhiProt[1]->Draw("same");
+  F_ThePhiProt[2]->Draw("same");
+  F_ThePhiProt[3]->Draw("same");
+  F_ThePhiProt[4]->Draw("same");
+  F_ThePhiProt[5]->Draw("same");
+  F_ThePhiProt[6]->Draw("same");
+
+
   LinesPTCuts();
   c2TP->SaveAs("imagenes/Fiduciary_Pion.eps");
 
@@ -635,7 +669,6 @@ void Histograms::DoCanvas(){
   c0TPC->cd(1);
   h_ThePhicut[0]->SetTitleSize(0.05, "XY");
   h_ThePhicut[0]->Draw("colz");
-  LinesPTCuts();
   c0TPC->SaveAs("imagenes/Fiduciarycuts_Proton.eps");
   
   //------ Kaon ------//
@@ -644,7 +677,6 @@ void Histograms::DoCanvas(){
   c1TPC->cd(1);
   h_ThePhicut[1]->SetTitleSize(0.05, "XY");
   h_ThePhicut[1]->Draw("colz");
-  LinesPTCuts();
   c1TPC->SaveAs("imagenes/Fiduciarycuts_Kaon.eps");
 
   //------ Pion ------//
@@ -653,7 +685,6 @@ void Histograms::DoCanvas(){
   c2TPC->cd(1);
   h_ThePhicut[2]->SetTitleSize(0.05, "XY");
   h_ThePhicut[2]->Draw("colz");
-  LinesPTCuts();
   c2TPC->SaveAs("imagenes/Fiduciarycuts_Pion.eps");
 
   // 3 in 1
@@ -1006,6 +1037,7 @@ void Histograms::DoCanvas(){
 
 
 //***************** Friend Functions ******************** //
+
 
 void LinesPTCuts(){
 

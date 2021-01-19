@@ -116,7 +116,15 @@ void Codecuts::CodeCuts(){
     if( (phiproton_cut >= 25)    && (phiproton_cut <= 35)   ) continue;
     if( (phiproton_cut >= 85)    && (phiproton_cut <= 95)   ) continue;
     if( (phiproton_cut >= 145)   && (phiproton_cut <= 155)  ) continue;
-      
+
+    if(F_ThePhiProt[0]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[1]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[2]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[3]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[4]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[5]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[6]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg()) continue;
+       
     h_ThePhicut[0]->Fill(phiproton_cut, myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg());
         
     //kaon cuts
@@ -129,6 +137,14 @@ void Codecuts::CodeCuts(){
     if( (phikaon_cut >= 25)    && (phikaon_cut <= 35)   ) continue;
     if( (phikaon_cut >= 85)    && (phikaon_cut <= 95)   ) continue;
     if( (phikaon_cut >= 145)   && (phikaon_cut <= 155)  ) continue;
+
+    if(F_ThePhiProt[0]->Eval(phikaon_cut) > myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[1]->Eval(phikaon_cut) > myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[2]->Eval(phikaon_cut) > myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[3]->Eval(phikaon_cut) > myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[4]->Eval(phikaon_cut) > myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[5]->Eval(phikaon_cut) > myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[6]->Eval(phikaon_cut) > myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg()) continue;
 
     h_ThePhicut[1]->Fill(phikaon_cut, myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg());
 
@@ -145,7 +161,16 @@ void Codecuts::CodeCuts(){
     if( (phiPion_cut >= 25)    && (phiPion_cut <= 35)   ) continue;
     if( (phiPion_cut >= 85)    && (phiPion_cut <= 95)   ) continue;
     if( (phiPion_cut >= 145)   && (phiPion_cut <= 155)  ) continue;
-      
+
+    if(F_ThePhiProt[0]->Eval(phiPion_cut) > myDataList->getEVNT_track(2).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[1]->Eval(phiPion_cut) > myDataList->getEVNT_track(2).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[2]->Eval(phiPion_cut) > myDataList->getEVNT_track(2).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[3]->Eval(phiPion_cut) > myDataList->getEVNT_track(2).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[4]->Eval(phiPion_cut) > myDataList->getEVNT_track(2).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[5]->Eval(phiPion_cut) > myDataList->getEVNT_track(2).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[6]->Eval(phiPion_cut) > myDataList->getEVNT_track(2).Theta()*TMath::RadToDeg()) continue;
+
+    
     h_ThePhicut[2]->Fill(phiPion_cut, myDataList->getEVNT_track(2).Theta()*TMath::RadToDeg());
       
     //------------------ Photons, Delta T  ------------------ // 
