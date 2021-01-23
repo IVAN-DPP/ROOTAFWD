@@ -23,7 +23,7 @@ void ListFilesAtDir(string,string,vector<string>&);
 
 //double GetPol(int plane, double edge, int eid, int poltype, double lowThresh, double highThresh);
 
-int LoadPolTable(int, char *);
+int LoadPolTable(int, char *,map<vector<float>,int>&);
 
 double GetPol(int, double, int, int, double, double);
 

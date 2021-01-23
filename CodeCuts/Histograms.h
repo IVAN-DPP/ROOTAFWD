@@ -100,12 +100,14 @@ protected:
   TH1F *h_kaonPhiPE[2]                      = {};
     
   //---------Function to do asymmetry fit----//
+  
   vector<vector<double> > MEASPhi{2}; //2 is the number of binning
   vector<vector<double> > MEASGammaP{2};
     
-  TF1 *FuncAsym                            =NULL;
-  TH1F *h_Asym[2]                         ={};
-    
+  TF1 *FuncAsym                             = NULL;
+  TH1F *h_Asym[2]                           = {};
+
+   
 public:
   Histograms(){}
   void DoHistograms();

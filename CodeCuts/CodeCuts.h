@@ -24,15 +24,15 @@ void Codecuts::CodeCuts(){
   
   vector<string> PolTableName;
   ListFilesAtDir("./ListTables", PolTableName);
-
   
+  map<vector<float>,int> keysPlane;
   
   const int NumbOfPolFiles=PolTableName.size();
   for (int i=0;i<NumbOfPolFiles;i++){
     char *cstr = const_cast<char *>(PolTableName[i].c_str());
-    LoadPolTable(i,cstr);
+    LoadPolTable(i,cstr,keysPlane);
   }
-
+  
   while (myDataList->getEntry()<myDataList->getEntries()){
 
     myDataList->getNextEntry();
@@ -229,17 +229,15 @@ void Codecuts::CodeCuts(){
     if (fabs(myDataList->getCoh_edge()-myDataList->getCoh_edge_nom()*1000)>15)continue;
     if (myDataList->getTrip_flag()!=0)continue;
     if (myDataList->getCoh_plan()!=0 && myDataList->getCoh_plan()!=1)continue;
-      
 
-
-       
-    double PhotoPol=GetPol(myDataList->getCoh_plan(), myDataList->getCoh_edge(), myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0, 8, 0.2,0.3); 
+    vector<float> Keys{myDataList->getBeam_en(),myDataList->getCoh_edge_nom(),float(myDataList->getCoh_plan())};
+        
+    double PhotoPol=0;
+    PhotoPol=GetPol(keysPlane[Keys], myDataList->getCoh_edge(), myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0, 8, 0.2,0.3); 
+  
     if (PhotoPol<0.5) continue;
 
-      
-
-      
-      
+        
     //-------------- Reconstruction --------- //
       
     TLorentzVector photon, deuteron, kaon, kaonpion, proton, pion, Wneutron_kaon, Wneutron_pion, Sigma, Lambda, Neutron, WBoost;
@@ -386,7 +384,7 @@ void Codecuts::CodeCuts(){
       
   }
   cout<<endl;
-    
+  
   DoCanvas();
   
 }

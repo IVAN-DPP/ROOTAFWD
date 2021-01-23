@@ -31,7 +31,7 @@ enum {
   PCOR    = 6,
   PCORERR = 7,
   PSMOOTH = 8,
-  EDGE    = 9
+  EDGE    = 9,
 };
 
 enum {
@@ -45,7 +45,7 @@ enum {
 
 
 double polTable[73][500][385][10];  //where its [plane][edge][E_id][field]
-int polTableN[73]={};            //No of entries for para and perp
+int polTableN[73]={};               //No of entries for para and perp
 char polFirstLines[73][500][250];   //to keep the 1st lines if needed (info from files)
 
 int edgeEventLow[5000];            //hold the current table of edge positions for event ranges
@@ -106,7 +106,7 @@ void ListFilesAtDir(string DirPathName,
   
 }
 
-int LoadPolTable(int plane, char *PolTableList){
+int LoadPolTable(int plane, char *PolTableList, map<vector<float>,int> &keysPlane){
   FILE *fplist,*fpfile;              //file pointers for filelist and each file therein
   char lline[250];                 //for reading in lines from filelist
   char fline[250];                 //for reading in lines from file
@@ -132,12 +132,47 @@ int LoadPolTable(int plane, char *PolTableList){
       cout << "Error Couldn't open file: " << filename << endl;
       return -1;
     }
-
+    
     if(fgets(polFirstLines[plane][polTableN[plane]],240,fpfile) == NULL)
       perror("There isn't file"); //save the 1st line
     sscanf(strrchr(filename,'_')+1,"%lg",&polTable[plane][fcount][0][EDGE]);
 
     
+    //File name:
+    //Beam_4726_CohEdge_1.7_PARA_1687.0.fitted2
+    //      ^            ^
+    //      |            |
+    //   Electron      Coh Edge
+    
+    string EBeam = filename;    float iEBeam = 0;
+    string EPhot = filename;    float iEPhot = 0;
+    string Pol   = filename;    float iPol = 0;
+    
+    EBeam = EBeam.substr(EBeam.find_first_of("_")+1,4);     //Electron energy from table name
+    EPhot = EPhot.substr(EPhot.find_first_of(".")-1,3);     //Photon energy from table name
+    Pol   = Pol.substr(Pol.find_first_of("P"),4);           //PARA or PERP string
+
+    // Beam energy of file name, if you need other energy put here
+    // to find the energy, see beam_en branch in the files .root
+    switch(stoi(EBeam.c_str())){
+    case 4199: iEBeam = 4.2; break;
+    case 4072: iEBeam = 4.1; break;
+    case 4482: iEBeam = 4.5; break;
+    case 4726: iEBeam = 4.7; break;
+    case 4756: iEBeam = 4.8; break;
+    case 5052: iEBeam = 5.1; break;
+    case 5166: iEBeam = 5.2; break;
+    }
+
+    iEPhot = stof(EPhot.c_str());
+    
+    if(Pol == "PARA"){iPol = 0;}
+    else {iPol=1;}
+    
+    vector<float> Keys {iEBeam,iEPhot,iPol};
+    
+    keysPlane[Keys] = plane;
+
     chancount=0;                                             //starting array at 1 for consistency with E_ID
     
     while((fgets(fline,240,fpfile)) != NULL){
@@ -152,7 +187,7 @@ int LoadPolTable(int plane, char *PolTableList){
 	     &polTable[plane][fcount][eid][PCOR],
 	     &polTable[plane][fcount][eid][PCORERR],
 	     &polTable[plane][fcount][eid][PSMOOTH]);
-      chancount++; 
+      chancount++;
     }
     
     fclose(fpfile); //close the file
@@ -165,7 +200,8 @@ int LoadPolTable(int plane, char *PolTableList){
     
     fcount++;
   }
-
+  
+  
   fclose(fplist);
     
   return(0);
@@ -189,7 +225,6 @@ double GetPol(int plane, double edge, int eid, int poltype, double lowThresh, do
 
   pol=polTable[plane][eIndex][eid][poltype];
   
-
   if((polTable[plane][eIndex][0][ENERGY]<edge)&&(pol<lowThresh)) pol = -1.0;
   if((polTable[plane][eIndex][0][ENERGY]>edge)&&(pol<highThresh)) pol = -1.0;
   
@@ -218,12 +253,12 @@ double GetPol(int plane, double edge, double eg, int poltype, double lowThresh, 
   }
   
   pol=polTable[plane][eIndex][eid][poltype];
+
   if((polTable[plane][eIndex][0][ENERGY]<edge)&&(pol<lowThresh)) pol = -1.0;
   if((polTable[plane][eIndex][0][ENERGY]>edge)&&(pol<highThresh)) pol = -1.0;
   
   return pol;
 }
-
 
   
 #endif
