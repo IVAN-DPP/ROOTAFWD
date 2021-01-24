@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm ./ListTables/*
+
 # List of Tables X Energy of Photon and Electron Beam
 
 # PARA
