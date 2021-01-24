@@ -19,45 +19,13 @@ void ListFilesAtDir(string,vector<string>&);
 
 void ListFilesAtDir(string,string,vector<string>&);
 
-//int LoadPolTable(int plane, char *PolTableList);
-
-//double GetPol(int plane, double edge, int eid, int poltype, double lowThresh, double highThresh);
-
 int LoadPolTable(int, char *,map<vector<float>,int>&);
 
 double GetPol(int, double, int, int, double, double);
 
 double GetPol(int, double, double, int, double, double);
 
-bool badSCpad(int, int, int, int);
+void GetPolAv(vector<float>,vector<vector<int>>&,vector<vector<double>>&,double);
 
-bool Cut_dcustBadTaggerCounters(int, int, int);
-
-TVector3 DocaCalculation(int, int, double&);
-
-//void Good_photon(int&,double,int,double,double,const TLorentzVector &,vector<double> &,vector<int> &);
-
-void Good_photon(int&,double,double,double,const TLorentzVector &,vector<double> &,vector<int> &);
-
-TLorentzVector define4Vector(double,double,double,double,double);
-
-TLorentzVector eloss_func(const TLorentzVector,TVector3,float);
-
-TLorentzVector lab_to_cm(TLorentzVector, TLorentzVector, TLorentzVector);
-
-//void Setup_dcustTripFile_PartialName(string, char *);
-void Setup_dcustTripFile_PartialName(string locPartialTripFileName, char *opt, int &Flag);
-void Setup_dcustTripFile(string locTripFileName, int &TripFlag);
-bool Cut_dcustTripEvents(int locEventNumber);
-
-//bool badSCpadpos(int, int);
-//bool badSCpadneg(int, int);
-
-bool Cut_dcustJunkRuns(string);
-bool Cut_dcustJunkFiles(string);
-
-//void GFluxFunction(int, char *, double [], double [], ofstream &);
-//string Construct_dcustGFluxFileName(string locPartialGFluxFileName);
-
-
+void GetPolAvTable();
 #endif

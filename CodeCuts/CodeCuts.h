@@ -27,6 +27,9 @@ void Codecuts::CodeCuts(){
   
   map<vector<float>,int> keysPlane;
   
+  vector<double> vecInitDob(2);   vector<vector<double>> AvP(10,vecInitDob);
+  vector<int> vecInitInt(2);      vector<vector<int>> ItP(10,vecInitInt);
+  
   const int NumbOfPolFiles=PolTableName.size();
   for (int i=0;i<NumbOfPolFiles;i++){
     char *cstr = const_cast<char *>(PolTableName[i].c_str());
@@ -234,10 +237,11 @@ void Codecuts::CodeCuts(){
         
     double PhotoPol=0;
     PhotoPol=GetPol(keysPlane[Keys], myDataList->getCoh_edge(), myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0, 8, 0.2,0.3); 
-  
+    
     if (PhotoPol<0.5) continue;
-
-        
+    
+    GetPolAv(Keys,ItP,AvP,PhotoPol);
+    
     //-------------- Reconstruction --------- //
       
     TLorentzVector photon, deuteron, kaon, kaonpion, proton, pion, Wneutron_kaon, Wneutron_pion, Sigma, Lambda, Neutron, WBoost;
@@ -384,6 +388,8 @@ void Codecuts::CodeCuts(){
       
   }
   cout<<endl;
+
+  GetPolAvTable(ItP,AvP);
   
   DoCanvas();
   
