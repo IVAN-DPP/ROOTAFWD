@@ -1,8 +1,9 @@
-#ifndef HISTOGRAMS_C
-#define HISTOGRAMS_C
+#ifndef HISTOGRAMS_H
+#define HISTOGRAMS_H
 
 #include "include/Libraries.h"
 #include "src/TPaveStateModify.C"
+
 
 using namespace std;
 
@@ -11,6 +12,7 @@ void LinesPTCuts();
 void NameLinesInv(double, double, int, int);
 vector<double> HistoBinning(TH1 *, int, double, double, double,double);
 Double_t fitf(Double_t *,Double_t *);
+
 class Histograms{
   //Friends Functions
   friend void LinesPTCuts();       //Functions for do the lines in Theta-Phi Correlations
@@ -25,14 +27,19 @@ protected:
   TH1F *h_Mass[2]                           = {};
   
   TH2F *h_DeltaBe[3]                        = {};
+  TH1D *h_DeltaBSl[3]                       = {};
   TH2F *h_BeVSp[3]                          = {};
   TH2F *h_BeVSpT                            = NULL;
   TH2F *h_DeltaBecut[3]                     = {};
   TH2F *h_BeVSpcut[3]                       = {};
   
-  
-  TF1 *FFits[3]                             = {};               //Fits for do cuts
-  TF1 *FFitsminus[3]                        = {};
+  TGraphErrors *Grap1[2]                    = {};
+  TGraphErrors *Grap2[2]                    = {};
+  TGraphErrors *Grap3[2]                    = {};
+  TF1 *FFitsUp[3]                           = {};               //Fits for do cuts
+  TF1 *FFitsLow[3]                          = {};
+  TF1 *FFitsFunctionsUp[3]                  = {};
+  TF1 *FFitsFunctionsLow[3]                 = {};
   string FFname[3]                          = {};
   
   TH1F *h_DeltaTall[2]                      = {};
@@ -109,11 +116,11 @@ protected:
 
    
 public:
+
   Histograms(){}
   void DoHistograms();
   void DoCanvas();
 };
-
 
 void Histograms::DoHistograms(){
 
@@ -152,12 +159,21 @@ void Histograms::DoHistograms(){
   
   //------- Fits for do cuts in Delta B ----------- //
 
-  FFits[0] = new TF1("DBProtonFit","0.02",0,3);
-  FFits[1] = new TF1("DBKaonFit","0.025", 0, 3);
-  FFits[2] = new TF1("DBPionFit","0.05",0,3);
-
-
+  FFitsUp[0] = new TF1("DBProtonFitU","0.015",0.7,3);
+  FFitsUp[1] = new TF1("DBKaonFitU","0.02", 0, 3);
+  FFitsUp[2] = new TF1("DBPionFitU","0.02",0.4,3);
   
+  FFitsLow[0] = new TF1("DBProtonFitL","-0.007",0.7,3);
+  FFitsLow[1] = new TF1("DBKaonFitL","-0.02", 0, 3);
+  FFitsLow[2] = new TF1("DBPionFitL","-0.015",0.4,3);
+  
+  FFitsFunctionsUp[0] = new TF1("DBProtonFU","[0]*x+[1]*pow(x,2)+[2]*pow(x,3)+[3]*pow(x,4)+[4]*pow(x,5)+[5]*pow(x,6)",0,0.8);
+  FFitsFunctionsUp[1] = new TF1("DBKaonFU","[0]*x+[1]*pow(x,2)+[2]*pow(x,3)+[3]*pow(x,4)+[4]*pow(x,5)+[5]*pow(x,6)",0,0.3);
+  FFitsFunctionsUp[2] = new TF1("DBPionFU","[0]*x+[1]*pow(x,2)+[2]*pow(x,3)+[3]*pow(x,4)+[4]*pow(x,5)+[5]*pow(x,6)",0,0.5);
+
+  FFitsFunctionsLow[0] = new TF1("DBProtonFL","[0]*x+[1]*pow(x,2)+[2]*pow(x,3)+[3]*pow(x,4)+[4]*pow(x,5)+[5]*pow(x,6)",0,0.8);
+  FFitsFunctionsLow[1] = new TF1("DBKaonFL","[0]*x+[1]*pow(x,2)+[2]*pow(x,3)+[3]*pow(x,4)+[4]*pow(x,5)+[5]*pow(x,6)",0,0.3);
+  FFitsFunctionsLow[2] = new TF1("DBPionFL","[0]*x+[1]*pow(x,2)+[2]*pow(x,3)+[3]*pow(x,4)+[4]*pow(x,5)+[5]*pow(x,6)",0,0.5);
   
   //-------- Delta Beta Cuts ------- //
 
@@ -393,22 +409,73 @@ void Histograms::DoCanvas(){
   cMt1->cd(1);
   h_Mass[1]->Draw();
   cMt1->SaveAs("imagenes/MassNeg.eps");
-  //---------------- Delta B With/out Cuts ----------------- //
 
+  //---------------- Delta B With/out Cuts ----------------- //
+  
+  TCanvas *CSl=new TCanvas("Slices","Mean + Sigma",1000,500);
+  CSl->Divide(3,1);
+  CSl->cd(1);
+  Grap1[0]->Draw("APE");
+  Grap1[1]->Draw("APE");
+  CSl->cd(2);
+  Grap2[0]->Draw("APE");
+  Grap2[1]->Draw("APE");
+  CSl->cd(3);
+  Grap3[0]->Draw("APE");
+  Grap3[1]->Draw("APE");
+
+  CSl->SaveAs("imagenes/SlicesDB.eps");
+
+    
+  TCanvas *CPrj1 = new TCanvas("Projections1","Projection Proton",900,450);
+  CPrj1->Divide(5,10);
+
+  for (unsigned int i = 0; i < 50; i++) {
+    CPrj1->cd(i+1);
+    TH1D *h1 = h_DeltaBe[0]->ProjectionX("e",i-1,i-1);
+    TF1 *FunctionBinning = new TF1("","gaus");
+    h1->Draw();
+    h1->Fit(FunctionBinning);
+    FunctionBinning->Draw("same");
+    h1->Clear();
+    FunctionBinning->Clear();
+  }
+  
+  CPrj1->SaveAs("imagenes/ProjProt1.eps");
+  
+  TCanvas *CPrj2 = new TCanvas("Projections2","Projection Proton",900,450);
+  CPrj2->Divide(5,10);
+
+  for (unsigned int i = 50; i < 100; i++) {
+    CPrj2->cd(i+1-50);
+    TH1D *h1 = h_DeltaBe[0]->ProjectionX("e",i-1,i-1);
+    TF1 *FunctionBinning = new TF1("","gaus");
+    h1->Draw();
+    h1->Fit(FunctionBinning);
+    FunctionBinning->Draw("same");
+    h1->Clear();
+    FunctionBinning->Clear();
+  }
+  
+  CPrj2->SaveAs("imagenes/ProjProt2.eps");
+
+  
   //------ Proton ------//
   
   TCanvas *c0DB=new TCanvas("c0DB","Delta Beta Without Cuts", 1000, 500);
   c0DB->cd(1);
-  //h_DeltaBe[0]->SetLabelSize(0.056, "XY");
   h_DeltaBe[0]->SetTitleSize(0.047, "XY");
   h_DeltaBe[0]->Draw("colz");
-  h_DeltaBe[0]->Fit(FFits[0]);
+  
   //Fit functions
-  FFname[0]=FFits[0]->GetName();
-  FFname[0].insert(0,"-1.0*");
-  FFitsminus[0] = new TF1("DBProtonFitminus",FFname[0].c_str(),0,3);
-  FFits[0]->Draw("same");
-  FFitsminus[0]->Draw("same");
+
+  Grap1[0]->Draw("P");
+  Grap1[1]->Draw("P");
+  
+  FFitsUp[0]->Draw("same");
+  FFitsLow[0]->Draw("same");
+  FFitsFunctionsUp[0]->Draw("same");
+  FFitsFunctionsLow[0]->Draw("same");
   c0DB->SaveAs("imagenes/ProtonDB_VS_P.eps");
   
   TCanvas *c0DBC=new TCanvas("c0DBC","Delta Beta With Cuts", 1000, 500);
@@ -423,13 +490,16 @@ void Histograms::DoCanvas(){
   c1DB->cd(1);
   h_DeltaBe[1]->SetTitleSize(0.047, "XY");
   h_DeltaBe[1]->Draw("colz");
-  h_DeltaBe[1]->Fit(FFits[1]);
+
   //Fit functions
-  FFname[1]=FFits[1]->GetName();
-  FFname[1].insert(0,"-1.0*");
-  FFitsminus[1] = new TF1("DBKaonFitminus",FFname[0].c_str(),0,3);
-  FFits[1]->Draw("same");
-  FFitsminus[1]->Draw("same");
+  
+  Grap2[0]->Draw("P");
+  Grap2[1]->Draw("P");
+  
+  FFitsUp[1]->Draw("same");
+  FFitsLow[1]->Draw("same");
+  FFitsFunctionsUp[1]->Draw("same");
+  FFitsFunctionsLow[1]->Draw("same");
   c1DB->SaveAs("imagenes/KaonDB_VS_P.eps");
 
   TCanvas *c1DBC=new TCanvas("c1DBC","Delta Beta With Cuts", 1000, 500);
@@ -445,13 +515,17 @@ void Histograms::DoCanvas(){
   c2DB->cd(1);
   h_DeltaBe[2]->SetTitleSize(0.047, "XY");
   h_DeltaBe[2]->Draw("colz");
-  h_DeltaBe[2]->Fit(FFits[2]);
+
   //Fit functions
-  FFname[2]=FFits[1]->GetName();
-  FFname[2].insert(0,"-1.0*");
-  FFitsminus[2] = new TF1("DBPionFitminus",FFname[0].c_str(),0,3);
-  FFits[2]->Draw("same");
-  FFitsminus[2]->Draw("same");
+
+  Grap3[0]->Draw("P");
+  Grap3[1]->Draw("P");
+
+  
+  FFitsUp[2]->Draw("same");
+  FFitsLow[2]->Draw("same");
+  FFitsFunctionsUp[2]->Draw("same");
+  FFitsFunctionsLow[2]->Draw("same");
   c2DB->SaveAs("imagenes/PionDB_VS_P.eps");
 
   TCanvas *c2DBC=new TCanvas("c2DBC","Delta Beta With Cuts", 1000, 500);
@@ -459,8 +533,7 @@ void Histograms::DoCanvas(){
   h_DeltaBecut[2]->SetTitleSize(0.047, "XY");
   h_DeltaBecut[2]->Draw("colz");
   c2DBC->SaveAs("imagenes/PionDB_VS_P_C.eps");
-
-
+  
   //---------------- B With/out Cuts ----------------- //
 
   gStyle->SetStatY(0.94);
