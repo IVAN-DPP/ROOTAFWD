@@ -5,6 +5,7 @@
 void Codigo(){
 
   Codecuts Cls;
+  Cls.CodeCutsDB();
   Cls.CodeCuts();
 
   remove("Codigo_C_ACLiC_dict_rdict.pcm");
