@@ -2,8 +2,8 @@ Analysis_C_ACLiC_dict_rdict.pcm
 Analysis_C.so
 *~
 Analysis_C.d
-CodeCuts/PARA
-CodeCuts/PERP
+CodeCuts/SKIMS/PARA
+CodeCuts/SKIMS/PERP
 CodeCuts/imagenes
 CodeCuts/*.d
 CodeCuts/*.so
