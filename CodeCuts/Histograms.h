@@ -79,10 +79,17 @@ protected:
   TH2F *h_DeltaBVSMissingMass             = NULL;
   TH2F *h_DeltaBVSMissingMomentum         = NULL;
 
+  //------Missing mass Sigma--------//
+  TH1F *h_MMassSigma                       = NULL;
+  
+  //--Correlations between Invariant and missing mass (lambda and sigma)--//
+  TH2F *h_InvMassLambda_vsInvMassSigma    = NULL;
+  TH2F *h_InvMassLambda_vsMMassSigma      = NULL;
+  
   //--- Ellipse Cuts ---- //
   
-  TEllipse *myEllipse                     = NULL;
-  double radx=0.034, rady=0.02, offsetx=0.937, offsety=1.047, angle=70*TMath::DegToRad();
+  // TEllipse *myEllipse                     = NULL;
+  //double radx=0.034, rady=0.02, offsetx=0.937, offsety=1.047, angle=70*TMath::DegToRad();
   
   //-----Correlation Theta-Phi, ----------//
  
@@ -329,8 +336,25 @@ void Histograms::DoHistograms(){
 				       "",
 				       100,0, 1.5,100,-0.17, 0.17);
 
+  //--------------Correlation Invariant masses (Lambda vs Sigma)----//
+  h_InvMassLambda_vsInvMassSigma = new TH2F("h_InvMassLambda_vsInvMassSigma",
+				      "; Invariant mass (#pi^{-} n) [GeV/c^{2}]; Invariant mass (#pi^{-} p) [GeV/c^{2}]",
+				      200,1.06,1.4, 200, 1.0, 1.5);
 
-  myEllipse = new TEllipse(offsetx,offsety,radx,rady,0,360,70);
+  //---------------Missing mass Sigma-----------------------------//
+  h_MMassSigma = new TH1F("h_MMassSigma",
+				   "; Missing mass sigma  (#pi^{-} n) [GeV/c^{2}]; Conteo ",
+				   100, 0.95, 1.45);
+
+  
+  //--------------Correlation Invariant mass (Lambda) and Missing mass Sigma----//
+  h_InvMassLambda_vsMMassSigma = new TH2F("h_InvMassLambda_vsMMassSigma",
+				      "; Missing mass Sigma (#pi^{-} n) [GeV/c^{2}]; Invariant mass (#pi^{-} p) [GeV/c^{2}]",
+				      200,1.06,1.4, 200, 1.0, 1.5);
+ 
+
+
+  //myEllipse = new TEllipse(offsetx,offsety,radx,rady,0,360,70);
 
 
   //--------------KaonCosTheta Boost-------------//
@@ -789,9 +813,15 @@ void Histograms::DoCanvas(){
   c0ELL->cd(1);
   h_MissingMass_vsMissingMasskaonpion[0]->SetTitleSize(0.045, "XY");  
   h_MissingMass_vsMissingMasskaonpion[0]->Draw("colz");
-  myEllipse->SetFillStyle(0);
-  myEllipse->SetLineColor(kRed);
-  myEllipse->Draw("same");
+  TLine *MMCorrLine;
+  MMCorrLine = new TLine(0.7, 0.98,1.2, 0.98);
+  MMCorrLine->SetLineWidth(2);
+  MMCorrLine->SetLineColor(2);
+  MMCorrLine->Draw("same");
+  
+  //myEllipse->SetFillStyle(0);
+  //myEllipse->SetLineColor(kRed);
+  //myEllipse->Draw("same");
   c0ELL->SaveAs("imagenes/Ellipse.eps");
 
   //---------- MM Correlation with cut ---------------//
@@ -800,9 +830,9 @@ void Histograms::DoCanvas(){
   c0ELLC->cd(1);
   h_MissingMass_vsMissingMasskaonpion[1]->SetTitleSize(0.045, "XY");  
   h_MissingMass_vsMissingMasskaonpion[1]->Draw("colz");
-  myEllipse->SetFillStyle(0);
-  myEllipse->SetLineColor(kRed);
-  myEllipse->Draw("same");
+  //myEllipse->SetFillStyle(0);
+  //myEllipse->SetLineColor(kRed);
+  //myEllipse->Draw("same");
   c0ELLC->SaveAs("imagenes/Ellipse_C.eps");
 
   //----------- MM After Cuts for MM correlation ------- //
@@ -904,6 +934,18 @@ void Histograms::DoCanvas(){
   h_LambdaMass->SetLabelSize(0.045, "XY");
   h_LambdaMass->SetTitleSize(0.043, "XY");
   h_LambdaMass->Draw();
+  TLine *LambdaLines[2]={};
+  LambdaLines[0] = new TLine(1.11, h_LambdaMass->GetMaximum(),1.11,0);
+  LambdaLines[1] = new TLine(1.132, h_LambdaMass->GetMaximum(),1.132,0);
+
+  LambdaLines[0]->SetLineWidth(2);
+  LambdaLines[1]->SetLineWidth(2);
+  LambdaLines[0]->SetLineColor(3);
+  LambdaLines[1]->SetLineColor(3);
+
+  LambdaLines[0]->Draw("same");
+  LambdaLines[1]->Draw("same");
+  
   h_LambdaMass->Fit(lamdaMassFit);
   gStyle->SetOptFit(111);
   lamdaMassFit->Draw("same");
@@ -937,6 +979,38 @@ void Histograms::DoCanvas(){
  
   
   IVM->SaveAs("imagenes/InvariantMassComparation_Sigma.eps");
+  
+  //--------------Correlation Invariant masses (Lambda vs Sigma)----//
+  TCanvas *cIMLS=new TCanvas("cIMLS","Correlation of Invariant masses", 900, 500);
+  cIMLS->cd(1);
+  h_InvMassLambda_vsInvMassSigma->SetTitleSize(0.045, "XY");  
+  h_InvMassLambda_vsInvMassSigma->Draw("colz");
+  
+  cIMLS->SaveAs("imagenes/InvariantMassCorrelation.eps");
+  
+  
+  //---------------Missing mass Sigma-----------------------//
+  
+  TCanvas *cMMS=new TCanvas("cMMS","Missing mass Sigma", 900, 500);
+  cMMS->cd(1);
+  h_MMassSigma->SetTitleSize(0.045, "XY");  
+  h_MMassSigma->Draw();
+  
+  cMMS->SaveAs("imagenes/MissingMassSigma.eps");
+  
+  //--------------Correlation Invariant mass (Lambda) vs Missing Mass Sigma----//
+  TCanvas *cIMMM=new TCanvas("cIMMM","Correlation Invariant mass (lambda) vs Missing Mass Sigma", 900, 500);
+  cIMMM->cd(1);
+  h_InvMassLambda_vsMMassSigma->SetTitleSize(0.045, "XY");  
+  h_InvMassLambda_vsMMassSigma->Draw("colz");
+  
+   cIMMM->SaveAs("imagenes/InvariantMassMMSigmaCorrelation.eps");
+
+  
+
+
+
+  
 
   //------------ Final Invarian Mass ---------------//
   

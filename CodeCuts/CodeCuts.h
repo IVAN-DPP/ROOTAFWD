@@ -268,7 +268,7 @@ void Codecuts::CodeCuts(){
 
     //-------------- Reconstruction --------- //
       
-    TLorentzVector photon, deuteron, kaon, kaonpion, proton, pion, Wneutron_kaon, Wneutron_pion, Sigma, Lambda, Neutron, WBoost;
+    TLorentzVector photon, deuteron, kaon, kaonpion, proton, pion, Wneutron_kaon, Wneutron_pion, Sigma, Lambda, Neutron, WBoost, MMSigma;
     photon.SetXYZM(0,0,myDataList->getTAGR_epho(myDataList->getIndex_k(0)),0);
     deuteron.SetXYZM(0,0,0,1.8756);
     double Px_kaonpion = myDataList->getEVNT_track(1).Rho()* sin(myDataList->getEVNT_track(1).Theta())* cos(myDataList->getEVNT_track(1).Phi());
@@ -284,6 +284,8 @@ void Codecuts::CodeCuts(){
     Neutron.SetXYZM(Wneutron_kaon.Px(), Wneutron_kaon.Py(), Wneutron_kaon.Pz(), 0.939);
     Sigma = pion + Neutron;
     Lambda = pion + proton;
+    MMSigma= photon + deuteron - proton - kaon; //This it to make correlation with invariant mass (lambda)
+    
     WBoost = photon + deuteron; // to make Boost
       
     Wneutron_pion = photon + deuteron - proton - kaonpion - pion;         // This missing mass is with the Pion-
@@ -304,12 +306,12 @@ void Codecuts::CodeCuts(){
       h_MissingPvsMass[1]->Fill(Wneutron_kaon.M(),Wneutron_kaon.P());
       
       
-      
-    Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
-      +TMath::Power((Wneutron_kaon.M()-offsetx)*sin(angle)-(Wneutron_pion.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
-      
-    if(El > 1) continue;
-    Events[15]++;         //Events With NOT PION, YES Kaon 
+    if ( Wneutron_pion.M() < 0.98) continue;       //Cut from correlation MM  
+    Events[15]++;         //Events With NOT PION, YES Kaon
+    //Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
+    //+TMath::Power((Wneutron_kaon.M()-offsetx)*sin(angle)-(Wneutron_pion.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
+    //if(El > 1) continue;
+     
     
     h_MissingMasscut->Fill(Wneutron_kaon.M());
     h_MissingMass_kaonpioncut->Fill(Wneutron_pion.M());
@@ -321,6 +323,9 @@ void Codecuts::CodeCuts(){
           
     h_InvariantMass->Fill(Sigma.M());
     h_LambdaMass->Fill(Lambda.M());
+    h_InvMassLambda_vsInvMassSigma->Fill(Sigma.M(), Lambda.M());
+    h_MMassSigma->Fill(MMSigma.M());
+    h_InvMassLambda_vsMMassSigma->Fill(MMSigma.M(), Lambda.M());
       
       
     //------------------------Comparación de sigmas-------------//
@@ -343,12 +348,12 @@ void Codecuts::CodeCuts(){
       
     if( Sigma.M()<1.08 || Sigma.M()>1.3)
       h_MissingP[1]->Fill(Wneutron_kaon.P());
-      
-      
+           
     if ( Lambda.M()>=1.11 && Lambda.M()<=1.132) continue;                   //Cut for LamdaMass in +/- 3sigma
     Events[16]++;         //Events With Lambda cuts
-    if ( Wneutron_kaon.M()<=0.9 || Wneutron_kaon.M()>=0.96 ) continue;       //Cut from correlation MM
-    Events[17]++;         //Events With Mass neutron range
+
+    
+    // Events[17]++;         //Events With Mass neutron range
     if(Wneutron_kaon.P()<=0.2) continue;                                    //Cut for rescattering
     Events[18]++;         //Events With Neutron Rescattering Lambada cuts
 
