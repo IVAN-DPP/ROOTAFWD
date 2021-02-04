@@ -24,14 +24,10 @@
     <ul>
       <li><em>SKIMS</em>, in this dir you must put the skims PARA and PERP</li>
       <li><em>PARA</em> and <em>PERP</em> skims with the form <em>include/DataEvent.h</em></li>
-      <li></li>
     </ul>
     <p>Finally run the script <em>Script.sh</em></p>
     <h2>Files</h2>
     <img src="./READMEPIC/Files.png" align="center"/>
-    <hr/>
-    <br/>
-    <h2>Dirs</h2>
     <h2>Files</h2>
     <ul>
       <li><a href="./CodeCuts/CodeCuts.h">CodeCuts.h</a> In this file you can change all kinds of cuts and make all physics process, also fill the histograms</li>
