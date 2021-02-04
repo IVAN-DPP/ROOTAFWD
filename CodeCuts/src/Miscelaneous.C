@@ -260,5 +260,47 @@ double GetPol(int plane, double edge, double eg, int poltype, double lowThresh, 
   return pol;
 }
 
+
+void GetPolAv(vector<float> Keys,vector<vector<int>> &ItP,vector<vector<double>> &AvP,double GetPol){
+
+  //cout << Keys[0] << "\t" << Keys[1] << "\t" << Keys[2] << endl; 
+  if(Keys[1] == float(1.3) && Keys[2] == 0) {ItP[0][0]++; AvP[0][0]+=GetPol;}
+  else if(Keys[0] == float(4.1) && Keys[1] == float(1.5) && Keys[2] == 0) {ItP[1][0]++; AvP[1][0]+=GetPol;}
+  else if(Keys[0] == float(4.5) && Keys[1] == float(1.5) && Keys[2] == 0) {ItP[2][0]++; AvP[2][0]+=GetPol;}
+  else if(Keys[0] == float(4.1) && Keys[1] == float(1.7) && Keys[2] == 0) {ItP[3][0]++; AvP[3][0]+=GetPol;}
+  else if(Keys[0] == float(4.7) && Keys[1] == float(1.7) && Keys[2] == 0) {ItP[4][0]++; AvP[4][0]+=GetPol;}
+  else if(Keys[0] == float(4.8) && Keys[1] == float(1.7) && Keys[2] == 0) {ItP[5][0]++; AvP[5][0]+=GetPol;}
+  else if(Keys[1] == float(1.9) && Keys[2] == 0) {ItP[6][0]++; AvP[6][0]+=GetPol;}
+  else if(Keys[0] == float(5.1) && Keys[1] == float(2.1) && Keys[2] == 0) {ItP[7][0]++; AvP[7][0]+=GetPol;}
+  else if(Keys[0] == float(5.2) && Keys[1] == float(2.1) && Keys[2] == 0) {ItP[8][0]++; AvP[8][0]+=GetPol;}
+  else if(Keys[0] == float(5.2) && Keys[1] == float(2.3) && Keys[2] == 0) {ItP[9][0]++; AvP[9][0]+=GetPol;}
+
+
+  else if(Keys[1] == float(1.3) && Keys[2] == float(1)) {ItP[0][1]++; AvP[0][1]+=GetPol;}
+  else if(Keys[0] == float(4.1) && Keys[1] == float(1.5) && Keys[2] == float(1)) {ItP[1][1]++; AvP[1][1]+=GetPol;}
+  else if(Keys[0] == float(4.5) && Keys[1] == float(1.5) && Keys[2] == float(1)) {ItP[2][1]++; AvP[2][1]+=GetPol;}
+  else if(Keys[0] == float(4.1) && Keys[1] == float(1.7) && Keys[2] == float(1)) {ItP[3][1]++; AvP[3][1]+=GetPol;}
+  else if(Keys[0] == float(4.7) && Keys[1] == float(1.7) && Keys[2] == float(1)) {ItP[4][1]++; AvP[4][1]+=GetPol;}
+  else if(Keys[0] == float(4.8) && Keys[1] == float(1.7) && Keys[2] == float(1)) {ItP[5][1]++; AvP[5][1]+=GetPol;}
+  else if(Keys[1] == float(1.9) && Keys[2] == float(1)) {ItP[6][1]++; AvP[6][1]+=GetPol;}
+  else if(Keys[0] == float(5.1) && Keys[1] == float(2.1) && Keys[2] == float(1)) {ItP[7][1]++; AvP[7][1]+=GetPol;}
+  else if(Keys[0] == float(5.2) && Keys[1] == float(2.1) && Keys[2] == float(1)) {ItP[8][1]++; AvP[8][1]+=GetPol;}
+  else if(Keys[0] == float(5.2) && Keys[1] == float(2.3) && Keys[2] == float(1)) {ItP[9][1]++; AvP[9][1]+=GetPol;}
   
+}
+
+void GetPolAvTable(vector<vector<int>> ItP,vector<vector<double>> AvP){
+  cout << setprecision(2);
+  cout << 1.3 << "\t" << 4199 << "\t" << AvP[0][0]/ItP[0][0] << "\t" << ItP[0][0] << "\t" << AvP[0][1]/ItP[0][1] << "\t" << ItP[0][1] << endl
+       << 1.5 << "\t" << 4072 << "\t" << AvP[1][0]/ItP[1][0] << "\t" << ItP[1][0] << "\t" << AvP[1][1]/ItP[1][1] << "\t" << ItP[1][1] << endl
+       << 1.5 << "\t" << 4482 << "\t" << AvP[2][0]/ItP[2][0] << "\t" << ItP[2][0] << "\t" << AvP[2][1]/ItP[2][1] << "\t" << ItP[2][1] << endl
+       << 1.7 << "\t" << 4072 << "\t" << AvP[3][0]/ItP[3][0] << "\t" << ItP[3][0] << "\t" << AvP[3][1]/ItP[3][1] << "\t" << ItP[3][1] << endl
+       << 1.7 << "\t" << 4726 << "\t" << AvP[4][0]/ItP[4][0] << "\t" << ItP[4][0] << "\t" << AvP[4][1]/ItP[4][1] << "\t" << ItP[4][1] << endl
+       << 1.7 << "\t" << 4756 << "\t" << AvP[5][0]/ItP[5][0] << "\t" << ItP[5][0] << "\t" << AvP[5][1]/ItP[5][1] << "\t" << ItP[5][1] << endl
+       << 1.9 << "\t" << 5052 << "\t" << AvP[6][0]/ItP[6][0] << "\t" << ItP[6][0] << "\t" << AvP[6][1]/ItP[6][1] << "\t" << ItP[6][1] << endl
+       << 2.1 << "\t" << 5052 << "\t" << AvP[7][0]/ItP[7][0] << "\t" << ItP[7][0] << "\t" << AvP[7][1]/ItP[7][1] << "\t" << ItP[7][1] << endl
+       << 2.1 << "\t" << 5166 << "\t" << AvP[8][0]/ItP[8][0] << "\t" << ItP[8][0] << "\t" << AvP[8][1]/ItP[8][1] << "\t" << ItP[8][1] << endl
+       << 2.3 << "\t" << 5166 << "\t" << AvP[9][0]/ItP[9][0] << "\t" << ItP[9][0] << "\t" << AvP[9][1]/ItP[9][1] << "\t" << ItP[9][1] << endl;
+        
+}
 #endif

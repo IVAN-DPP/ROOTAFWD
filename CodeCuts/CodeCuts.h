@@ -19,13 +19,16 @@ void Codecuts::CodeCuts(){
 
   
   string treeName="g13b";  
-  string fileNamePERP="ListFiles.txt";
+  string fileNamePERP="./SKIMS/ListFiles.txt";
   DataEvent *myDataList=new DataEvent(fileNamePERP,treeName, 35);
   
   vector<string> PolTableName;
-  ListFilesAtDir("./ListTables", PolTableName);
+  ListFilesAtDir("./TABLES/ListTables", PolTableName);
   
   map<vector<float>,int> keysPlane;
+  
+  vector<double> vecInitDob(2);   vector<vector<double>> AvP(10,vecInitDob);
+  vector<int> vecInitInt(2);      vector<vector<int>> ItP(10,vecInitInt);
   
   const int NumbOfPolFiles=PolTableName.size();
   for (int i=0;i<NumbOfPolFiles;i++){
@@ -38,11 +41,11 @@ void Codecuts::CodeCuts(){
     myDataList->getNextEntry();
     if (myDataList->getEntry() % 1000 == 0){
       if(myDataList->getCoh_plan() == 0){
-	fprintf (stderr, "Looped %s : %.2f percent \r", "PARA" ,myDataList->getEntry()*100.0/myDataList->getEntries());
+	fprintf (stderr, "Looped %s : %.2f percent, CohEdge %f BeamE %f \r", "PARA" ,myDataList->getEntry()*100.0/myDataList->getEntries(),myDataList->getCoh_edge_nom(),myDataList->getBeam_en());
 	fflush (stderr);
       }
       else {
-	fprintf (stderr, "Looped %s : %.2f percent \r", "PERP" ,myDataList->getEntry()*100.0/myDataList->getEntries());
+	fprintf (stderr, "Looped %s : %.2f percent, CohEdge %f BeamE %f \r", "PERP" ,myDataList->getEntry()*100.0/myDataList->getEntries(),myDataList->getCoh_edge_nom(),myDataList->getBeam_en());
 	fflush (stderr);
       }
     }
@@ -230,14 +233,25 @@ void Codecuts::CodeCuts(){
     if (myDataList->getTrip_flag()!=0)continue;
     if (myDataList->getCoh_plan()!=0 && myDataList->getCoh_plan()!=1)continue;
 
-    vector<float> Keys{myDataList->getBeam_en(),myDataList->getCoh_edge_nom(),float(myDataList->getCoh_plan())};
+    vector<float> Keys(3);
+    if(myDataList->getCoh_edge_nom() == float(1.3)){
+      Keys[0]=float(4.2);
+      Keys[1]=myDataList->getCoh_edge_nom();
+      Keys[2]=float(myDataList->getCoh_plan());
+  }
+    else{
+      Keys[0]=float(myDataList->getBeam_en());
+      Keys[1]=myDataList->getCoh_edge_nom();
+      Keys[2]=float(myDataList->getCoh_plan());
+  }
         
     double PhotoPol=0;
-    PhotoPol=GetPol(keysPlane[Keys], myDataList->getCoh_edge(), myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0, 8, 0.2,0.3); 
-  
+    PhotoPol=GetPol(keysPlane[Keys], myDataList->getCoh_edge(), myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0, 8, 0.2,0.3);
+    
     if (PhotoPol<0.5) continue;
-
-        
+    
+    GetPolAv(Keys,ItP,AvP,PhotoPol);
+    
     //-------------- Reconstruction --------- //
       
     TLorentzVector photon, deuteron, kaon, kaonpion, proton, pion, Wneutron_kaon, Wneutron_pion, Sigma, Lambda, Neutron, WBoost;
@@ -384,6 +398,8 @@ void Codecuts::CodeCuts(){
       
   }
   cout<<endl;
+
+  GetPolAvTable(ItP,AvP);
   
   DoCanvas();
   
