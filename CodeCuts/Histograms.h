@@ -81,10 +81,14 @@ protected:
 
   //------Missing mass Sigma--------//
   TH1F *h_MMassSigma                       = NULL;
+  TH1F *h_MMassSigmaCut                    = NULL;
   
   //--Correlations between Invariant and missing mass (lambda and sigma)--//
   TH2F *h_InvMassLambda_vsInvMassSigma    = NULL;
   TH2F *h_InvMassLambda_vsMMassSigma      = NULL;
+
+  //-----Correlation Momentums (lambda and Sigma)----//
+  TH2F *h_CorrelationMMomentum            = NULL;
   
   //--- Ellipse Cuts ---- //
   
@@ -100,8 +104,10 @@ protected:
   TH2F *h_ThePhicut[3]                      = {};
   
   //----Costheta-Kaon Boost-------------------//
-  TH1F *h_KCosThetaCM                     = NULL;
+  TH1F *h_KCosThetaCM                      = NULL;
 
+  //-------Momentum proton------------------//
+  TH1F *h_MomentumProton                    = NULL;
   //-----Kaon phi-------------------//
   TH1F *h_kaonPhiPA[2]                      = {};
   TH1F *h_kaonPhiPE[2]                      = {};
@@ -314,6 +320,13 @@ void Histograms::DoHistograms(){
   h_InvariantMasscut[3] = new TH1F("h_InvariantMasscut_ACP",
 				   "; Masa [GeV/c^{2}]; Conteo ",
 				   100, 1.0, 1.5);
+
+  //----------Momentum proton---------------//
+  
+   h_MomentumProton = new TH1F("h_MomentumProton",
+			  "; Momentum [GeV/c]; Conteo ",
+			  100, 0, 2.0);
+
   
   //-------- Lambda and Lambda Fit ------ //
   
@@ -341,18 +354,30 @@ void Histograms::DoHistograms(){
 				      "; Invariant mass (#pi^{-} n) [GeV/c^{2}]; Invariant mass (#pi^{-} p) [GeV/c^{2}]",
 				      200,1.06,1.4, 200, 1.0, 1.5);
 
+   //--------------Correlation momentums (Lambda vs Sigma)----//
+  h_CorrelationMMomentum  = new TH2F("h_CorrelationMMomentum",
+				     "; Missing momentum [GeV/c^{2}]; Missing momentum [GeV/c^{2}] [GeV/c^{2}]",
+				     200,0, 1.6 , 200, 0, 1.6);
+
+
+
+  
   //---------------Missing mass Sigma-----------------------------//
   h_MMassSigma = new TH1F("h_MMassSigma",
 				   "; Missing mass sigma  (#pi^{-} n) [GeV/c^{2}]; Conteo ",
 				   100, 0.95, 1.45);
 
+  //--------Missing mass Sigma cut--------------//
+  h_MMassSigmaCut = new TH1F("h_MMassSigmaCut",
+				   "; Missing mass sigma cut  (#pi^{-} n) [GeV/c^{2}]; Conteo ",
+				   100, 0.95, 1.45);
+  
   
   //--------------Correlation Invariant mass (Lambda) and Missing mass Sigma----//
   h_InvMassLambda_vsMMassSigma = new TH2F("h_InvMassLambda_vsMMassSigma",
 				      "; Missing mass Sigma (#pi^{-} n) [GeV/c^{2}]; Invariant mass (#pi^{-} p) [GeV/c^{2}]",
 				      200,1.06,1.4, 200, 1.0, 1.5);
  
-
 
   //myEllipse = new TEllipse(offsetx,offsety,radx,rady,0,360,70);
 
@@ -935,7 +960,7 @@ void Histograms::DoCanvas(){
   h_LambdaMass->SetTitleSize(0.043, "XY");
   h_LambdaMass->Draw();
   TLine *LambdaLines[2]={};
-  LambdaLines[0] = new TLine(1.11, h_LambdaMass->GetMaximum(),1.11,0);
+  LambdaLines[0] = new TLine(1.1, h_LambdaMass->GetMaximum(),1.1,0);
   LambdaLines[1] = new TLine(1.132, h_LambdaMass->GetMaximum(),1.132,0);
 
   LambdaLines[0]->SetLineWidth(2);
@@ -979,6 +1004,16 @@ void Histograms::DoCanvas(){
  
   
   IVM->SaveAs("imagenes/InvariantMassComparation_Sigma.eps");
+
+  //-------------Momentum proton--------------//
+  TCanvas *cMP=new TCanvas("cMP","Momentum proton", 900, 500);
+  cMP->cd(1);
+  h_MomentumProton->SetTitleSize(0.045, "XY");  
+  h_MomentumProton->Draw();
+  
+  cMP->SaveAs("imagenes/MomentumProton.eps");
+
+
   
   //--------------Correlation Invariant masses (Lambda vs Sigma)----//
   TCanvas *cIMLS=new TCanvas("cIMLS","Correlation of Invariant masses", 900, 500);
@@ -987,6 +1022,15 @@ void Histograms::DoCanvas(){
   h_InvMassLambda_vsInvMassSigma->Draw("colz");
   
   cIMLS->SaveAs("imagenes/InvariantMassCorrelation.eps");
+
+  //--------------Correlation Missing momentums--------------------//
+
+   TCanvas *cMMom=new TCanvas("cMMom","Correlation Missing momentums", 900, 500);
+  cMMom->cd(1);
+  h_CorrelationMMomentum->SetTitleSize(0.045, "XY");  
+  h_CorrelationMMomentum->Draw("colz");
+  
+  cMMom->SaveAs("imagenes/CorrelationMissingMomentums.eps");
   
   
   //---------------Missing mass Sigma-----------------------//
@@ -997,6 +1041,16 @@ void Histograms::DoCanvas(){
   h_MMassSigma->Draw();
   
   cMMS->SaveAs("imagenes/MissingMassSigma.eps");
+
+ //---------------Missing mass Sigma Cut-----------------------//
+  
+  TCanvas *cMMSC=new TCanvas("cMMSC","Missing mass Sigma Cut", 900, 500);
+  cMMSC->cd(1);
+  h_MMassSigmaCut->SetTitleSize(0.045, "XY");  
+  h_MMassSigmaCut->Draw();
+  
+  cMMS->SaveAs("imagenes/MissingMassSigmaCut.eps");
+
   
   //--------------Correlation Invariant mass (Lambda) vs Missing Mass Sigma----//
   TCanvas *cIMMM=new TCanvas("cIMMM","Correlation Invariant mass (lambda) vs Missing Mass Sigma", 900, 500);
@@ -1005,12 +1059,6 @@ void Histograms::DoCanvas(){
   h_InvMassLambda_vsMMassSigma->Draw("colz");
   
    cIMMM->SaveAs("imagenes/InvariantMassMMSigmaCorrelation.eps");
-
-  
-
-
-
-  
 
   //------------ Final Invarian Mass ---------------//
   

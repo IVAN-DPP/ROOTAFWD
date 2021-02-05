@@ -297,13 +297,8 @@ void Codecuts::CodeCuts(){
     h_MissingMass_vsMissingMasskaonpion[0]->Fill(Wneutron_kaon.M(), Wneutron_pion.M());
 
       
-    //----------Correlación momentums vs missing mass------------------------//
-      
-    if( Lambda.M()<1.11 || Lambda.M()>1.132) 
-      h_MissingPvsMass[0]->Fill(Wneutron_kaon.M(),Wneutron_kaon.P());
-      
-    if( Sigma.M()<1.08 || Sigma.M()>1.3)
-      h_MissingPvsMass[1]->Fill(Wneutron_kaon.M(),Wneutron_kaon.P());
+   
+    
       
       
     if ( Wneutron_pion.M() < 0.98) continue;       //Cut from correlation MM  
@@ -311,7 +306,16 @@ void Codecuts::CodeCuts(){
     //Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
     //+TMath::Power((Wneutron_kaon.M()-offsetx)*sin(angle)-(Wneutron_pion.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
     //if(El > 1) continue;
-     
+
+     //----------Correlación momentums vs missing mass------------------------//
+      
+    if( Lambda.M()<1.11 || Lambda.M()>1.132) 
+      h_MissingPvsMass[0]->Fill(Sigma.M(),Wneutron_kaon.P());
+    
+    if( Sigma.M()<1.08 || Sigma.M()>1.3)
+      h_MissingPvsMass[1]->Fill(Lambda.M(),Wneutron_kaon.P());
+
+     h_MissingMassvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.P());
     
     h_MissingMasscut->Fill(Wneutron_kaon.M());
     h_MissingMass_kaonpioncut->Fill(Wneutron_pion.M());
@@ -349,23 +353,29 @@ void Codecuts::CodeCuts(){
     if( Sigma.M()<1.08 || Sigma.M()>1.3)
       h_MissingP[1]->Fill(Wneutron_kaon.P());
            
-    if ( Lambda.M()>=1.11 && Lambda.M()<=1.132) continue;                   //Cut for LamdaMass in +/- 3sigma
+    if ( Lambda.M()>=1.1 && Lambda.M()<=1.132) continue;                   //Cut for LamdaMass in +/- 8sigma
     Events[16]++;         //Events With Lambda cuts
 
+
+    //--------Correlation Momentums--------------//
+    h_CorrelationMMomentum->Fill(Sigma.P(), Lambda.P());
     
     // Events[17]++;         //Events With Mass neutron range
     if(Wneutron_kaon.P()<=0.2) continue;                                    //Cut for rescattering
     Events[18]++;         //Events With Neutron Rescattering Lambada cuts
 
+  
     h_InvariantMasscut[3]->Fill(Sigma.M());
-    h_MissingMassvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.M());
+   
+    h_MMassSigmaCut->Fill(MMSigma.M());
       
     // Pion -  (Por si las moscas)
     h_DeltaBVSInvariantMass->Fill(Sigma.M(),deltbeta[2]);
     h_DeltaBVSMissingMass->Fill(Wneutron_kaon.M(),deltbeta[2]);
     h_DeltaBVSMissingMomentum->Fill(Wneutron_kaon.P(),deltbeta[2]);
 
-
+    //------------Momentum proton----------------.//
+    h_MomentumProton->Fill(proton.P());
    
     //-----------------BOOST------------------------------//
 
