@@ -85,11 +85,12 @@ protected:
   
   //--Correlations between Invariant and missing mass (lambda and sigma)--//
   TH2F *h_InvMassLambda_vsInvMassSigma    = NULL;
-  TH2F *h_InvMassLambda_vsMMassSigma      = NULL;
-
+  TH2F *h_MMNeutron_vsMMassSigma[2]       = {};
+  
   //-----Correlation Momentums (lambda and Sigma)----//
   TH2F *h_CorrelationMMomentum            = NULL;
   
+
   //--- Ellipse Cuts ---- //
   
   // TEllipse *myEllipse                     = NULL;
@@ -373,11 +374,19 @@ void Histograms::DoHistograms(){
 				   100, 0.95, 1.45);
   
   
-  //--------------Correlation Invariant mass (Lambda) and Missing mass Sigma----//
-  h_InvMassLambda_vsMMassSigma = new TH2F("h_InvMassLambda_vsMMassSigma",
-				      "; Missing mass Sigma (#pi^{-} n) [GeV/c^{2}]; Invariant mass (#pi^{-} p) [GeV/c^{2}]",
-				      200,1.06,1.4, 200, 1.0, 1.5);
+  //--------------Correlation MM neutron and Missing mass Sigma----//
+  
+  h_MMNeutron_vsMMassSigma[0] = new TH2F("h_MMNeutron_vsMMassSigma",
+					 "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; #gamma d #rightarrow K^{+} X p [GeV/c^{2}]",
+					 200, 0.6, 1.5,200,1,1.4);
  
+
+
+  h_MMNeutron_vsMMassSigma[1] = new TH2F("h_MMNeutron_vsMMassSigmaC",
+					 "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; #gamma d #rightarrow K^{+} X p [GeV/c^{2}]",
+					 200, 0.6, 1.5,200,1,1.4);
+ 
+
 
   //myEllipse = new TEllipse(offsetx,offsety,radx,rady,0,360,70);
 
@@ -1055,10 +1064,21 @@ void Histograms::DoCanvas(){
   //--------------Correlation Invariant mass (Lambda) vs Missing Mass Sigma----//
   TCanvas *cIMMM=new TCanvas("cIMMM","Correlation Invariant mass (lambda) vs Missing Mass Sigma", 900, 500);
   cIMMM->cd(1);
-  h_InvMassLambda_vsMMassSigma->SetTitleSize(0.045, "XY");  
-  h_InvMassLambda_vsMMassSigma->Draw("colz");
+  h_MMNeutron_vsMMassSigma[0]->SetTitleSize(0.045, "XY");  
+  h_MMNeutron_vsMMassSigma[0]->Draw("colz");
   
-   cIMMM->SaveAs("imagenes/InvariantMassMMSigmaCorrelation.eps");
+  cIMMM->SaveAs("imagenes/InvariantMassMMSigmaCorrelation.eps");
+
+
+  TCanvas *cIMMMC=new TCanvas("cIMMMC","Correlation Invariant mass (lambda) vs Missing Mass Sigma", 900, 500);
+  cIMMMC->cd(1);
+  h_MMNeutron_vsMMassSigma[1]->SetTitleSize(0.045, "XY");  
+  h_MMNeutron_vsMMassSigma[1]->Draw("colz");
+  
+  cIMMMC->SaveAs("imagenes/InvariantMassMMSigmaCorrelation_C.eps");
+
+ 
+
 
   //------------ Final Invarian Mass ---------------//
   
