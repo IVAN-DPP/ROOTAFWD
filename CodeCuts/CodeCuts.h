@@ -284,11 +284,11 @@ void Codecuts::CodeCuts(){
     Neutron.SetXYZM(Wneutron_kaon.Px(), Wneutron_kaon.Py(), Wneutron_kaon.Pz(), 0.939);
     Sigma = pion + Neutron;
     Lambda = pion + proton;
-    MMSigma= photon + deuteron - proton - kaon; //This it to make correlation with invariant mass (lambda)
+    MMSigma= photon + deuteron - proton - kaon;              			// Correlation with invariant mass (lambda)
     
-    WBoost = photon + deuteron; // to make Boost
+    WBoost = photon + deuteron; 						// to make Boost
       
-    Wneutron_pion = photon + deuteron - proton - kaonpion - pion;         // This missing mass is with the Pion-
+    Wneutron_pion = photon + deuteron - proton - kaonpion - pion;        	// This missing mass is with the Pion-
       
       
     h_MissingMass->Fill(Wneutron_kaon.M());
@@ -311,7 +311,6 @@ void Codecuts::CodeCuts(){
     //Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
     //+TMath::Power((Wneutron_kaon.M()-offsetx)*sin(angle)-(Wneutron_pion.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
     //if(El > 1) continue;
-     
     
     h_MissingMasscut->Fill(Wneutron_kaon.M());
     h_MissingMass_kaonpioncut->Fill(Wneutron_pion.M());
@@ -325,9 +324,9 @@ void Codecuts::CodeCuts(){
     h_LambdaMass->Fill(Lambda.M());
     h_InvMassLambda_vsInvMassSigma->Fill(Sigma.M(), Lambda.M());
     h_MMassSigma->Fill(MMSigma.M());
-    h_InvMassLambda_vsMMassSigma->Fill(MMSigma.M(), Lambda.M());
-      
-      
+    h_MMNeutron_vsMMassSigma[0]->Fill(Wneutron_kaon.M(),MMSigma.M());
+
+
     //------------------------Comparación de sigmas-------------//
     if( Lambda.M()<1.108 || Lambda.M()>1.124)
       h_InvariantMasscut[0]->Fill(Sigma.M());
@@ -342,14 +341,10 @@ void Codecuts::CodeCuts(){
     //------------- Comparación de missing momentums-----------//
       
     if( Lambda.M()<1.096 || Lambda.M()>1.136) 
-      h_MissingP[0]->Fill(Wneutron_kaon.P());
-      
-      
-      
+      h_MissingP[0]->Fill(Wneutron_kaon.P());   
     if( Sigma.M()<1.08 || Sigma.M()>1.3)
       h_MissingP[1]->Fill(Wneutron_kaon.P());
-           
-    if ( Lambda.M()>=1.11 && Lambda.M()<=1.132) continue;                   //Cut for LamdaMass in +/- 3sigma
+    if ( Lambda.M()>=1.1 && Lambda.M()<=1.132) continue;                   //Cut for LamdaMass in +/- 8sigma
     Events[16]++;         //Events With Lambda cuts
 
     
@@ -357,6 +352,7 @@ void Codecuts::CodeCuts(){
     if(Wneutron_kaon.P()<=0.2) continue;                                    //Cut for rescattering
     Events[18]++;         //Events With Neutron Rescattering Lambada cuts
 
+    h_MMNeutron_vsMMassSigma[1]->Fill(Wneutron_kaon.M(),MMSigma.M());       //Cut MM neutron and MM sigma 
     h_InvariantMasscut[3]->Fill(Sigma.M());
     h_MissingMassvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.M());
       
