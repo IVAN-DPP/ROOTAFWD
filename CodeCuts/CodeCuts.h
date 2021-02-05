@@ -2,18 +2,162 @@
 #include "./include/Libraries.h"
 #include "./include/Miscelaneous.h"
 
-#ifndef CODECUTS_H
-#define CODECUTS_H
+#ifndef CODECUTS_H 
+#define CODECUTS_H 
 
-class Codecuts : public Histograms {
+class Codecuts : public Histograms{
 
 private:
 
 public:
   Codecuts(){DoHistograms();}
+  void CodeCutsDB();
   void CodeCuts();
-
 };
+
+void Codecuts::CodeCutsDB(){
+
+  string treeName="g13b";  
+  string fileNamePERP="./SKIMS/ListFiles.txt";
+  DataEvent *myDataList=new DataEvent(fileNamePERP,treeName, 35);
+  
+  while (myDataList->getEntry()<myDataList->getEntries()){
+    
+    myDataList->getNextEntry();
+    if (myDataList->getEntry() % 1000 == 0){
+      if(myDataList->getCoh_plan() == 0){
+	fprintf (stderr, "Looped %s : %.2f percent, CohEdge %f BeamE %f \r", "PARA" ,myDataList->getEntry()*100.0/myDataList->getEntries(),myDataList->getCoh_edge_nom(),myDataList->getBeam_en());
+	fflush (stderr);
+      }
+      else {
+	fprintf (stderr, "Looped %s : %.2f percent, CohEdge %f BeamE %f \r", "PERP" ,myDataList->getEntry()*100.0/myDataList->getEntries(),myDataList->getCoh_edge_nom(),myDataList->getBeam_en());
+	fflush (stderr);
+      }
+    }
+      
+      
+    //------------------ Delta Beta ---------------//
+    double deltbeta[3]     = {};      
+    //---------- Vertex ------------ //
+      
+      
+    h_Vertex->Fill(myDataList->getEVNT_vertex(1).Z());
+    if(myDataList->getEVNT_vertex(1).Z()<-39.0  || myDataList->getEVNT_vertex(1).Z()>-1.0) continue;
+      
+    for (int i=0;i<myDataList->getNum_chargedtracks();i++){
+      deltbeta[i]=myDataList->getEVNT_track(i).Beta()-myDataList->getEVNT_bem(i);
+      h_DeltaBe[i]->Fill(myDataList->getEVNT_track(i).Rho(),deltbeta[i]);
+    }
+
+  }
+  cout << endl;
+
+  //Slices to each bean and each particle in DB
+
+  TH1D *h_DeltaBSSig[3] = {};
+  TF1 *FunctionsFit = new TF1("","gaus");
+  h_DeltaBe[0]->FitSlicesY(FunctionsFit,0,-1,0,"s");
+  h_DeltaBSl[0] = (TH1D*)gDirectory->Get("h_DeltaBe_0_1");
+  h_DeltaBSSig[0] = (TH1D*)gDirectory->Get("h_DeltaBe_0_2");
+  FunctionsFit->Clear();
+  // TODO: Hacer un fit!!!! 
+  h_DeltaBe[1]->FitSlicesY(FunctionsFit,0,-1,0,"s");
+  h_DeltaBSl[1] = (TH1D*)gDirectory->Get("h_DeltaBe_1_1");
+  h_DeltaBSSig[1] = (TH1D*)gDirectory->Get("h_DeltaBe_1_2");
+  FunctionsFit->Clear();
+  // TODO: Hacer un fit!!!! 
+  h_DeltaBe[2]->FitSlicesY(FunctionsFit,0,-1,0,"s");
+  h_DeltaBSl[2] = (TH1D*)gDirectory->Get("h_DeltaBe_2_1");
+  h_DeltaBSSig[2] = (TH1D*)gDirectory->Get("h_DeltaBe_2_2");
+  FunctionsFit->Clear();
+  // TODO: Hacer un fit!!!! 
+  
+  vector<vector<double>> hVec1(5);
+  vector<vector<double>> hVec2(5);
+  vector<vector<double>> hVec3(5);
+
+  for (int  i = 0; i < h_DeltaBSl[0]->GetSize()-100; i++) {
+    hVec1[0].push_back(h_DeltaBSl[0]->GetBinCenter(i));
+    hVec1[1].push_back(h_DeltaBSl[0]->GetBinContent(i)+
+		       h_DeltaBSSig[0]->GetBinContent(i));
+    hVec1[2].push_back(h_DeltaBSl[0]->GetBinContent(i)-
+		       h_DeltaBSSig[0]->GetBinContent(i));
+    hVec1[3].push_back(h_DeltaBSl[0]->GetBinErrorUp(i));
+    hVec1[4].push_back(h_DeltaBSl[0]->GetBinErrorLow(i));
+  }
+  for (int  i = 0; i < h_DeltaBSl[1]->GetSize()-100; i++) {
+    hVec2[0].push_back(h_DeltaBSl[1]->GetBinCenter(i));
+    hVec2[1].push_back(h_DeltaBSl[1]->GetBinContent(i)+
+		       h_DeltaBSSig[1]->GetBinContent(i));
+    hVec2[2].push_back(h_DeltaBSl[1]->GetBinContent(i)-
+		       h_DeltaBSSig[1]->GetBinContent(i));
+    hVec2[3].push_back(h_DeltaBSl[1]->GetBinErrorUp(i));
+    hVec2[4].push_back(h_DeltaBSl[1]->GetBinErrorLow(i));
+  }
+  for (int  i = 0; i < h_DeltaBSl[2]->GetSize()-100; i++) {
+    hVec3[0].push_back(h_DeltaBSl[2]->GetBinCenter(i));
+    hVec3[1].push_back(h_DeltaBSl[2]->GetBinContent(i)+
+		       h_DeltaBSSig[2]->GetBinContent(i));
+    hVec3[2].push_back(h_DeltaBSl[2]->GetBinContent(i)-
+		       h_DeltaBSSig[2]->GetBinContent(i));
+    hVec3[3].push_back(h_DeltaBSl[2]->GetBinErrorUp(i));
+    hVec3[4].push_back(h_DeltaBSl[2]->GetBinErrorLow(i));
+  }
+
+  double hArray1[5][hVec1[0].size()];
+  double hArray2[5][hVec2[0].size()];
+  double hArray3[5][hVec3[0].size()];
+
+
+  for (unsigned int i = 0; i < hVec1[0].size(); i++) {
+    hArray1[0][i]=hVec1[0][i];
+    hArray1[1][i]=hVec1[1][i];
+    hArray1[2][i]=hVec1[2][i];
+    hArray1[3][i]=hVec1[3][i];
+    hArray1[4][i]=hVec1[4][i];
+  }
+  for (unsigned int i = 0; i < hVec2[0].size(); i++) {
+    hArray2[0][i]=hVec2[0][i];
+    hArray2[1][i]=hVec2[1][i];
+    hArray2[2][i]=hVec2[2][i];
+    hArray2[3][i]=hVec2[3][i];
+    hArray2[4][i]=hVec2[4][i];
+  }
+  for (unsigned int i = 0; i < hVec3[0].size(); i++) {	
+    hArray3[0][i]=hVec3[0][i];
+    hArray3[1][i]=hVec3[1][i];
+    hArray3[2][i]=hVec3[2][i];
+    hArray3[3][i]=hVec3[3][i];
+    hArray3[4][i]=hVec3[4][i];
+  }
+
+  //TODO: Arreglar las barras de error y ponerlas
+  Grap1[0] = new TGraphErrors(hVec1[0].size(),hArray1[0],hArray1[1],hArray1[3],hArray1[4]);
+  Grap1[1] = new TGraphErrors(hVec1[0].size(),hArray1[0],hArray1[2],hArray1[3],hArray1[4]);
+  Grap2[0] = new TGraphErrors(hVec2[0].size(),hArray2[0],hArray2[1],hArray2[3],hArray2[4]);
+  Grap2[1] = new TGraphErrors(hVec2[0].size(),hArray2[0],hArray2[2],hArray2[3],hArray2[4]);
+  Grap3[0] = new TGraphErrors(hVec3[0].size(),hArray3[0],hArray3[1],hArray3[3],hArray3[4]);
+  Grap3[1] = new TGraphErrors(hVec3[0].size(),hArray3[0],hArray3[2],hArray3[3],hArray3[4]);    
+
+  
+  //Fit functions
+
+  //------ Proton ------//
+  
+  Grap1[0]->Fit(FFitsFunctionsUp[0],"R");
+  Grap1[1]->Fit(FFitsFunctionsLow[0],"R");
+  
+  //------ Kaon ------//
+
+  Grap2[0]->Fit(FFitsFunctionsUp[1]);
+  Grap2[1]->Fit(FFitsFunctionsLow[1]);
+   
+  //------ Pion ------//
+  
+  Grap3[0]->Fit(FFitsFunctionsUp[2],"R");
+  Grap3[1]->Fit(FFitsFunctionsLow[2],"R");  
+
+}
 
 void Codecuts::CodeCuts(){
 
@@ -39,7 +183,12 @@ void Codecuts::CodeCuts(){
     char *cstr = const_cast<char *>(PolTableName[i].c_str());
     LoadPolTable(i,cstr,keysPlane);
   }
-  
+
+  h_Vertex->Clear();
+  h_DeltaBe[0]->Clear();
+  h_DeltaBe[1]->Clear();
+  h_DeltaBe[2]->Clear();
+      
   while (myDataList->getEntry()<myDataList->getEntries()){
 
     myDataList->getNextEntry();
@@ -58,9 +207,8 @@ void Codecuts::CodeCuts(){
     Events[0]++;         //Events Without Cuts
 
     //------------------ Delta Beta ---------------//
-    double deltbeta[3]     = {};
     double deltbetacut[3]  = {};
-      
+    double deltbeta[3]    = {};  
     //---------- Vertex ------------ //
       
       
@@ -81,32 +229,36 @@ void Codecuts::CodeCuts(){
 	h_Mass[1]->Fill(myDataList->getEVNT_track(i).Mt());
     }
 
-    
+
     
     //------------------ Delta Beta with Cuts ---------------//
     
     for (int i=0;i<myDataList->getNum_chargedtracks();i++){
       deltbetacut[i]=myDataList->getEVNT_track(i).Beta()-myDataList->getEVNT_bem(i);
-	
-      if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue; 
-      if(deltbetacut[0] > 0.02  || deltbetacut[0] < -0.02) continue;
-      if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
-
-
+      
+      if(FFitsFunctionsUp[i]->Eval(myDataList->getEVNT_track(i).Rho()) <= deltbetacut[i] ||
+	 FFitsFunctionsLow[i]->Eval(myDataList->getEVNT_track(i).Rho()) >= deltbetacut[i]) continue;
+      
       h_DeltaBecut[i]->Fill(myDataList->getEVNT_track(i).Rho(),deltbeta[i]);
       h_BeVSpcut[i]->Fill(myDataList->getEVNT_track(i).Rho(),myDataList->getEVNT_bem(i));
 
     }
 
-    if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue;
+    if(FFitsFunctionsUp[0]->Eval(myDataList->getEVNT_track(0).Rho()) <= deltbetacut[0] ||
+       FFitsFunctionsLow[0]->Eval(myDataList->getEVNT_track(0).Rho()) >= deltbetacut[0]) continue;
     Events[2]++;         //Events With DeltaB cut
-    if(deltbetacut[0] > 0.02  || deltbetacut[0] < -0.02) continue;
+    if(FFitsFunctionsUp[1]->Eval(myDataList->getEVNT_track(1).Rho()) <= deltbetacut[1] ||
+       FFitsFunctionsLow[1]->Eval(myDataList->getEVNT_track(1).Rho()) >= deltbetacut[1]) continue;
     Events[3]++;         //Events With DeltaB cut
-    if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
-    Events[4]++;         //Events With DeltaB cut
+    if(FFitsFunctionsUp[2]->Eval(myDataList->getEVNT_track(2).Rho()) <= deltbetacut[2] ||
+       FFitsFunctionsLow[2]->Eval(myDataList->getEVNT_track(2).Rho()) >= deltbetacut[2]) continue;
+    Events[4]++;         //Events With DeltaB cut      
     
-    
-    
+    // if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue; 
+    // if(deltbetacut[0] > 0.02  || deltbetacut[0] < -0.02) continue;
+    // if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
+    //Cut from Delta Beta vs Missingmass,Missing momentum, Invariantmass
+   
     
    
     //------------------Correlation Theta-Phi, -----------------------/
@@ -416,7 +568,9 @@ void Codecuts::CodeCuts(){
   GetEventPercentLatex(Events, "./EventCuts.tex", "Event Cut Tables", "eventtab");
   GetEventPercent(Events);
   DoCanvas();
-  
+
 }
+
+
 
 #endif
