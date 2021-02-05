@@ -2,17 +2,18 @@ Analysis_C_ACLiC_dict_rdict.pcm
 Analysis_C.so
 *~
 Analysis_C.d
-PARA/
-PERP/
-CodeCuts/PARA
-CodeCuts/PERP
+CodeCuts/SKIMS/PARA
+CodeCuts/SKIMS/PERP
 CodeCuts/imagenes
 CodeCuts/*.d
 CodeCuts/*.so
 CodeCuts/*.pcm
-CodeCuts/Tables
+CodeCuts/TABLES/Tables
+CodeCuts/TABLES/ListTables
 CodeCuts/Boostest.C
 CodeCuts/Salida.dat
 CodeCuts/Salida2.dat
 CodeCuts/Asymmetry.png
 CodeCuts/Phi_Distribution Kaon.png
+CodeCuts/PolTable.tex
+CodeCuts/EventCuts.tex

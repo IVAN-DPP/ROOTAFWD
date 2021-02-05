@@ -18,23 +18,22 @@ public:
 void Codecuts::CodeCutsDB(){
 
   string treeName="g13b";  
-  string fileNamePERP="ListFiles.txt";
+  string fileNamePERP="./SKIMS/ListFiles.txt";
   DataEvent *myDataList=new DataEvent(fileNamePERP,treeName, 35);
   
   while (myDataList->getEntry()<myDataList->getEntries()){
-
+    
     myDataList->getNextEntry();
     if (myDataList->getEntry() % 1000 == 0){
       if(myDataList->getCoh_plan() == 0){
-	fprintf (stderr, "Looped Delta Beta %s : %.2f percent \r", "PARA" ,myDataList->getEntry()*100.0/myDataList->getEntries());
+	fprintf (stderr, "Looped %s : %.2f percent, CohEdge %f BeamE %f \r", "PARA" ,myDataList->getEntry()*100.0/myDataList->getEntries(),myDataList->getCoh_edge_nom(),myDataList->getBeam_en());
 	fflush (stderr);
       }
       else {
-	fprintf (stderr, "Looped Delta Beta %s : %.2f percent \r", "PERP" ,myDataList->getEntry()*100.0/myDataList->getEntries());
+	fprintf (stderr, "Looped %s : %.2f percent, CohEdge %f BeamE %f \r", "PERP" ,myDataList->getEntry()*100.0/myDataList->getEntries(),myDataList->getCoh_edge_nom(),myDataList->getBeam_en());
 	fflush (stderr);
       }
     }
-      
       
       
     //------------------ Delta Beta ---------------//
@@ -164,16 +163,20 @@ void Codecuts::CodeCuts(){
 
   
   string treeName="g13b";  
-  string fileNamePERP="ListFiles.txt";
+  string fileNamePERP="./SKIMS/ListFiles.txt";
   DataEvent *myDataList=new DataEvent(fileNamePERP,treeName, 35);
   
   vector<string> PolTableName;
-  ListFilesAtDir("./ListTables", PolTableName);
+  ListFilesAtDir("./TABLES/ListTables", PolTableName);
   
   map<vector<float>,int> keysPlane;
-  
+
+  //Average Table Polarization
   vector<double> vecInitDob(2);   vector<vector<double>> AvP(10,vecInitDob);
   vector<int> vecInitInt(2);      vector<vector<int>> ItP(10,vecInitInt);
+
+  //Table Events X 14 cuts
+  vector<int> Events(19);
   
   const int NumbOfPolFiles=PolTableName.size();
   for (int i=0;i<NumbOfPolFiles;i++){
@@ -191,17 +194,18 @@ void Codecuts::CodeCuts(){
     myDataList->getNextEntry();
     if (myDataList->getEntry() % 1000 == 0){
       if(myDataList->getCoh_plan() == 0){
-	fprintf (stderr, "Looped %s : %.2f percent \r", "PARA" ,myDataList->getEntry()*100.0/myDataList->getEntries());
+	fprintf (stderr, "Looped %s : %.2f percent, CohEdge %f BeamE %f \r", "PARA" ,myDataList->getEntry()*100.0/myDataList->getEntries(),myDataList->getCoh_edge_nom(),myDataList->getBeam_en());
 	fflush (stderr);
       }
       else {
-	fprintf (stderr, "Looped %s : %.2f percent \r", "PERP" ,myDataList->getEntry()*100.0/myDataList->getEntries());
+	fprintf (stderr, "Looped %s : %.2f percent, CohEdge %f BeamE %f \r", "PERP" ,myDataList->getEntry()*100.0/myDataList->getEntries(),myDataList->getCoh_edge_nom(),myDataList->getBeam_en());
 	fflush (stderr);
       }
     }
       
       
-      
+    Events[0]++;         //Events Without Cuts
+
     //------------------ Delta Beta ---------------//
     double deltbetacut[3]  = {};
     double deltbeta[3]    = {};  
@@ -210,7 +214,9 @@ void Codecuts::CodeCuts(){
       
     h_Vertex->Fill(myDataList->getEVNT_vertex(1).Z());
     if(myDataList->getEVNT_vertex(1).Z()<-39.0  || myDataList->getEVNT_vertex(1).Z()>-1.0) continue;
-      
+
+    Events[1]++;         //Events With Vertex Cut
+    
     for (int i=0;i<myDataList->getNum_chargedtracks();i++){
       deltbeta[i]=myDataList->getEVNT_track(i).Beta()-myDataList->getEVNT_bem(i);
       h_DeltaBe[i]->Fill(myDataList->getEVNT_track(i).Rho(),deltbeta[i]);
@@ -240,21 +246,19 @@ void Codecuts::CodeCuts(){
 
     if(FFitsFunctionsUp[0]->Eval(myDataList->getEVNT_track(0).Rho()) <= deltbetacut[0] ||
        FFitsFunctionsLow[0]->Eval(myDataList->getEVNT_track(0).Rho()) >= deltbetacut[0]) continue;
-
+    Events[2]++;         //Events With DeltaB cut
     if(FFitsFunctionsUp[1]->Eval(myDataList->getEVNT_track(1).Rho()) <= deltbetacut[1] ||
        FFitsFunctionsLow[1]->Eval(myDataList->getEVNT_track(1).Rho()) >= deltbetacut[1]) continue;
-
+    Events[3]++;         //Events With DeltaB cut
     if(FFitsFunctionsUp[2]->Eval(myDataList->getEVNT_track(2).Rho()) <= deltbetacut[2] ||
        FFitsFunctionsLow[2]->Eval(myDataList->getEVNT_track(2).Rho()) >= deltbetacut[2]) continue;
-      
+    Events[4]++;         //Events With DeltaB cut      
     
     // if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue; 
     // if(deltbetacut[0] > 0.02  || deltbetacut[0] < -0.02) continue;
     // if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
     //Cut from Delta Beta vs Missingmass,Missing momentum, Invariantmass
-    
-    
-    
+   
     
    
     //------------------Correlation Theta-Phi, -----------------------/
@@ -286,7 +290,8 @@ void Codecuts::CodeCuts(){
        F_ThePhiProt[6]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg()) continue;
        
     h_ThePhicut[0]->Fill(phiproton_cut, myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg());
-        
+
+    Events[5]++;         //Events With Phi-Theta Cuts
     //kaon cuts
     Double_t phikaon_cut;
     phikaon_cut= myDataList->getEVNT_track(1).Phi()*TMath::RadToDeg();
@@ -308,7 +313,7 @@ void Codecuts::CodeCuts(){
 
     h_ThePhicut[1]->Fill(phikaon_cut, myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg());
 
-   
+    Events[6]++;         //Events With Phi-Theta Cuts   
       
     //Pion cuts
     
@@ -332,7 +337,9 @@ void Codecuts::CodeCuts(){
 
     
     h_ThePhicut[2]->Fill(phiPion_cut, myDataList->getEVNT_track(2).Theta()*TMath::RadToDeg());
-      
+
+    Events[7]++;         //Events With Phi-Theta Cuts   
+    
     //------------------ Photons, Delta T  ------------------ // 
       
     for (int i=0;i<myDataList->getNum_photons();i++){
@@ -355,6 +362,7 @@ void Codecuts::CodeCuts(){
       h_DeltaT[1]->Fill(myDataList->getDelt_t_pi(myDataList->getIndex_pi(0)));
       
     if (myDataList->getNumph_k()!=1) continue;
+    Events[8]++;         //Events With Delta T Photon cut
     //if (myDataList->getNumph_pi()!=1) continue;
       
     //--------------- Energy loss ----------- //
@@ -383,22 +391,33 @@ void Codecuts::CodeCuts(){
       
     h_TagrEpho[0]->Fill(myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0);
     if (myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0 > myDataList->getCoh_edge()) continue;
-    h_TagrEpho[1]->Fill(myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0);
+    h_TagrEpho[1]->Fill(myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0);        Events[9]++;         //Events With Tager Epho
     if (myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000< myDataList->getCoh_edge()-200.0) continue;
-    h_TagrEpho[2]->Fill(myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0);
-    if (fabs(myDataList->getCoh_edge()-myDataList->getCoh_edge_nom()*1000)>15)continue;
-    if (myDataList->getTrip_flag()!=0)continue;
-    if (myDataList->getCoh_plan()!=0 && myDataList->getCoh_plan()!=1)continue;
+    h_TagrEpho[2]->Fill(myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0);        Events[10]++;         //Events With Tager Epho
+    if (fabs(myDataList->getCoh_edge()-myDataList->getCoh_edge_nom()*1000)>15)continue;     Events[11]++;         //Events With Tager Epho
+    if (myDataList->getTrip_flag()!=0)continue;                                             Events[12]++;         //Events With Tager Epho
+    if (myDataList->getCoh_plan()!=0 && myDataList->getCoh_plan()!=1)continue;              Events[13]++;         //Events With Tager Epho
 
-    vector<float> Keys{myDataList->getBeam_en(),myDataList->getCoh_edge_nom(),float(myDataList->getCoh_plan())};
+    vector<float> Keys(3);
+    if(myDataList->getCoh_edge_nom() == float(1.3)){
+      Keys[0]=float(4.2);
+      Keys[1]=myDataList->getCoh_edge_nom();
+      Keys[2]=float(myDataList->getCoh_plan());
+  }
+    else{
+      Keys[0]=float(myDataList->getBeam_en());
+      Keys[1]=myDataList->getCoh_edge_nom();
+      Keys[2]=float(myDataList->getCoh_plan());
+  }
         
     double PhotoPol=0;
-    PhotoPol=GetPol(keysPlane[Keys], myDataList->getCoh_edge(), myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0, 8, 0.2,0.3); 
+    PhotoPol=GetPol(keysPlane[Keys], myDataList->getCoh_edge(), myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0, 8, 0.2,0.3);
     
     if (PhotoPol<0.5) continue;
     
     GetPolAv(Keys,ItP,AvP,PhotoPol);
-    
+    Events[14]++;         //Events With PhotoPol Tables
+
     //-------------- Reconstruction --------- //
       
     TLorentzVector photon, deuteron, kaon, kaonpion, proton, pion, Wneutron_kaon, Wneutron_pion, Sigma, Lambda, Neutron, WBoost;
@@ -442,8 +461,8 @@ void Codecuts::CodeCuts(){
       +TMath::Power((Wneutron_kaon.M()-offsetx)*sin(angle)-(Wneutron_pion.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
       
     if(El > 1) continue;
-      
-      
+    Events[15]++;         //Events With NOT PION, YES Kaon 
+    
     h_MissingMasscut->Fill(Wneutron_kaon.M());
     h_MissingMass_kaonpioncut->Fill(Wneutron_pion.M());
       
@@ -478,15 +497,13 @@ void Codecuts::CodeCuts(){
       h_MissingP[1]->Fill(Wneutron_kaon.P());
       
       
-    if(Wneutron_kaon.P()<=0.2) continue;                                    //Cut for rescattering
-      
-      
-    // h_MissingPcut->Fill(Wneutron_kaon.P());
-      
-      
     if ( Lambda.M()>=1.11 && Lambda.M()<=1.132) continue;                   //Cut for LamdaMass in +/- 3sigma
+    Events[16]++;         //Events With Lambda cuts
     if ( Wneutron_kaon.M()<=0.9 || Wneutron_kaon.M()>=0.96 ) continue;       //Cut from correlation MM
-      
+    Events[17]++;         //Events With Mass neutron range
+    if(Wneutron_kaon.P()<=0.2) continue;                                    //Cut for rescattering
+    Events[18]++;         //Events With Neutron Rescattering Lambada cuts
+
     h_InvariantMasscut[3]->Fill(Sigma.M());
     h_MissingMassvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.M());
       
@@ -547,6 +564,9 @@ void Codecuts::CodeCuts(){
   cout<<endl;
 
   GetPolAvTable(ItP,AvP);
+  GetPolAvTableLatex(ItP, AvP, "./PolTable.tex","Polarization Tables","poltab");
+  GetEventPercentLatex(Events, "./EventCuts.tex", "Event Cut Tables", "eventtab");
+  GetEventPercent(Events);
   DoCanvas();
 
 }

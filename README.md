@@ -12,14 +12,22 @@
     <hr/>
     <br/>
     <h1 align="center">¿How Use This Code?</h1>
-    <p>To use this code you need has the directories into <em>CodeCuts</em>: </p>
+    <p>To use this code you need have the directories into <em>CodeCuts</em>: </p>
+    <img src="./READMEPIC/Dirs.png" align="center"/>
+    <h2>TABLES</h2>
     <ul>
+      <li><em>TABLES</em>, You must create this dir, into this dir you must create ListTables dir, next to this put the tables of polarization list into <em>TABLES</em> dir</li>
       <li><em>Tables</em>, it has the polarization tables</li>
+      <li><em>ListTables</em>, it has the list of polarization tables</li>
+    </ul>
+    <h2>SKIMS</h2>
+    <ul>
+      <li><em>SKIMS</em>, in this dir you must put the skims PARA and PERP</li>
       <li><em>PARA</em> and <em>PERP</em> skims with the form <em>include/DataEvent.h</em></li>
     </ul>
-    <img src="./READMEPIC/Dirs.png" align="center"/>
-    <hr/>
-    <br/>
+    <p>Finally run the script <em>Script.sh</em></p>
+    <h2>Files</h2>
+    <img src="./READMEPIC/Files.png" align="center"/>
     <h2>Files</h2>
     <ul>
       <li><a href="./CodeCuts/CodeCuts.h">CodeCuts.h</a> In this file you can change all kinds of cuts and make all physics process, also fill the histograms</li>
