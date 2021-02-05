@@ -293,7 +293,7 @@ void Codecuts::CodeCuts(){
       
     h_MissingMass->Fill(Wneutron_kaon.M());
     h_MissingMass_kaonpion->Fill(Wneutron_pion.M());
-    //h_MissingPvsMass->Fill(Wneutron_kaon.M(),Wneutron_kaon.P());
+    //h_MissingPvsIMMass->Fill(Wneutron_kaon.M(),Wneutron_kaon.P());
     h_MissingMass_vsMissingMasskaonpion[0]->Fill(Wneutron_kaon.M(), Wneutron_pion.M());
 
       
@@ -310,10 +310,10 @@ void Codecuts::CodeCuts(){
      //----------Correlación momentums vs missing mass------------------------//
       
     if( Lambda.M()<1.11 || Lambda.M()>1.132) 
-      h_MissingPvsMass[0]->Fill(Sigma.M(),Wneutron_kaon.P());
+      h_MissingPvsIMMass[0]->Fill(Sigma.M(),Wneutron_kaon.P());
     
     if( Sigma.M()<1.08 || Sigma.M()>1.3)
-      h_MissingPvsMass[1]->Fill(Lambda.M(),Wneutron_kaon.P());
+      h_MissingPvsIMMass[1]->Fill(Lambda.M(),Wneutron_kaon.P());
 
      h_MissingMassvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.P());
     

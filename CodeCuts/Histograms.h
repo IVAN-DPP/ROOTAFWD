@@ -62,7 +62,7 @@ protected:
 
   TH1F *h_MissingP[2]                      = {};
   TH1F *h_MissingPcut[2]                   = {};
-  TH2F *h_MissingPvsMass[2]                = {};
+  TH2F *h_MissingPvsIMMass[2]                = {};
   TH2F *h_MissingMassvsSigmaMass          = NULL;
   TH2F *h_MissingPvsSigmaMass             = NULL;
 
@@ -131,10 +131,10 @@ public:
 
 void Histograms::DoHistograms(){
 
-  h_Vertex = new TH1F("h_Vertex","; Distancia [cm]; Conteo",200,0,-40);
+  h_Vertex = new TH1F("h_Vertex","; Distance [cm]; Frequency",200,0,-40);
 
-  h_Mass[0] = new TH1F("","; Masa [GeV/c^{2}]; Conteo",200,0,-1.5);
-  h_Mass[1] = new TH1F("","; Masa [GeV/c^{2}]; Conteo",200,0,-1.5);
+  h_Mass[0] = new TH1F("","; Mass [GeV/c^{2}]; Frequency",200,0,-1.5);
+  h_Mass[1] = new TH1F("","; Mass [GeV/c^{2}]; Frequency",200,0,-1.5);
   
   //------------------ Delta Beta ---------------//
   
@@ -144,7 +144,7 @@ void Histograms::DoHistograms(){
 
   
   h_BeVSp[0]=new TH2F("h_BeVSp_0"," ;p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
-  h_BeVSp[1]=new TH2F("h_BeVSp_1"," ;p [GeV/c];#beta;",200, 0, 3, 200, 0, 1);
+  h_BeVSp[1]=new TH2F("h_BeVSp_1"," ;p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
   h_BeVSp[2]=new TH2F("h_BeVSp_2"," ;p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
 
   h_BeVSpT = new TH2F("h_BeVSpT"," ; p [GeV/c]; #beta;",200, 0, 3, 200, 0, 1);
@@ -186,9 +186,9 @@ void Histograms::DoHistograms(){
 
   //-----Correlation Theta-Phi, ----------//
 
-  h_ThePhi[0] = new TH2F("h_ThePhi_proton"," ; #phi #circ; #theta #circ;",200, -180, 180, 200, 0, 150);
-  h_ThePhi[1] = new TH2F("h_ThePhi_kaon"," ; #phi #circ;#theta #circ;",200,  -180, 180, 200, 0, 150);
-  h_ThePhi[2] = new TH2F("h_ThePhi_pion"," ; #phi #circ;#theta #circ;", 200,  -180, 180, 200, 0, 150);
+  h_ThePhi[0] = new TH2F("h_ThePhi_proton"," ; Azimuthal Angle  #phi #circ; Polar Angle  #theta #circ;",200, -180, 180, 200, 0, 150);
+  h_ThePhi[1] = new TH2F("h_ThePhi_kaon"," ; Azimuthal Angle  #phi #circ; Polar Angle  #theta #circ;",200,  -180, 180, 200, 0, 150);
+  h_ThePhi[2] = new TH2F("h_ThePhi_pion"," ; Azimuthal Angle  #phi #circ; Polar Angle  #theta #circ;", 200,  -180, 180, 200, 0, 150);
 
   F_ThePhiProt[0] = new TF1("F_ThePhiProt[0]","-1/(0.01*(TMath::Abs(x-180)-28))+10",150,180);
   F_ThePhiProt[1] = new TF1("F_ThePhiProt[0]","-1/(0.01*(TMath::Abs(x-120)-28))+10",90,150);
@@ -201,16 +201,16 @@ void Histograms::DoHistograms(){
   //-------------Fiducial cuts-------------------------//
 
   
-  h_ThePhicut[0] = new TH2F("h_ThePhi_protoncut"," ; #phi #circ;#theta #circ;",200, -180, 180, 200, 0, 150);
-  h_ThePhicut[1] = new TH2F("h_ThePhi_kaoncut"," ; #phi #circ;#theta #circ;",200,  -180, 180, 200, 0, 150);
-  h_ThePhicut[2] = new TH2F("h_ThePhi_pioncut"," ;  #phi #circ;#theta #circ;", 200,  -180, 180, 200, 0, 150);
+  h_ThePhicut[0] = new TH2F("h_ThePhi_protoncut"," ;  Azimuthal Angle  #phi #circ; Polar Angle  #theta #circ;",200, -180, 180, 200, 0, 150);
+  h_ThePhicut[1] = new TH2F("h_ThePhi_kaoncut"," ;  Azimuthal Angle  #phi #circ; Polar Angle  #theta #circ;",200,  -180, 180, 200, 0, 150);
+  h_ThePhicut[2] = new TH2F("h_ThePhi_pioncut"," ;   Azimuthal Angle  #phi #circ; Polar Angle  #theta #circ;", 200,  -180, 180, 200, 0, 150);
 
 
   
   //------------------ Photons, Delta T  ------------------ // 
   
-  h_DeltaTall[0]=new TH1F("h_DeltaTall_0"," ;#Delta t [ns];Conteo;", 200, -10, 10);
-  h_DeltaTall[1]=new TH1F("h_DeltaTall_1"," ;#Delta t [ns];Conteo;", 200, -10, 10);
+  h_DeltaTall[0]=new TH1F("h_DeltaTall_0"," ;#Delta t [ns];Frequency;", 200, -10, 10);
+  h_DeltaTall[1]=new TH1F("h_DeltaTall_1"," ;#Delta t [ns];Frequency;", 200, -10, 10);
 
 
   h_DeltaTallvsp[0]=new TH2F("h_DeltaTallvsp_0"," ;p [GeV/c];#Delta t [ns];", 200, 0, 3, 200, -10, 10);
@@ -218,17 +218,17 @@ void Histograms::DoHistograms(){
 
   //------------Delta T with Cuts ----------- //
   
-  h_DeltaT[0]=new TH1F("h_DeltaT_0"," ;#Delta t [ns];Conteo;", 200, -10, 10);
-  h_DeltaT[1]=new TH1F("h_DeltaT_1"," ;#Delta t [ns];Conteo;", 200, -10, 10);
+  h_DeltaT[0]=new TH1F("h_DeltaT_0"," ;#Delta t [ns];Frequency;", 200, -10, 10);
+  h_DeltaT[1]=new TH1F("h_DeltaT_1"," ;#Delta t [ns];Frequency;", 200, -10, 10);
 
   //--------------- Energy loss ----------- //
 
-  h_eloss[0]=new TH1F("h_eloss_0","; (P_{eloss}-P_{med})/P_{med};Conteo;",50, 0, 0.05);
-  h_eloss[1]=new TH1F("h_eloss_1","; (P_{eloss}-P_{med})/P_{med};Conteo;",50, 0, .05);
-  h_eloss[2]=new TH1F("h_eloss_2","; (P_{eloss}-P_{med})/P_{med};Conteo",50, 0, .05);
-  h_Celoss[0]=new TH2F("h_Celoss_0"," ;P_{med} GeV/c];(P_{eloss}-P_{med})/P_{med};", 200, 0, 2.5, 200, 0, 0.25);
-  h_Celoss[1]=new TH2F("h_Celoss_1"," ;P_{med} [GeV/c];(P_{eloss}-P_{med})/P_{med};", 200, 0, 3, 200, 0, 0.15);
-  h_Celoss[2]=new TH2F("h_Celoss_2"," ;P_{med} [GeV/c];(P_{eloss}-P_{med})/P_{med};", 200, 0, 2.5, 200, 0, 0.25);
+  h_eloss[0]=new TH1F("h_eloss_0","; (P_{eloss}-P_{meas})/P_{meas};Frequency;",50, 0, 0.05);
+  h_eloss[1]=new TH1F("h_eloss_1","; (P_{eloss}-P_{meas})/P_{meas};Frequency;",50, 0, .05);
+  h_eloss[2]=new TH1F("h_eloss_2","; (P_{eloss}-P_{meas})/P_{meas};Frequency",50, 0, .05);
+  h_Celoss[0]=new TH2F("h_Celoss_0"," ;P_{meas} [GeV/c];(P_{eloss}-P_{meas})/P_{meas};", 200, 0, 2.5, 200, 0, 0.25);
+  h_Celoss[1]=new TH2F("h_Celoss_1"," ;P_{meas} [GeV/c];(P_{eloss}-P_{meas})/P_{meas};", 200, 0, 3, 200, 0, 0.15);
+  h_Celoss[2]=new TH2F("h_Celoss_2"," ;P_{meas} [GeV/c];(P_{eloss}-P_{meas})/P_{meas};", 200, 0, 2.5, 200, 0, 0.25);
 
   //---- Get Coherent Edge ---- //
 
@@ -239,58 +239,56 @@ void Histograms::DoHistograms(){
   //-------------- Reconstruction --------- //
 
   h_MissingMass = new TH1F("h_missingmass",
-			   "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Conteo",
+			   "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
 			   100, 0.7, 1.2);
   
   h_MissingMass_kaonpion = new TH1F("h_missingmass_kaonpion",
-				    "; #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]; Conteo",
+				    "; MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
 				    100, 0.7, 1.2);
 
   h_MissingMasscut = new TH1F("h_missingmasscut",
-			      "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Conteo",
+			      "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
 			      100, 0.7, 1.2);
   
   h_MissingMass_kaonpioncut = new TH1F("h_missingmass_kaonpioncut",
-				       " ; #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]; Conteo",
+				       " ; MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
 				       100, 0.7, 1.2);
 
   
   h_MissingMass_vsMissingMasskaonpion[0] = new TH2F("MissingMass_correlation",
-						    "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}];  #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]",
+						    "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]",
 						    100, 0.7, 1.2, 100, 0.7, 1.2);
 
   h_MissingMass_vsMissingMasskaonpion[1] = new TH2F("MissingMass_correlation_Cut",
-						    "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}];  #gamma d #rightarrow #pi^{+} #pi^{-} X p [GeV/c^{2}]",
+						    "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]",
 						    100, 0.7, 1.2, 100, 0.7, 1.2);
   
   h_MissingP[0] = new TH1F("h_missingpSigma",
-			   "; Missing momentum [GeV/c]; Conteo",
+			   "; Missing momentum (#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c]; Frequency",
 			   100, 0.0, 1.);
   h_MissingP[1] = new TH1F("h_missingpLambda",
-			   "; Missing momentum [GeV/c]; Conteo",
+			   "; Missing momentum (#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c]; Frequency",
 			   100, 0.0, 1.);
 
   h_MissingPcut[0] = new TH1F("h_missingpcutSigma",
-			      "; Missing momentum [GeV/c]; Conteo",
+			      "; Missing momentum (#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c]; Frequency",
 			      100, 0.0, 1.5);
   h_MissingPcut[1] = new TH1F("h_missingpcutLambda",
-			      "; Missing momentum [GeV/c]; Conteo",
+			      "; Missing momentum (#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c]; Frequency",
 			      100, 0.0, 1.5);
   
-
-
-
   
-  h_MissingPvsMass[0] = new TH2F("h_missingpvsmSigma",
-				 "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Missing Momentum (p) [GeV/c]",
+  h_MissingPvsIMMass[0] = new TH2F("h_missingpvsmSigma",
+				 "; IM(#pi^{-} n) [GeV/c^{2}]; Missing Momentum (#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c]",
 				 100, 0.7, 1.2, 100, 0.0, 1.5);
 
-  h_MissingPvsMass[1] = new TH2F("h_missingpvsmLambda",
-				 "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; Missing Momentum (p) [GeV/c]",
+  h_MissingPvsIMMass[1] = new TH2F("h_missingpvsmLambda",
+				 "; IM(#pi^{-} p) [GeV/c^{2}]; Missing Momentum (#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c]",
 				 100, 0.7, 1.2, 100, 0.0, 1.5);
 
 
   // ------- This aren't important -------- //
+  
   h_MissingMassvsSigmaMass = new TH2F("h_missingmvsSigma",
 				      "; Masa Invariante (#pi^{-} n) [GeV/c^{2}]; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]",
 				      100,1.0,1.5, 100, 0.7, 1.2);
@@ -302,42 +300,43 @@ void Histograms::DoHistograms(){
   // ----------------------------------- //
 
   h_InvariantMass = new TH1F("h_InvariantMass",
-			     "; Masa [GeV/c^{2}]; Conteo ",
+			     "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
 			     100, 1.0, 1.5);
   
   
   h_InvariantMasscut[0] = new TH1F("h_InvariantMasscut3Sig",
-				   "; Masa [GeV/c^{2}]; Conteo ",
+				   "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
 				   100, 1.0, 1.5);
 
   h_InvariantMasscut[1] = new TH1F("h_InvariantMasscut4Sig",
-				   "; Masa [GeV/c^{2}]; Conteo ",
+				   "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
 				   100, 1.0, 1.5);
 
   h_InvariantMasscut[2] = new TH1F("h_InvariantMasscut5Sig",
-				   "; Masa [GeV/c^{2}]; Conteo ",
+				   "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
 				   100, 1.0, 1.5);
   
   h_InvariantMasscut[3] = new TH1F("h_InvariantMasscut_ACP",
-				   "; Masa [GeV/c^{2}]; Conteo ",
+				   "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
 				   100, 1.0, 1.5);
 
   //----------Momentum proton---------------//
   
    h_MomentumProton = new TH1F("h_MomentumProton",
-			  "; Momentum [GeV/c]; Conteo ",
+			  "; Proton momentum [GeV/c]; Frequency ",
 			  100, 0, 2.0);
 
   
   //-------- Lambda and Lambda Fit ------ //
   
   h_LambdaMass = new TH1F("h_LambdaMass",
-			  "; Masa [GeV/c^{2}]; Conteo ",
+			  "; IM(#pi^{-} p) [GeV/c^{2}]; Frequency ",
 			  100, 1.08, 1.16);
 
   lamdaMassFit = new TF1("lamdaMassFit","gaus",1.08,1.16);
   
-  //----------------------------------//
+  //--------- Others --------------//
+  
   h_DeltaBVSInvariantMass = new TH2F("h_DeltaBVSInvariantMass",
 				     "",
 				     100,0, 2,100,-0.17, 0.17);
@@ -350,14 +349,17 @@ void Histograms::DoHistograms(){
 				       "",
 				       100,0, 1.5,100,-0.17, 0.17);
 
+
   //--------------Correlation Invariant masses (Lambda vs Sigma)----//
+
   h_InvMassLambda_vsInvMassSigma = new TH2F("h_InvMassLambda_vsInvMassSigma",
-				      "; Invariant mass (#pi^{-} n) [GeV/c^{2}]; Invariant mass (#pi^{-} p) [GeV/c^{2}]",
+				      "; IM(#pi^{-} n) [GeV/c^{2}]; IM(#pi^{-} p) [GeV/c^{2}]",
 				      200,1.06,1.4, 200, 1.0, 1.5);
 
-   //--------------Correlation momentums (Lambda vs Sigma)----//
+  //--------------Correlation momentums (Lambda vs Sigma)----//
+
   h_CorrelationMMomentum  = new TH2F("h_CorrelationMMomentum",
-				     "; Missing momentum [GeV/c^{2}]; Missing momentum [GeV/c^{2}] [GeV/c^{2}]",
+				     "; IM(#pi^{-} n) momentum [GeV/c^{2}]; IM(#pi^{-} p) momentum [GeV/c^{2}] [GeV/c^{2}]",
 				     200,0, 1.6 , 200, 0, 1.6);
 
 
@@ -365,25 +367,25 @@ void Histograms::DoHistograms(){
   
   //---------------Missing mass Sigma-----------------------------//
   h_MMassSigma = new TH1F("h_MMassSigma",
-				   "; Missing mass sigma  (#pi^{-} n) [GeV/c^{2}]; Conteo ",
+				   "; MM(#gamma d #rightarrow K^{+} X p) [GeV/c^{2}]; Frequency ",
 				   100, 0.95, 1.45);
 
   //--------Missing mass Sigma cut--------------//
   h_MMassSigmaCut = new TH1F("h_MMassSigmaCut",
-				   "; Missing mass sigma cut  (#pi^{-} n) [GeV/c^{2}]; Conteo ",
+				   "; MM(#gamma d #rightarrow K^{+} X p) [GeV/c^{2}]; Frequency ",
 				   100, 0.95, 1.45);
   
   
   //--------------Correlation MM neutron and Missing mass Sigma----//
   
   h_MMNeutron_vsMMassSigma[0] = new TH2F("h_MMNeutron_vsMMassSigma",
-					 "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; #gamma d #rightarrow K^{+} X p [GeV/c^{2}]",
+					 "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}]; MM(#gamma d #rightarrow K^{+} X p) [GeV/c^{2}]",
 					 200, 0.6, 1.5,200,1,1.4);
  
 
 
   h_MMNeutron_vsMMassSigma[1] = new TH2F("h_MMNeutron_vsMMassSigmaC",
-					 "; #gamma d #rightarrow K^{+} #pi^{-} X p [GeV/c^{2}]; #gamma d #rightarrow K^{+} X p [GeV/c^{2}]",
+					 "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}]; MM(#gamma d #rightarrow K^{+} X p) [GeV/c^{2}]",
 					 200, 0.6, 1.5,200,1,1.4);
  
 
@@ -946,15 +948,15 @@ void Histograms::DoCanvas(){
   TCanvas *c312=new TCanvas("c312","Missing Momentum vs Missing Mass", 1450, 500);
   c312->Divide(2,1);
   c312->cd(1);
-  h_MissingPvsMass[0]->SetLabelSize(0.05, "XY");
-  h_MissingPvsMass[0]->SetTitleSize(0.045, "XY");
-  h_MissingPvsMass[0]->Draw("colz");
+  h_MissingPvsIMMass[0]->SetLabelSize(0.05, "XY");
+  h_MissingPvsIMMass[0]->SetTitleSize(0.045, "XY");
+  h_MissingPvsIMMass[0]->Draw("colz");
   
 
   c312->cd(2);
-  h_MissingPvsMass[1]->SetLabelSize(0.05, "XY");
-  h_MissingPvsMass[1]->SetTitleSize(0.045, "XY");
-  h_MissingPvsMass[1]->Draw("colz");
+  h_MissingPvsIMMass[1]->SetLabelSize(0.05, "XY");
+  h_MissingPvsIMMass[1]->SetTitleSize(0.045, "XY");
+  h_MissingPvsIMMass[1]->Draw("colz");
   
   c312->SaveAs("imagenes/MissingMomentumCorrelation.eps");
 
@@ -963,7 +965,7 @@ void Histograms::DoCanvas(){
 
   //------ Lambda -------//
   
-  TCanvas *STDC = new TCanvas("STDC","Invariant mass", 900, 500);
+  TCanvas *STDC = new TCanvas("STDC","Invariant mass", 1450, 500);
   STDC->cd(1);
   h_LambdaMass->SetLabelSize(0.045, "XY");
   h_LambdaMass->SetTitleSize(0.043, "XY");
@@ -1058,7 +1060,7 @@ void Histograms::DoCanvas(){
   h_MMassSigmaCut->SetTitleSize(0.045, "XY");  
   h_MMassSigmaCut->Draw();
   
-  cMMS->SaveAs("imagenes/MissingMassSigmaCut.eps");
+  cMMSC->SaveAs("imagenes/MissingMassSigmaCut.eps");
 
   
   //--------------Correlation Invariant mass (Lambda) vs Missing Mass Sigma----//
