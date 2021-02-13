@@ -57,8 +57,9 @@ protected:
   TH1F *h_MissingMasscut                  = NULL;
   TH1F *h_MissingMass_kaonpioncut         = NULL;
   
-  TH2F *h_MissingMass_vsMissingMasskaonpion[2] = {};
-
+  TH2F *h_MissingMass_vsMissingMasskaonpion[2] 		= {};
+  TH2F *h_MissingMass_vsMissingMasskaonproton[2] 	= {};
+  TH2F *h_MissingMass_vsMissingMasspionkaon[2] 		= {};
 
   TH1F *h_MissingP[2]                      = {};
   TH1F *h_MissingPcut[2]                   = {};
@@ -93,9 +94,9 @@ protected:
 
   //--- Ellipse Cuts ---- //
   
-  // TEllipse *myEllipse                     = NULL;
-  //double radx=0.034, rady=0.02, offsetx=0.937, offsety=1.047, angle=70*TMath::DegToRad();
-  
+  TEllipse *myEllipse                     = NULL;
+  double radx=0.1569373, rady=0.03295391, offsetx=0.5972416, offsety=1.153089-0.02, angle=360*TMath::DegToRad();
+  double radx1=0.12744, rady1=0.01959062, offsetx1=1.152367, offsety1=1.199867, angle1=360*TMath::DegToRad();
   //-----Correlation Theta-Phi, ----------//
  
   TH2F *h_ThePhi[3]                         = {};
@@ -109,6 +110,9 @@ protected:
 
   //-------Momentum proton------------------//
   TH1F *h_MomentumProton                    = NULL;
+  TH2F *h_CorrIvan[3]                       = {};
+  TH1F *h_CorrIvanM			    = NULL; 
+  
   //-----Kaon phi-------------------//
   TH1F *h_kaonPhiPA[2]                      = {};
   TH1F *h_kaonPhiPE[2]                      = {};
@@ -255,14 +259,28 @@ void Histograms::DoHistograms(){
 				       100, 0.7, 1.2);
 
   
-  h_MissingMass_vsMissingMasskaonpion[0] = new TH2F("MissingMass_correlation",
-						    "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]",
-						    100, 0.7, 1.2, 100, 0.7, 1.2);
 
-  h_MissingMass_vsMissingMasskaonpion[1] = new TH2F("MissingMass_correlation_Cut",
+  h_MissingMass_vsMissingMasskaonpion[0] = new TH2F("MissingMass_correlationKaonPion",
 						    "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]",
-						    100, 0.7, 1.2, 100, 0.7, 1.2);
-  
+						    300, 0.7, 1.2, 300, 0.7, 1.2);
+
+  h_MissingMass_vsMissingMasskaonpion[1] = new TH2F("MissingMass_correlationKaonPion_Cut",
+						    "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]",
+						    300, 0.7, 1.2, 300, 0.7, 1.2);
+
+  h_MissingMass_vsMissingMasskaonproton[0] = new TH2F("MissingMass_correlationKaonProton",
+						      "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow p #pi^{-} X p) [GeV/c^{2}]",
+						      300, 0.7, 1.2, 300, 0, 1.2);
+  h_MissingMass_vsMissingMasskaonproton[1] = new TH2F("MissingMass_correlationKaonProton_Cut",
+						      "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow p #pi^{-} X p) [GeV/c^{2}]",
+						      300, 0.7, 1.2, 300, 0, 1.2);
+  h_MissingMass_vsMissingMasspionkaon[0] = new TH2F("MissingMass_correlationPionKaon",
+						    "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow K^{+} K^{-} X p) [GeV/c^{2}]",
+						      300, 0.7, 1.2, 300, 0, 1.2);
+  h_MissingMass_vsMissingMasspionkaon[0] = new TH2F("MissingMass_correlationPionKaon_Cut",
+						    "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow K^{+} K^{-} X p) [GeV/c^{2}]",
+						      300, 0.7, 1.2, 300, 0, 1.2);
+
   h_MissingP[0] = new TH1F("h_missingpSigma",
 			   "; Missing momentum (#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c]; Frequency",
 			   100, 0.0, 1.);
@@ -326,8 +344,7 @@ void Histograms::DoHistograms(){
 			  "; Proton momentum [GeV/c]; Frequency ",
 			  100, 0, 2.0);
 
-  
-  //-------- Lambda and Lambda Fit ------ //
+   //-------- Lambda and Lambda Fit ------ //
   
   h_LambdaMass = new TH1F("h_LambdaMass",
 			  "; IM(#pi^{-} p) [GeV/c^{2}]; Frequency ",
@@ -843,7 +860,7 @@ void Histograms::DoCanvas(){
   h_MissingMass->Draw();
   c0MM->SaveAs("imagenes/MissingMass.eps");
 
-  //---------- MM Correlation without cut ---------------//
+  //---------- MM Kaon-Pion Correlation without cut ---------------//
   
   TCanvas *c0ELL=new TCanvas("c0ELL","Correlation of MM", 900, 500);
   c0ELL->cd(1);
@@ -858,9 +875,9 @@ void Histograms::DoCanvas(){
   //myEllipse->SetFillStyle(0);
   //myEllipse->SetLineColor(kRed);
   //myEllipse->Draw("same");
-  c0ELL->SaveAs("imagenes/Ellipse.eps");
+  c0ELL->SaveAs("imagenes/MIS_Identification_KPi.eps");
 
-  //---------- MM Correlation with cut ---------------//
+  //---------- MM Kaon-Pion Correlation with cut ---------------//
   
   TCanvas *c0ELLC=new TCanvas("c0ELLC","Correlation of MM", 900, 500);
   c0ELLC->cd(1);
@@ -869,10 +886,68 @@ void Histograms::DoCanvas(){
   //myEllipse->SetFillStyle(0);
   //myEllipse->SetLineColor(kRed);
   //myEllipse->Draw("same");
-  c0ELLC->SaveAs("imagenes/Ellipse_C.eps");
+  c0ELLC->SaveAs("imagenes/MIS_Identification_KPi_C.eps");
+
+  
+  //---------- MM Kaon-Proton Correlation without cut ---------------//
+  
+  TCanvas *c1ELL=new TCanvas("c1ELL","Correlation of MM", 900, 500);
+  c1ELL->cd(1);
+  h_MissingMass_vsMissingMasskaonproton[0]->SetTitleSize(0.045, "XY");  
+  h_MissingMass_vsMissingMasskaonproton[0]->Draw("colz");
+  TLine *MMCorrLine1;
+  MMCorrLine1 = new TLine(0.7, 0.75,1.2, 0.75);
+  MMCorrLine1->SetLineWidth(2);
+  MMCorrLine1->SetLineColor(2);
+  MMCorrLine1->Draw("same");
+  
+  //myEllipse->SetFillStyle(0);
+  //myEllipse->SetLineColor(kRed);
+  //myEllipse->Draw("same");
+  c1ELL->SaveAs("imagenes/MIS_Identification_KP.eps");
+
+  //---------- MM Kaon-Proton Correlation with cut ---------------//
+  
+  TCanvas *c1ELLC=new TCanvas("c1ELLC","Correlation of MM", 900, 500);
+  c1ELLC->cd(1);
+  h_MissingMass_vsMissingMasskaonproton[1]->SetTitleSize(0.045, "XY");  
+  h_MissingMass_vsMissingMasskaonproton[1]->Draw("colz");
+  //myEllipse->SetFillStyle(0);
+  //myEllipse->SetLineColor(kRed);
+  //myEllipse->Draw("same");
+  c1ELLC->SaveAs("imagenes/MIS_Identification_KP_C.eps");
+
+  
+  //---------- MM Pion-Kaon Correlation without cut ---------------//
+  
+  TCanvas *c2ELL=new TCanvas("c2ELL","Correlation of MM", 900, 500);
+  c2ELL->cd(1);
+  h_MissingMass_vsMissingMasspionkaon[0]->SetTitleSize(0.045, "XY");  
+  h_MissingMass_vsMissingMasspionkaon[0]->Draw("colz");
+  TLine *MMCorrLine2;
+  MMCorrLine2 = new TLine(0.7, 0.70,1.2, 0.70);
+  MMCorrLine2->SetLineWidth(2);
+  MMCorrLine2->SetLineColor(2);
+  MMCorrLine2->Draw("same");
+  
+  //myEllipse->SetFillStyle(0);
+  //myEllipse->SetLineColor(kRed);
+  //myEllipse->Draw("same");
+  c2ELL->SaveAs("imagenes/MIS_Identification_PiK.eps");
+
+  //---------- MM Pion-Kaon Correlation with cut ---------------//
+  
+  TCanvas *c2ELLC=new TCanvas("c2ELLC","Correlation of MM", 900, 500);
+  c2ELLC->cd(1);
+  h_MissingMass_vsMissingMasspionkaon[1]->SetTitleSize(0.045, "XY");  
+  h_MissingMass_vsMissingMasspionkaon[1]->Draw("colz");
+  //myEllipse->SetFillStyle(0);
+  //myEllipse->SetLineColor(kRed);
+  //myEllipse->Draw("same");
+  c2ELLC->SaveAs("imagenes/MIS_Identification_Pik_C.eps");
 
   //----------- MM After Cuts for MM correlation ------- //
-
+  
 
   //------ Kaon ------//  
   
@@ -910,7 +985,7 @@ void Histograms::DoCanvas(){
   MMC1.BoxOptStat("em");
   MMC1.BoxSize(0.7,0.7);
   MMC1.BoxPosition(0.75,(h_MissingMass_kaonpion->GetMaximum()/2),0.85,h_MissingMass_kaonpion->GetMaximum()+100);
-  MMC1.BoxTextSize(0.04);
+  MMC1.BoxTextSize(0.05);
   MMC1.SaveChanges();
   h_MissingMass_kaonpioncut->Draw("same");
 
@@ -1022,15 +1097,23 @@ void Histograms::DoCanvas(){
   h_MomentumProton->SetTitleSize(0.045, "XY");  
   h_MomentumProton->Draw();
   
-  cMP->SaveAs("imagenes/MomentumProton.eps");
-
-
+  cMP->SaveAs("imagenes/MomentumProton.eps");    
   
   //--------------Correlation Invariant masses (Lambda vs Sigma)----//
   TCanvas *cIMLS=new TCanvas("cIMLS","Correlation of Invariant masses", 900, 500);
   cIMLS->cd(1);
   h_InvMassLambda_vsInvMassSigma->SetTitleSize(0.045, "XY");  
   h_InvMassLambda_vsInvMassSigma->Draw("colz");
+  TLine *IMCorrLine1;
+  IMCorrLine1 = new TLine(1,1.1,1.4, 1.1);
+  IMCorrLine1->SetLineWidth(2);
+  IMCorrLine1->SetLineColor(2);
+  IMCorrLine1->Draw("same");
+  TLine *IMCorrLine2;
+  IMCorrLine2 = new TLine(1,1.132,1.4, 1.132);
+  IMCorrLine2->SetLineWidth(2);
+  IMCorrLine2->SetLineColor(2);
+  IMCorrLine2->Draw("same");
   
   cIMLS->SaveAs("imagenes/InvariantMassCorrelation.eps");
 
