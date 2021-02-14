@@ -277,7 +277,7 @@ void Histograms::DoHistograms(){
   h_MissingMass_vsMissingMasspionkaon[0] = new TH2F("MissingMass_correlationPionKaon",
 						    "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow K^{+} K^{-} X p) [GeV/c^{2}]",
 						      300, 0.7, 1.2, 300, 0, 1.2);
-  h_MissingMass_vsMissingMasspionkaon[0] = new TH2F("MissingMass_correlationPionKaon_Cut",
+  h_MissingMass_vsMissingMasspionkaon[1] = new TH2F("MissingMass_correlationPionKaon_Cut",
 						    "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow K^{+} K^{-} X p) [GeV/c^{2}]",
 						      300, 0.7, 1.2, 300, 0, 1.2);
 
