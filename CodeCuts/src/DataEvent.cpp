@@ -1,3 +1,9 @@
+/*******************************************/
+// Author: Nicholas Zachariou
+// Date:   15/02/2020                  
+// Title:  ROOT-ROOTBEAR macro                              
+/*******************************************/
+
 #include "../include/DataEvent.h"
 
 DataEvent::DataEvent(string fileName, string treeName){

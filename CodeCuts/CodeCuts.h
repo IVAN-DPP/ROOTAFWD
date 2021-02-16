@@ -1,3 +1,10 @@
+/*******************************************/
+// Author: Ivan Dario Piernagorda Peña     
+// Author: Karen Milena Rodriguez      
+// Date:   15/02/2020                  
+// Title:  Cuts to Data                              
+/*******************************************/
+
 #include "./Histograms.h"
 #include "./include/Libraries.h"
 #include "./include/Miscelaneous.h"

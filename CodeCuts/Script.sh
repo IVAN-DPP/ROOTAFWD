@@ -1,3 +1,10 @@
+#*******************************************#
+# Author: Ivan Dario Piernagorda Peña     
+# Date:   15/02/2020                  
+# Title:  Photon Polarization Tables                              
+#*******************************************#
+
+
 #!/bin/sh
 
 echo "---------- OPEN ----------"

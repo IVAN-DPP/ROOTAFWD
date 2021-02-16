@@ -1,3 +1,11 @@
+/*******************************************/
+// Author: Ivan Dario Piernagorda Peña     
+// Author: Karen Milena Rodriguez      
+// Date:   15/02/2020                  
+// Title:  Histograms                              
+/*******************************************/
+
+
 #ifndef HISTOGRAMS_C
 #define HISTOGRAMS_C
 
