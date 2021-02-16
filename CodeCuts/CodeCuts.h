@@ -411,7 +411,7 @@ void Codecuts::CodeCuts(){
       if(KaonCosThetaCM < 0.51){
 	MEASPhi.at(0).push_back(KaonPhiCM);
 	MEASGammaP.at(0).push_back(PhotoPol);
-	h_kaonPhiPA[0]->Fill(KaonPhiCM);c
+	h_kaonPhiPA[0]->Fill(KaonPhiCM);
       }
       else if (KaonCosThetaCM > 0.51){
 	MEASPhi.at(1).push_back(KaonPhiCM);
