@@ -1,9 +1,10 @@
+#ifndef CODECUTS_H
+#define CODECUTS_H
+
 #include "./Histograms.h"
 #include "./include/Libraries.h"
 #include "./include/Miscelaneous.h"
-
-#ifndef CODECUTS_H
-#define CODECUTS_H
+#include "./src/DataEvent.cpp"
 
 class Codecuts : public Histograms {
 
@@ -104,11 +105,7 @@ void Codecuts::CodeCuts(){
     Events[3]++;         //Events With DeltaB cut
     if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
     Events[4]++;         //Events With DeltaB cut
-    
-    
-    
-    
-   
+       
     //------------------Correlation Theta-Phi, -----------------------/
     
     h_ThePhi[0]->Fill(myDataList->getEVNT_track(0).Phi()*TMath::RadToDeg(), myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg());  
@@ -304,7 +301,10 @@ void Codecuts::CodeCuts(){
     MMNeut_PiK 	= photon + deuteron - proton - pionkaon - kaon;     	   	// This missing mass is with the Kaon-      
       
     h_MissingMass->Fill(MMNeut_kaon.M());
+
     h_MissingMass_kaonpion->Fill(MMNeut_KPi.M());
+    h_MissingMass_kaonproton->Fill(MMNeut_KP.M());
+    h_MissingMass_pionkaon->Fill(MMNeut_PiK.M());
     //h_MissingPvsIMMass->Fill(MMNeut_kaon.M(),MMNeut_kaon.P());
     h_MissingMass_vsMissingMasskaonpion[0]->Fill(MMNeut_kaon.M(), MMNeut_KPi.M());
     h_MissingMass_vsMissingMasskaonproton[0]->Fill(MMNeut_kaon.M(),MMNeut_KP.M());
@@ -313,16 +313,19 @@ void Codecuts::CodeCuts(){
             
     
     if(MMNeut_KPi.M() < 0.98) continue;       //Cut from correlation MM
+    h_MissingMass_vsMissingMasskaonpion[1]->Fill(MMNeut_kaon.M(), MMNeut_KPi.M());
     if(MMNeut_KP.M()  > 0.75) continue; 
+    h_MissingMass_vsMissingMasskaonproton[1]->Fill(MMNeut_kaon.M(),MMNeut_KP.M());
     if(MMNeut_PiK.M() > 0.70) continue; 
+    h_MissingMass_vsMissingMasspionkaon[1]->Fill(MMNeut_kaon.M(),MMNeut_PiK.M());
     Events[15]++;         //Events With NOT PION, YES Kaon
     // Double_t El = TMath::Power((proton.P()-offsetx)*cos(angle)+(MMSigma.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
     //   +TMath::Power((proton.P()-offsetx)*sin(angle)-(MMSigma.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
     // if(El <= 1) continue;
     
-    h_MissingMass_vsMissingMasskaonpion[1]->Fill(MMNeut_kaon.M(), MMNeut_KPi.M());
-    h_MissingMass_vsMissingMasskaonproton[1]->Fill(MMNeut_kaon.M(),MMNeut_KP.M());
-    h_MissingMass_vsMissingMasspionkaon[1]->Fill(MMNeut_kaon.M(),MMNeut_PiK.M());
+
+
+
     
     //----------Correlación momentums vs missing mass------------------------//
       
@@ -405,12 +408,12 @@ void Codecuts::CodeCuts(){
     //0 is for PARA
     //1 is for PERP
     if (myDataList->getCoh_plan()==0){
-      if(KaonCosThetaCM < 0.668){
+      if(KaonCosThetaCM < 0.51){
 	MEASPhi.at(0).push_back(KaonPhiCM);
 	MEASGammaP.at(0).push_back(PhotoPol);
-	h_kaonPhiPA[0]->Fill(KaonPhiCM);
+	h_kaonPhiPA[0]->Fill(KaonPhiCM);c
       }
-      else if (KaonCosThetaCM > 0.668){
+      else if (KaonCosThetaCM > 0.51){
 	MEASPhi.at(1).push_back(KaonPhiCM);
 	MEASGammaP.at(1).push_back(PhotoPol);
 	h_kaonPhiPA[1]->Fill(KaonPhiCM);
@@ -418,18 +421,19 @@ void Codecuts::CodeCuts(){
     }
       
     else if (myDataList->getCoh_plan()==1){
-      if(KaonCosThetaCM < 0.668){
+      if(KaonCosThetaCM < 0.51){
 	MEASPhi.at(0).push_back(KaonPhiCM);
 	MEASGammaP.at(0).push_back(-PhotoPol);
 	h_kaonPhiPE[0]->Fill(KaonPhiCM);
       }
-      else if (KaonCosThetaCM > 0.668){
+      else if (KaonCosThetaCM > 0.51){
 	MEASPhi.at(1).push_back(KaonPhiCM);
 	MEASGammaP.at(1).push_back(-PhotoPol);
 	h_kaonPhiPE[1]->Fill(KaonPhiCM);
       }
     }
-     
+
+
     //---------------Asymmetry Analysis----------------//
       
     h_Asym[0]=(TH1F*)h_kaonPhiPA[0]->GetAsymmetry(h_kaonPhiPE[0]);

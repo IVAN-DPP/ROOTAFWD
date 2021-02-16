@@ -2,7 +2,8 @@
 #define HISTOGRAMS_C
 
 #include "include/Libraries.h"
-#include "src/TPaveStateModify.C"
+#include "include/MaxLike.h"
+#include "include/TPaveStateModify.h"
 
 using namespace std;
 
@@ -20,111 +21,114 @@ class Histograms{
   
 protected:
 
-  TH1F *h_Vertex                            = NULL;
+  TH1F *h_Vertex                            		= NULL;
 
-  TH1F *h_Mass[2]                           = {};
+  TH1F *h_Mass[2]                           		= {};
   
-  TH2F *h_DeltaBe[3]                        = {};
-  TH2F *h_BeVSp[3]                          = {};
-  TH2F *h_BeVSpT                            = NULL;
-  TH2F *h_DeltaBecut[3]                     = {};
-  TH2F *h_BeVSpcut[3]                       = {};
+  TH2F *h_DeltaBe[3]                        		= {};
+  TH2F *h_BeVSp[3]                          		= {};
+  TH2F *h_BeVSpT                            		= NULL;
+  TH2F *h_DeltaBecut[3]                     		= {};
+  TH2F *h_BeVSpcut[3]                       		= {};
   
   
-  TF1 *FFits[3]                             = {};               //Fits for do cuts
-  TF1 *FFitsminus[3]                        = {};
-  string FFname[3]                          = {};
+  TF1 *FFits[3]                             		= {};               //Fits for do cuts
+  TF1 *FFitsminus[3]                        		= {};
+  string FFname[3]                          		= {};
   
-  TH1F *h_DeltaTall[2]                      = {};
-  TH2F *h_DeltaTallvsp[2]                   = {};
-  TH1F *h_DeltaT[2]                         = {};
-  TH1F *h_eloss[3]                          = {};
-  TH2F *h_Celoss[3]                         = {};
+  TH1F *h_DeltaTall[2]                      		= {};
+  TH2F *h_DeltaTallvsp[2]                  		= {};
+  TH1F *h_DeltaT[2]                         		= {};
+  TH1F *h_eloss[3]                          		= {};
+  TH2F *h_Celoss[3]                         		= {};
   
   //--> Beta vs P with PDG MASSES  
 
-  TF1 *BeVSp[3]                             = {};
+  TF1 *BeVSp[3]                             		= {};
 
 
   //---- Get Coherent Edge ---- //
 
-  TH1F *h_TagrEpho[3]                       = {};
+  TH1F *h_TagrEpho[3]                       		= {};
   
   //---- Missing mass ----//
   
-  TH1F *h_MissingMass                     = NULL;
-  TH1F *h_MissingMass_kaonpion            = NULL;
-  TH1F *h_MissingMasscut                  = NULL;
-  TH1F *h_MissingMass_kaonpioncut         = NULL;
+  TH1F *h_MissingMass              		       	= NULL;
+  TH1F *h_MissingMasscut                  		= NULL;
+  TH1F *h_MissingMass_kaonpioncut         		= NULL;
   
   TH2F *h_MissingMass_vsMissingMasskaonpion[2] 		= {};
   TH2F *h_MissingMass_vsMissingMasskaonproton[2] 	= {};
   TH2F *h_MissingMass_vsMissingMasspionkaon[2] 		= {};
 
-  TH1F *h_MissingP[2]                      = {};
-  TH1F *h_MissingPcut[2]                   = {};
-  TH2F *h_MissingPvsIMMass[2]                = {};
-  TH2F *h_MissingMassvsSigmaMass          = NULL;
-  TH2F *h_MissingPvsSigmaMass             = NULL;
+  TH1F *h_MissingMass_kaonpion            		= NULL;
+  TH1F *h_MissingMass_kaonproton 			= NULL;
+  TH1F *h_MissingMass_pionkaon	 			= NULL;
 
-  TH1F *h_InvariantMass                   = NULL;
-  TH1F *h_InvariantMasscut[4]                = {};
+  TH1F *h_MissingP[2]                      		= {};
+  TH1F *h_MissingPcut[2]                   		= {};
+  TH2F *h_MissingPvsIMMass[2]                		= {};
+  TH2F *h_MissingMassvsSigmaMass          		= NULL;
+  TH2F *h_MissingPvsSigmaMass             		= NULL;
+
+  TH1F *h_InvariantMass                   		= NULL;
+  TH1F *h_InvariantMasscut[4]                		= {};
 
   //---- Lambda and Lambda Fit ---- //
   
-  TH1F *h_LambdaMass                      = NULL;
-  TF1 *lamdaMassFit                       = NULL; 
+  TH1F *h_LambdaMass                      		= NULL;
+  TF1 *lamdaMassFit                       		= NULL; 
   
   
-  TH2F *h_DeltaBVSInvariantMass           = NULL;
-  TH2F *h_DeltaBVSMissingMass             = NULL;
-  TH2F *h_DeltaBVSMissingMomentum         = NULL;
+  TH2F *h_DeltaBVSInvariantMass           		= NULL;
+  TH2F *h_DeltaBVSMissingMass             		= NULL;
+  TH2F *h_DeltaBVSMissingMomentum         		= NULL;
 
   //------Missing mass Sigma--------//
-  TH1F *h_MMassSigma                       = NULL;
-  TH1F *h_MMassSigmaCut                    = NULL;
+  TH1F *h_MMassSigma                       		= NULL;
+  TH1F *h_MMassSigmaCut                    		= NULL;
   
   //--Correlations between Invariant and missing mass (lambda and sigma)--//
-  TH2F *h_InvMassLambda_vsInvMassSigma    = NULL;
-  TH2F *h_MMNeutron_vsMMassSigma[2]       = {};
+  TH2F *h_InvMassLambda_vsInvMassSigma    		= NULL;
+  TH2F *h_MMNeutron_vsMMassSigma[2]       		= {};
   
   //-----Correlation Momentums (lambda and Sigma)----//
-  TH2F *h_CorrelationMMomentum            = NULL;
+  TH2F *h_CorrelationMMomentum            		= NULL;
   
 
   //--- Ellipse Cuts ---- //
   
-  TEllipse *myEllipse                     = NULL;
+  TEllipse *myEllipse                     		= NULL;
   double radx=0.1569373, rady=0.03295391, offsetx=0.5972416, offsety=1.153089-0.02, angle=360*TMath::DegToRad();
   double radx1=0.12744, rady1=0.01959062, offsetx1=1.152367, offsety1=1.199867, angle1=360*TMath::DegToRad();
   //-----Correlation Theta-Phi, ----------//
  
-  TH2F *h_ThePhi[3]                         = {};
-  TF1 *F_ThePhiProt[7]                      = {};
+  TH2F *h_ThePhi[3]                         		= {};
+  TF1 *F_ThePhiProt[7]                      		= {};
   
   //--- Fiduciary cuts ---//
-  TH2F *h_ThePhicut[3]                      = {};
+  TH2F *h_ThePhicut[3]                      		= {};
   
   //----Costheta-Kaon Boost-------------------//
-  TH1F *h_KCosThetaCM                      = NULL;
+  TH1F *h_KCosThetaCM                      		= NULL;
 
   //-------Momentum proton------------------//
-  TH1F *h_MomentumProton                    = NULL;
-  TH2F *h_CorrIvan[3]                       = {};
-  TH1F *h_CorrIvanM			    = NULL; 
+  TH1F *h_MomentumProton                    		= NULL;
+  TH2F *h_CorrIvan[3]                       		= {};
+  TH1F *h_CorrIvanM			   		= NULL; 
   
   //-----Kaon phi-------------------//
-  TH1F *h_kaonPhiPA[2]                      = {};
-  TH1F *h_kaonPhiPE[2]                      = {};
+  TH1F *h_kaonPhiPA[2]                      		= {};
+  TH1F *h_kaonPhiPE[2]                      		= {};
     
   //---------Function to do asymmetry fit----//
   
   vector<vector<double> > MEASPhi{2}; //2 is the number of binning
   vector<vector<double> > MEASGammaP{2};
     
-  TF1 *FuncAsym                             = NULL;
-  TH1F *h_Asym[2]                           = {};
-
+  TF1 *FuncAsym                             		= NULL;
+  TH1F *h_Asym[2]                           		= {};
+  TF2 *Like[2] 				    		= {};
    
 public:
   Histograms(){}
@@ -245,11 +249,22 @@ void Histograms::DoHistograms(){
   h_MissingMass = new TH1F("h_missingmass",
 			   "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
 			   100, 0.7, 1.2);
+
+  // ---- MIS-identification ----/
   
   h_MissingMass_kaonpion = new TH1F("h_missingmass_kaonpion",
 				    "; MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
 				    100, 0.7, 1.2);
 
+  h_MissingMass_kaonproton = new TH1F("h_missingmass_kaonproton",
+				    "; MM(#gamma d #rightarrow p #pi^{-} X p) [GeV/c^{2}]; Frequency",
+				    100, 0, 1.2);
+
+  h_MissingMass_pionkaon = new TH1F("h_missingmass_pionkaon",
+				    "; MM(#gamma d #rightarrow K^{+} K^{-} X p) [GeV/c^{2}]; Frequency",
+				    100, 0, 1.2);
+
+  
   h_MissingMasscut = new TH1F("h_missingmasscut",
 			      "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
 			      100, 0.7, 1.2);
@@ -434,6 +449,7 @@ void Histograms::DoHistograms(){
   
   h_Asym[0] = new TH1F("h_Asym[0]","Asymmetry first partition", 100, -180, 180);
   h_Asym[1] = new TH1F("h_Asym[1]","Asymmetry Second partition",100, -180, 180);
+
 }
 
 
@@ -971,7 +987,7 @@ void Histograms::DoCanvas(){
 
   c0MMC->SaveAs("imagenes/MissingMass_Kaon.eps");
   
-  //------ Pion + ------//
+  //------ MIS-identification ---//
 
   gStyle->SetOptStat("me");
    
@@ -991,6 +1007,19 @@ void Histograms::DoCanvas(){
 
   c1MMC->SaveAs("imagenes/MissingMass_Pion.eps");
 
+  TCanvas *c2MM=new TCanvas("c2MM","Missing mass", 1200, 500);
+  c2MM->cd(1);
+  h_MissingMass_kaonproton->Draw();
+
+  c2MM->SaveAs("imagenes/MissingMass_Proton.eps");
+
+  TCanvas *c3MM=new TCanvas("c3MM","Missing mass", 1200, 500);
+  c3MM->cd(1);
+  h_MissingMass_pionkaon->Draw();
+
+  c3MM->SaveAs("imagenes/MissingMass_PionK.eps");
+  
+  
   //------------ Missing Momentum -----------------//
   
   TCanvas *MMP=new TCanvas("MMP","Missing Momentum", 1450, 500);
@@ -1276,18 +1305,31 @@ void Histograms::DoCanvas(){
     MaxLike Min(MEASPhi.at(i), MEASGammaP.at(i));
     ROOT::Math::Functor f(Min,2);
     minim->SetFunction(f);
-    minim->SetVariable(0, "Sigma", 0, 0.01);
-    minim->SetVariable(1, "Phi", 0, 0.01);
+    minim->SetVariable(0, "Sigma", 1, 0.001);
+    minim->SetVariable(1, "Phi", 1, 0.001);
+    // minim->SetVariableLimits(0,0,2);
     minim->SetPrintLevel(1);
     minim->Minimize();
 
     const double *xs = minim->X();
     std::cout << "minim: f(" << xs[0] << "," << xs[1] <<"): "
 	      << minim->MinValue()  << std::endl;
-  }
 
+    
+    MaxLikeTF MinF(MEASPhi.at(i),MEASGammaP.at(i));
+    Like[i] = new TF2("",MinF,-1.5,1.5,-15,15,0);
+    
+  }
+  
   c44->SaveAs("imagenes/Asymmetry.eps");
-   
+
+  TCanvas *cMin = new TCanvas("","",900,450);
+  cMin->Divide(2,1);
+  cMin->cd(1);
+  Like[0]->Draw("colz");
+  cMin->cd(2);
+  Like[1]->Draw("colz");
+  cMin->SaveAs("imagenes/Like.eps");
 }
 
 
@@ -1421,7 +1463,7 @@ vector<double> HistoBinning(TH1 *PrincipalHisto,
 Double_t fitf(Double_t *x, Double_t *par){
   double num=0, denom=0;
   num=par[0]-1.0-(par[0]*par[1]+1.0)/(par[1]+1.0)*2*par[2]*par[3]*TMath::Cos(2*x[0]*TMath::DegToRad());
-  denom=par[0]+1.0-   (par[0]*par[1]-1.0)/(par[1]+1.0)*2*par[2]*par[3]*TMath::Cos(2*x[0]*TMath::DegToRad());
+  denom=par[0]+1.0-(par[0]*par[1]-1.0)/(par[1]+1.0)*2*par[2]*par[3]*TMath::Cos(2*x[0]*TMath::DegToRad());
   Double_t fitval =num/denom;
   return fitval;
 }
