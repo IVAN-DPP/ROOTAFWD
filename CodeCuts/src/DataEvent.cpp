@@ -4,7 +4,11 @@
 // Title:  ROOT-ROOTBEAR macro                              
 /*******************************************/
 
+#ifndef DATAEVENT_CPP
+#define DATAEVENT_CPP
+
 #include "../include/DataEvent.h"
+#include "../include/Libraries.h"
 
 DataEvent::DataEvent(string fileName, string treeName){
     SetUpTree(fileName, treeName);
@@ -170,4 +174,4 @@ int DataEvent::getEntries(){
     return loc_Tree->GetEntries();
 }
 
-
+#endif

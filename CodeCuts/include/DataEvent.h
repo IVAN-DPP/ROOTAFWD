@@ -7,19 +7,13 @@
 #ifndef DATAEVENT_H
 #define DATAEVENT_H
 
+#include "Libraries.h"
+
 #pragma link C++ class vector<TLorentzVector>+;
 #pragma link C++ class vector<TVector3>+;
 
-
-#include <iostream>
-#include <vector>
-#include "TVector3.h"
-#include "TLorentzVector.h"
-#include "TFile.h"
-#include <TChain.h>
-#include <fstream>
-
 using namespace std;
+
 class DataEvent{
 
 

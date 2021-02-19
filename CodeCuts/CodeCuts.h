@@ -5,9 +5,11 @@
 // Title:  Cuts to Data                              
 /*******************************************/
 
+
 #include "./Histograms.h"
 #include "./include/Libraries.h"
 #include "./include/Miscelaneous.h"
+
 
 #ifndef CODECUTS_H
 #define CODECUTS_H
@@ -111,11 +113,7 @@ void Codecuts::CodeCuts(){
     Events[3]++;         //Events With DeltaB cut
     if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
     Events[4]++;         //Events With DeltaB cut
-    
-    
-    
-    
-   
+       
     //------------------Correlation Theta-Phi, -----------------------/
     
     h_ThePhi[0]->Fill(myDataList->getEVNT_track(0).Phi()*TMath::RadToDeg(), myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg());  
@@ -275,61 +273,92 @@ void Codecuts::CodeCuts(){
 
     //-------------- Reconstruction --------- //
       
-    TLorentzVector photon, deuteron, kaon, kaonpion, proton, pion, Wneutron_kaon, Wneutron_pion, Sigma, Lambda, Neutron, WBoost;
+    TLorentzVector photon, deuteron, kaon, proton ,pion, Neutron, WBoost;			//Principal Reaction
+    TLorentzVector kaonpion, kaonproton, pionkaon;						//MIS-identification particles
+    TLorentzVector MMNeut_kaon, MMNeut_KPi, MMNeut_KP, MMNeut_PiK ,MMSigma;			//Missing mass
+    TLorentzVector Sigma, Lambda;								//Invariant Mass
+    
     photon.SetXYZM(0,0,myDataList->getTAGR_epho(myDataList->getIndex_k(0)),0);
     deuteron.SetXYZM(0,0,0,1.8756);
+    
     double Px_kaonpion = myDataList->getEVNT_track(1).Rho()* sin(myDataList->getEVNT_track(1).Theta())* cos(myDataList->getEVNT_track(1).Phi());
     double Py_kaonpion = myDataList->getEVNT_track(1).Rho()* sin(myDataList->getEVNT_track(1).Theta())* sin(myDataList->getEVNT_track(1).Phi());
     double Pz_kaonpion = myDataList->getEVNT_track(1).Rho()*(myDataList->getEVNT_track(1).CosTheta());
-    kaonpion.SetXYZM(Px_kaonpion, Py_kaonpion, Pz_kaonpion, 0.139);       // This mass is of Pion-, because we need remove the background of Pion-
-      
-      
-    proton = myDataList->geteloss_track(0);
-    kaon = myDataList->geteloss_track(1);
-    pion = myDataList->geteloss_track(2);
-    Wneutron_kaon = photon + deuteron - proton - kaon - pion;
-    Neutron.SetXYZM(Wneutron_kaon.Px(), Wneutron_kaon.Py(), Wneutron_kaon.Pz(), 0.939);
-    Sigma = pion + Neutron;
-    Lambda = pion + proton;
-    WBoost = photon + deuteron; // to make Boost
-      
-    Wneutron_pion = photon + deuteron - proton - kaonpion - pion;         // This missing mass is with the Pion-
-      
-      
-    h_MissingMass->Fill(Wneutron_kaon.M());
-    h_MissingMass_kaonpion->Fill(Wneutron_pion.M());
-    //h_MissingPvsMass->Fill(Wneutron_kaon.M(),Wneutron_kaon.P());
-    h_MissingMass_vsMissingMasskaonpion[0]->Fill(Wneutron_kaon.M(), Wneutron_pion.M());
 
+    double Px_pionkaon = myDataList->getEVNT_track(2).Rho()* sin(myDataList->getEVNT_track(2).Theta())* cos(myDataList->getEVNT_track(2).Phi());
+    double Py_pionkaon = myDataList->getEVNT_track(2).Rho()* sin(myDataList->getEVNT_track(2).Theta())* sin(myDataList->getEVNT_track(2).Phi());
+    double Pz_pionkaon = myDataList->getEVNT_track(2).Rho()*(myDataList->getEVNT_track(2).CosTheta());
+
+    // This mass is of Pion-, because we need remove the background of Pion-
+    kaonpion.SetXYZM(Px_kaonpion, Py_kaonpion, Pz_kaonpion, 0.139);       			
+    kaonproton.SetXYZM(Px_kaonpion, Py_kaonpion, Pz_kaonpion,0.9383);
+    pionkaon.SetXYZM(Px_pionkaon, Py_pionkaon, Pz_pionkaon,0.4937);
+    
+    proton 	= myDataList->geteloss_track(0);
+    kaon 	= myDataList->geteloss_track(1);
+    pion 	= myDataList->geteloss_track(2);
+    MMNeut_kaon = photon + deuteron - proton - kaon - pion;
+    Neutron.SetXYZM(MMNeut_kaon.Px(), MMNeut_kaon.Py(), MMNeut_kaon.Pz(), 0.939);
+    Sigma 	= pion + Neutron;
+    Lambda 	= pion + proton;
+    MMSigma  	= photon + deuteron - proton - kaon;           			// Correlation with invariant mass (lambda)
+    WBoost   	= photon + deuteron; 						// to make Boost
       
+    MMNeut_KPi 	= photon + deuteron - proton - kaonpion - pion;     	   	// This missing mass is with the Pion-
+    MMNeut_KP	= photon + deuteron - proton - kaonproton - pion;     	   	// This missing mass is with the Proton
+    MMNeut_PiK 	= photon + deuteron - proton - pionkaon - kaon;     	   	// This missing mass is with the Kaon-      
+      
+    h_MissingMass->Fill(MMNeut_kaon.M());
+
+    h_MissingMass_kaonpion->Fill(MMNeut_KPi.M());
+    h_MissingMass_kaonproton->Fill(MMNeut_KP.M());
+    h_MissingMass_pionkaon->Fill(MMNeut_PiK.M());
+    //h_MissingPvsIMMass->Fill(MMNeut_kaon.M(),MMNeut_kaon.P());
+    h_MissingMass_vsMissingMasskaonpion[0]->Fill(MMNeut_kaon.M(), MMNeut_KPi.M());
+    h_MissingMass_vsMissingMasskaonproton[0]->Fill(MMNeut_kaon.M(),MMNeut_KP.M());
+    h_MissingMass_vsMissingMasspionkaon[0]->Fill(MMNeut_kaon.M(),MMNeut_PiK.M());
+    
+            
+    
+    if(MMNeut_KPi.M() < 0.98) continue;       //Cut from correlation MM
+    h_MissingMass_vsMissingMasskaonpion[1]->Fill(MMNeut_kaon.M(), MMNeut_KPi.M());
+    if(MMNeut_KP.M()  > 0.75) continue; 
+    h_MissingMass_vsMissingMasskaonproton[1]->Fill(MMNeut_kaon.M(),MMNeut_KP.M());
+    if(MMNeut_PiK.M() > 0.70) continue; 
+    h_MissingMass_vsMissingMasspionkaon[1]->Fill(MMNeut_kaon.M(),MMNeut_PiK.M());
+    Events[15]++;         //Events With NOT PION, YES Kaon
+    // Double_t El = TMath::Power((proton.P()-offsetx)*cos(angle)+(MMSigma.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
+    //   +TMath::Power((proton.P()-offsetx)*sin(angle)-(MMSigma.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
+    // if(El <= 1) continue;
+    
+
+
+
+    
     //----------Correlación momentums vs missing mass------------------------//
       
     if( Lambda.M()<1.11 || Lambda.M()>1.132) 
-      h_MissingPvsMass[0]->Fill(Wneutron_kaon.M(),Wneutron_kaon.P());
-      
-    if( Sigma.M()<1.08 || Sigma.M()>1.3)
-      h_MissingPvsMass[1]->Fill(Wneutron_kaon.M(),Wneutron_kaon.P());
-      
-      
-      
-    Double_t El = TMath::Power((Wneutron_kaon.M()-offsetx)*cos(angle)+(Wneutron_pion.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
-      +TMath::Power((Wneutron_kaon.M()-offsetx)*sin(angle)-(Wneutron_pion.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
-      
-    if(El > 1) continue;
-    Events[15]++;         //Events With NOT PION, YES Kaon 
+      h_MissingPvsIMMass[0]->Fill(Sigma.M(),MMNeut_kaon.P());
     
-    h_MissingMasscut->Fill(Wneutron_kaon.M());
-    h_MissingMass_kaonpioncut->Fill(Wneutron_pion.M());
+    if( Sigma.M()<1.08 || Sigma.M()>1.3)
+      h_MissingPvsIMMass[1]->Fill(Lambda.M(),MMNeut_kaon.P());
+
+     h_MissingMassvsSigmaMass->Fill(Sigma.M(), MMNeut_kaon.P());
+    
+    h_MissingMasscut->Fill(MMNeut_kaon.M());
+    h_MissingMass_kaonpioncut->Fill(MMNeut_KPi.M());
       
-    // h_MissingP->Fill(Wneutron_kaon.P());
+    // h_MissingP->Fill(MMNeut_kaon.P());
       
-    h_MissingPvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.P());
-    h_MissingMass_vsMissingMasskaonpion[1]->Fill(Wneutron_kaon.M(), Wneutron_pion.M());
+    h_MissingPvsSigmaMass->Fill(Sigma.M(), MMNeut_kaon.P());
           
     h_InvariantMass->Fill(Sigma.M());
     h_LambdaMass->Fill(Lambda.M());
-      
-      
+    h_InvMassLambda_vsInvMassSigma->Fill(Sigma.M(), Lambda.M());
+    h_MMassSigma->Fill(MMSigma.M());
+    h_MMNeutron_vsMMassSigma[0]->Fill(MMNeut_kaon.M(),MMSigma.M());
+
+    
     //------------------------Comparación de sigmas-------------//
     if( Lambda.M()<1.108 || Lambda.M()>1.124)
       h_InvariantMasscut[0]->Fill(Sigma.M());
@@ -344,30 +373,35 @@ void Codecuts::CodeCuts(){
     //------------- Comparación de missing momentums-----------//
       
     if( Lambda.M()<1.096 || Lambda.M()>1.136) 
-      h_MissingP[0]->Fill(Wneutron_kaon.P());
-      
-      
-      
+      h_MissingP[0]->Fill(MMNeut_kaon.P());   
     if( Sigma.M()<1.08 || Sigma.M()>1.3)
-      h_MissingP[1]->Fill(Wneutron_kaon.P());
-      
-      
-    if ( Lambda.M()>=1.11 && Lambda.M()<=1.132) continue;                   //Cut for LamdaMass in +/- 3sigma
+      h_MissingP[1]->Fill(MMNeut_kaon.P());
+
+
+    if ( Lambda.M()>=1.1 && Lambda.M()<=1.132) continue;                   //Cut for LamdaMass in +/- 8sigma
     Events[16]++;         //Events With Lambda cuts
-    if ( Wneutron_kaon.M()<=0.9 || Wneutron_kaon.M()>=0.96 ) continue;       //Cut from correlation MM
-    Events[17]++;         //Events With Mass neutron range
-    if(Wneutron_kaon.P()<=0.2) continue;                                    //Cut for rescattering
+
+
+    //--------Correlation Momentums--------------//
+    h_CorrelationMMomentum->Fill(Sigma.P(), Lambda.P());
+    
+    // Events[17]++;         //Events With Mass neutron range
+    if(MMNeut_kaon.P()<=0.2) continue;                                    //Cut for rescattering
     Events[18]++;         //Events With Neutron Rescattering Lambada cuts
 
+
+    h_MMNeutron_vsMMassSigma[1]->Fill(MMNeut_kaon.M(),MMSigma.M());       //Cut MM neutron and MM sigma 
     h_InvariantMasscut[3]->Fill(Sigma.M());
-    h_MissingMassvsSigmaMass->Fill(Sigma.M(), Wneutron_kaon.M());
+   
+    h_MMassSigmaCut->Fill(MMSigma.M());
       
     // Pion -  (Por si las moscas)
     h_DeltaBVSInvariantMass->Fill(Sigma.M(),deltbeta[2]);
-    h_DeltaBVSMissingMass->Fill(Wneutron_kaon.M(),deltbeta[2]);
-    h_DeltaBVSMissingMomentum->Fill(Wneutron_kaon.P(),deltbeta[2]);
+    h_DeltaBVSMissingMass->Fill(MMNeut_kaon.M(),deltbeta[2]);
+    h_DeltaBVSMissingMomentum->Fill(MMNeut_kaon.P(),deltbeta[2]);
 
-
+    //------------Momentum proton----------------.//
+    h_MomentumProton->Fill(proton.P());
    
     //-----------------BOOST------------------------------//
 
@@ -382,12 +416,12 @@ void Codecuts::CodeCuts(){
     //0 is for PARA
     //1 is for PERP
     if (myDataList->getCoh_plan()==0){
-      if(KaonCosThetaCM < 0.668){
+      if(KaonCosThetaCM < 0.51){
 	MEASPhi.at(0).push_back(KaonPhiCM);
 	MEASGammaP.at(0).push_back(PhotoPol);
 	h_kaonPhiPA[0]->Fill(KaonPhiCM);
       }
-      else if (KaonCosThetaCM > 0.668){
+      else if (KaonCosThetaCM > 0.51){
 	MEASPhi.at(1).push_back(KaonPhiCM);
 	MEASGammaP.at(1).push_back(PhotoPol);
 	h_kaonPhiPA[1]->Fill(KaonPhiCM);
@@ -395,18 +429,19 @@ void Codecuts::CodeCuts(){
     }
       
     else if (myDataList->getCoh_plan()==1){
-      if(KaonCosThetaCM < 0.668){
+      if(KaonCosThetaCM < 0.51){
 	MEASPhi.at(0).push_back(KaonPhiCM);
 	MEASGammaP.at(0).push_back(-PhotoPol);
 	h_kaonPhiPE[0]->Fill(KaonPhiCM);
       }
-      else if (KaonCosThetaCM > 0.668){
+      else if (KaonCosThetaCM > 0.51){
 	MEASPhi.at(1).push_back(KaonPhiCM);
 	MEASGammaP.at(1).push_back(-PhotoPol);
 	h_kaonPhiPE[1]->Fill(KaonPhiCM);
       }
     }
-     
+
+
     //---------------Asymmetry Analysis----------------//
       
     h_Asym[0]=(TH1F*)h_kaonPhiPA[0]->GetAsymmetry(h_kaonPhiPE[0]);

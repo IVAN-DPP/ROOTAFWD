@@ -9,13 +9,14 @@
 
 #include "Libraries.h"
 
+using namespace std;
 
 class TPaveStateModify{
 protected:
-  TH1 *PrincipalHisto = NULL;
+  TH1 *PrincipalHisto 	= NULL;
   vector<TH1*> Histos;
-  TPaveStats *Pave = NULL;
-  TList *ListText  = NULL;
+  TPaveStats *Pave 	= NULL;
+  TList *ListText  	= NULL;
   double XSize;
   double YSize;
   double XStat;

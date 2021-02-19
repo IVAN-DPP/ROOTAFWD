@@ -7,8 +7,10 @@
 #ifndef TPAVESTATEMODIFY_C
 #define TPAVESTATEMODIFY_C
 
-#include "../include/Libraries.h"
 #include "../include/TPaveStateModify.h"
+#include "../include/Libraries.h"
+
+using namespace std;
 
 TPaveStateModify::TPaveStateModify(TH1 *PH,TH1 *SH){
   PrincipalHisto=PH;

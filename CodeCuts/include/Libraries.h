@@ -8,10 +8,6 @@
 #ifndef LIBRARIES_H
 #define LIBRARIES_H
 
-#include "../src/DataEvent.cpp"
-#include "MaxLike.h"
-//#include "TPaveStateModify.h"
-
 #include "TROOT.h"
 #include "TH1F.h"
 #include "TH2F.h"
@@ -21,6 +17,7 @@
 #include "TMath.h"
 #include "TLine.h"
 #include "TPad.h"
+#include "TChain.h"
 #include "TStyle.h"
 #include "TPaveStats.h"
 #include "TLatex.h"
@@ -33,9 +30,12 @@
 #include "TObjArray.h"
 #include "TPaveText.h"
 #include "TText.h"
+#include "TSystem.h" 
 #include "Math/Minimizer.h"
 #include "Math/Factory.h"
 #include "Math/Functor.h"
+#include "Math/IFunction.h"
+#include "TVirtualFitter.h"
 
 #include <sstream>
 #include <iostream>
@@ -53,4 +53,7 @@
 #include <assert.h>
 #include <chrono>
 #include <map>
+
 #endif
+
+
