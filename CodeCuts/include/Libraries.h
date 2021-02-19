@@ -1,5 +1,12 @@
-#ifndef LIBRARIES_H 
-#define LIBRARIES_H 
+/*******************************************/
+// Author: Ivan Dario Piernagorda Peña     
+// Author: Karen Milena Rodriguez      
+// Date:   15/02/2020                  
+// Title:  ROOT and C/C++ Libraries
+/*******************************************/
+
+#ifndef LIBRARIES_H
+#define LIBRARIES_H
 
 #include "TROOT.h"
 #include "TH1F.h"

@@ -1,6 +1,10 @@
-//Author: Edwin Munevar
+/*******************************************/
+// Author: Edwin Munevar Espitia
+// Author: Ivan Dario Piernagorda Peña     
+// Date:   15/02/2020                  
+// Title:  Photon Polarization Tables                              
+/*******************************************/
 
-/* Miscelaneous.C.  */
 #ifndef MISCELANEOUS_H
 #define MISCELANEOUS_H
 

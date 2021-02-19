@@ -1,3 +1,9 @@
+/*******************************************/
+// Author: Ivan Dario Piernagorda Peña     
+// Date:   15/02/2020                  
+// Title:  It Modify the TPave in a Graph
+/*******************************************/
+
 #ifndef TPAVESTATEMODIFY_H
 #define TPAVESTATEMODIFY_H
 

@@ -1,3 +1,9 @@
+/*******************************************/
+// Author: Nicholas Zachariou
+// Date:   15/02/2020                  
+// Title:  ROOT-ROOTBEAR macro                              
+/*******************************************/
+
 #ifndef DATAEVENT_CPP
 #define DATAEVENT_CPP
 

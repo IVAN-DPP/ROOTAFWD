@@ -1,7 +1,11 @@
-//Author: Edwin Munevar
+/*******************************************/
+// Author: Edwin Munevar Espitia
+// Author: Ivan Dario Piernagorda Peña     
+// Date:   15/02/2020                  
+// Title:  Photon Polarization Tables                              
+/*******************************************/
 
-/* Miscelaneous.h
-   This code contains the variable and function declarations for the Miscelaneous.C routine.*/
+// This code contains the variable and function declarations for the Miscelaneous.C routine.
 
 #ifndef Miscelaneous_h
 #define Miscelaneous_h
