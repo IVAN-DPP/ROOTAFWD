@@ -272,13 +272,14 @@ void Codecuts::CodeCuts(){
 
     //-------------- Reconstruction --------- //
       
-    TLorentzVector photon, deuteron, kaon, proton ,pion, Neutron, WBoost;			//Principal Reaction
+    TLorentzVector photon, deuteron, kaon, proton ,pion, Neutron, WBoost, NT;			//Principal Reaction
     TLorentzVector kaonpion, kaonproton, pionkaon;						//MIS-identification particles
-    TLorentzVector MMNeut_kaon, MMNeut_KPi, MMNeut_KP, MMNeut_PiK ,MMSigma;			//Missing mass
-    TLorentzVector Sigma, Lambda;								//Invariant Mass
+    TLorentzVector MMNeut_kaon, MMNeut_KPi, MMNeut_KP, MMNeut_PiK ,MMSigma, MMKaon0;		//Missing mass
+    TLorentzVector Sigma, Lambda, KaonS, Pi0;								//Invariant Mass
     
     photon.SetXYZM(0,0,myDataList->getTAGR_epho(myDataList->getIndex_k(0)),0);
     deuteron.SetXYZM(0,0,0,1.8756);
+    NT.SetXYZM(0,0,0,0.939);
     
     double Px_kaonpion = myDataList->getEVNT_track(1).Rho()* sin(myDataList->getEVNT_track(1).Theta())* cos(myDataList->getEVNT_track(1).Phi());
     double Py_kaonpion = myDataList->getEVNT_track(1).Rho()* sin(myDataList->getEVNT_track(1).Theta())* sin(myDataList->getEVNT_track(1).Phi());
@@ -290,7 +291,7 @@ void Codecuts::CodeCuts(){
 
     // This mass is of Pion-, because we need remove the background of Pion-
     kaonpion.SetXYZM(Px_kaonpion, Py_kaonpion, Pz_kaonpion, 0.139);       			
-    kaonproton.SetXYZM(Px_kaonpion, Py_kaonpion, Pz_kaonpion,0.9383);
+    kaonproton.SetXYZM(Px_kaonpion, Py_kaonpion, Pz_kaonpion,0.8937);
     pionkaon.SetXYZM(Px_pionkaon, Py_pionkaon, Pz_pionkaon,0.4937);
     
     proton 	= myDataList->geteloss_track(0);
@@ -306,29 +307,38 @@ void Codecuts::CodeCuts(){
     MMNeut_KPi 	= photon + deuteron - proton - kaonpion - pion;     	   	// This missing mass is with the Pion-
     MMNeut_KP	= photon + deuteron - proton - kaonproton - pion;     	   	// This missing mass is with the Proton
     MMNeut_PiK 	= photon + deuteron - proton - pionkaon - kaon;     	   	// This missing mass is with the Kaon-      
-      
+    MMKaon0	= photon + NT - Lambda;   
+    KaonS	= MMKaon0 + pion;
+    Pi0         = photon + deuteron - kaon - pion - Neutron - proton;
+    
     h_MissingMass->Fill(MMNeut_kaon.M());
 
     h_MissingMass_kaonpion->Fill(MMNeut_KPi.M());
-    h_MissingMass_kaonproton->Fill(MMNeut_KP.M());
-    h_MissingMass_pionkaon->Fill(MMNeut_PiK.M());
+    h_MissingMass_kaonproton->Fill(Pi0.M());
+    h_MissingMass_pionkaon->Fill(MMKaon0.M());
     //h_MissingPvsIMMass->Fill(MMNeut_kaon.M(),MMNeut_kaon.P());
     h_MissingMass_vsMissingMasskaonpion[0]->Fill(MMNeut_kaon.M(), MMNeut_KPi.M());
-    h_MissingMass_vsMissingMasskaonproton[0]->Fill(MMNeut_kaon.M(),MMNeut_KP.M());
-    h_MissingMass_vsMissingMasspionkaon[0]->Fill(MMNeut_kaon.M(),MMNeut_PiK.M());
+    h_MissingMass_vsMissingMasskaonproton[0]->Fill(MMNeut_kaon.M(),kaon.P());
+    h_MissingMass_vsMissingMasspionkaon[0]->Fill(MMNeut_kaon.M(),Pi0.M());
     
             
     
     if(MMNeut_KPi.M() < 0.98) continue;       //Cut from correlation MM
+    
+    // if(MMNeut_kaon.M() < 0.93) continue;
+    //if(MMNeut_kaon.M() > 0.98) continue;
+    
+    if(Pi0.M() > 0.03) continue; 
+    h_MissingMass_vsMissingMasskaonproton[1]->Fill(MMNeut_kaon.M(),KaonS.M());
     h_MissingMass_vsMissingMasskaonpion[1]->Fill(MMNeut_kaon.M(), MMNeut_KPi.M());
-    if(MMNeut_KP.M()  > 0.75) continue; 
-    h_MissingMass_vsMissingMasskaonproton[1]->Fill(MMNeut_kaon.M(),MMNeut_KP.M());
-    if(MMNeut_PiK.M() > 0.70) continue; 
-    h_MissingMass_vsMissingMasspionkaon[1]->Fill(MMNeut_kaon.M(),MMNeut_PiK.M());
+
+    //if(MMNeut_PiK.M() > 0.70) continue; 
+    h_MissingMass_vsMissingMasspionkaon[1]->Fill(MMNeut_kaon.M(),MMKaon0.M());
     Events[15]++;         //Events With NOT PION, YES Kaon
-    // Double_t El = TMath::Power((proton.P()-offsetx)*cos(angle)+(MMSigma.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
-    //   +TMath::Power((proton.P()-offsetx)*sin(angle)-(MMSigma.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
-    // if(El <= 1) continue;
+    
+    Double_t El = TMath::Power((Sigma.M()-offsetx)*cos(angle)+(MMSigma.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
+    +TMath::Power((Sigma.M()-offsetx)*sin(angle)-(MMSigma.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
+     
     
 
 
@@ -390,9 +400,17 @@ void Codecuts::CodeCuts(){
 
 
     h_MMNeutron_vsMMassSigma[1]->Fill(MMNeut_kaon.M(),MMSigma.M());       //Cut MM neutron and MM sigma 
-    h_InvariantMasscut[3]->Fill(Sigma.M());
+
    
     h_MMassSigmaCut->Fill(MMSigma.M());
+    
+    // if (MMSigma.M()>1.23 || MMSigma.M()<1.16) continue;
+    //if (MMSigma.M()>1.23) continue;
+    //if (MMSigma.M()<1.17) continue;
+
+    if(El >= 1) continue;
+    h_MMSigmaVS_IMSigma->Fill(Sigma.M(), MMSigma.M());
+    h_InvariantMasscut[3]->Fill(Sigma.M());
       
     // Pion -  (Por si las moscas)
     h_DeltaBVSInvariantMass->Fill(Sigma.M(),deltbeta[2]);

@@ -11,7 +11,7 @@
 
 #include "include/Libraries.h"
 #include "include/MaxLike.h"
-#include "include/TPaveStateModify.h"
+#include "src/TPaveStateModify.C"
 
 using namespace std;
 
@@ -95,10 +95,11 @@ protected:
   //------Missing mass Sigma--------//
   TH1F *h_MMassSigma                       		= NULL;
   TH1F *h_MMassSigmaCut                    		= NULL;
-  
+    
   //--Correlations between Invariant and missing mass (lambda and sigma)--//
   TH2F *h_InvMassLambda_vsInvMassSigma    		= NULL;
   TH2F *h_MMNeutron_vsMMassSigma[2]       		= {};
+  TH2F *h_MMSigmaVS_IMSigma                    		= NULL;
   
   //-----Correlation Momentums (lambda and Sigma)----//
   TH2F *h_CorrelationMMomentum            		= NULL;
@@ -107,7 +108,7 @@ protected:
   //--- Ellipse Cuts ---- //
   
   TEllipse *myEllipse                     		= NULL;
-  double radx=0.1569373, rady=0.03295391, offsetx=0.5972416, offsety=1.153089-0.02, angle=360*TMath::DegToRad();
+  double radx=0.01626367, rady=0.02722365, offsetx=1.197115, offsety=1.203825, angle=360*TMath::DegToRad();
   double radx1=0.12744, rady1=0.01959062, offsetx1=1.152367, offsety1=1.199867, angle1=360*TMath::DegToRad();
   //-----Correlation Theta-Phi, ----------//
  
@@ -396,6 +397,13 @@ void Histograms::DoHistograms(){
 				      "; IM(#pi^{-} n) [GeV/c^{2}]; IM(#pi^{-} p) [GeV/c^{2}]",
 				      200,1.06,1.4, 200, 1.0, 1.5);
 
+  //--------------Correlation MM Sigma and IM Sigma-----------------//
+  h_MMSigmaVS_IMSigma = new TH2F("h_MMSigmaVS_IMSigma",
+				      "; IM(#pi^{-} p) [GeV/c^{2}]; MM(Sigma) [GeV/c^{2}]",
+				      300,1.06,1.4, 300, 1.0, 1.35);
+  
+
+  
   //--------------Correlation momentums (Lambda vs Sigma)----//
 
   h_CorrelationMMomentum  = new TH2F("h_CorrelationMMomentum",
@@ -1154,6 +1162,14 @@ void Histograms::DoCanvas(){
   
   cIMLS->SaveAs("imagenes/InvariantMassCorrelation.eps");
 
+  //-------------------Correlation MM Sigma and IM Sigma------------//
+  TCanvas *cMMIMS=new TCanvas("MMIMS","Correlation MM Sigma and IM Sigma", 900, 500);
+  cMMIMS->cd(1);
+  h_MMSigmaVS_IMSigma->SetTitleSize(0.045, "XY");  
+  h_MMSigmaVS_IMSigma->Draw("colz");
+  
+  cMMIMS->SaveAs("imagenes/MissingMassSigmaVSInvariantMassSigma.eps");
+  
   //--------------Correlation Missing momentums--------------------//
 
    TCanvas *cMMom=new TCanvas("cMMom","Correlation Missing momentums", 900, 500);
