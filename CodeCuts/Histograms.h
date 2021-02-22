@@ -11,20 +11,20 @@
 
 #include "include/Libraries.h"
 #include "include/MaxLike.h"
-#include "include/TPaveStateModify.h"
+#include "src/TPaveStateModify.C"
+#include "src/HistoBinning.C"
+
 
 using namespace std;
 
 //Friends Functions
 void LinesPTCuts();
 void NameLinesInv(double, double, int, int);
-vector<double> HistoBinning(TH1 *, int, double, double, double,double);
 Double_t fitf(Double_t *,Double_t *);
 class Histograms{
   //Friends Functions
   friend void LinesPTCuts();       //Functions for do the lines in Theta-Phi Correlations
   friend void NameLinesInv(double, double, int, int);
-  friend vector<double> HistoBinning(TH1 *, int, double, double, double,double); //Function for binning the graphic Cos(Kaon.Theta)
   friend Double_t fitf(Double_t *,Double_t *); //Function to asymmetry compute
   
 protected:
@@ -434,7 +434,7 @@ void Histograms::DoHistograms(){
 
 
   //--------------KaonCosTheta Boost-------------//
-  h_KCosThetaCM = new TH1F("h_KCosThetaCM","Kaon Cos_Theta Boost", 100, -0.4, 2.);
+  h_KCosThetaCM = new TH1F("h_KCosThetaCM","Kaon Cos_Theta Boost", 100, -2, 2.);
 
   
   //-----------------Kaon phi-------------------//
@@ -1245,7 +1245,10 @@ void Histograms::DoCanvas(){
   TCanvas *c42 = new TCanvas("c42","Theta Kaon Boost", 1450, 500);
   //Principalhisto,Parts,Firstpoint,step,error,Timeofbreak
   vector<double> Points(3);
-  HistoBinning(h_KCosThetaCM,2,0.5,0.001,0.5,10);
+  HistoBinning *B = new HistoBinning(h_KCosThetaCM,10);
+  B->DoHistoBinning();
+  B->PrintLevel(2);
+  B->GetLatexTable("./CosBin.tex", "Cos Theta Binning", "COST");
   c42->cd(1);
   h_KCosThetaCM->Draw();
   c42->SaveAs("imagenes/ThetaKaonBoost.eps");
@@ -1399,71 +1402,6 @@ void NameLinesInv(double Average, double  Sigma, int NSig, int Binning){
     NSig-=Binning;
 
   }
-}
-
-vector<double> HistoBinning(TH1 *PrincipalHisto,
-			    int Parts,
-			    double FirstPoint,
-			    double step,
-			    double error = 0.5,
-			    double TimeOfBreak = 5){
-
-  //Define Timers if we need stop the program
-  unsigned Time0, Time1;
-  Time0 = clock();
-  double time = 0;
-
-  //Define histograms and their areas
-  TH1F *TempHisto = (TH1F*)PrincipalHisto->Clone("");
-  double TheoricArea = PrincipalHisto->Integral("width");   //We compute the area of the principal histogram
-  TempHisto->GetXaxis()->SetRangeUser(0,FirstPoint);        //We change the range of the TempHisto
-  double NumericArea = TempHisto->Integral("width");        //We compute the area of the temp histogram
-  vector<double> CoordinatesX(Parts-1);                           //To save the points the histograms
-  double Point = 0;
-  
-  for(int j=1;j<=Parts-1;j++){
-    
-    Point=FirstPoint;
-    TempHisto->GetXaxis()->SetRangeUser(0,Point);
-    NumericArea = TempHisto->Integral("width");
-    
-    while(true){
-      Time1 = clock();
-      time = (double(Time1- Time0)/CLOCKS_PER_SEC);
-
-      if(int(time)==TimeOfBreak){
-	cout << "ALERT: ¡Stop the code for Time!\n";
-	break;
-      }
-      
-      if(NumericArea>TheoricArea*j/Parts){
-	Point-=step;
-	TempHisto->GetXaxis()->SetRangeUser(0,Point);
-	NumericArea = TempHisto->Integral("width");
-      }
-      else if(NumericArea < TheoricArea*j/Parts){
-	Point+=step;
-	TempHisto->GetXaxis()->SetRangeUser(0,Point);
-	NumericArea = TempHisto->Integral("width");
-      }
-      if(abs(NumericArea-(TheoricArea*j/Parts)) <= error)
-	break;
-    }
-    cout << "********************************************************************\n"
-	 << "\t\tDelta Error: " << abs(NumericArea-(TheoricArea*j/Parts)) << endl
-	 << "Point for " << j << " : " << Point << "\t"
-	 << "Numeric Area: " << NumericArea << "\t"
-	 << "Theoric Area: " << TheoricArea*j/Parts << endl
-	 << "Execution Time: " << time << endl
-	 << "********************************************************************\n";
-
-    CoordinatesX[j-1]=Point;
-
-   
-  }
-
-  return CoordinatesX;
-  
 }
 
 // Function to asymmetry
