@@ -41,7 +41,7 @@ void Codecuts::CodeCuts(){
 
   //Table Events X 14 cuts
   vector<int> Events(19);
-  
+
   const int NumbOfPolFiles=PolTableName.size();
   for (int i=0;i<NumbOfPolFiles;i++){
     char *cstr = const_cast<char *>(PolTableName[i].c_str());
@@ -404,49 +404,65 @@ void Codecuts::CodeCuts(){
    
     //-----------------BOOST------------------------------//
 
-    TVector3 b=WBoost.BoostVector();
-    kaon.Boost(-b);
+    // TVector3 b=WBoost.BoostVector();
+    // proton.Boost(-b);
+    // kaon.Boost(-b);
+    // Sigma.Boost(-b);
+    double ProtonCosThetaCM=TMath::Cos(proton.Theta());
     double KaonCosThetaCM=TMath::Cos(kaon.Theta());
-    double KaonPhiCM=kaon.Phi()*TMath::RadToDeg();
-    h_KCosThetaCM->Fill(KaonCosThetaCM);
+    double SigmaCosThetaCM=TMath::Cos(Sigma.Theta());
+    double PhiCM=kaon.Phi()*TMath::RadToDeg();
+    h_CosThetaCM[0]->Fill(ProtonCosThetaCM);
+    h_CosThetaCM[1]->Fill(KaonCosThetaCM);
+    h_CosThetaCM[2]->Fill(SigmaCosThetaCM);
+    
 
+    h_Theta[0]->Fill(proton.Theta());
+    h_Theta[1]->Fill(kaon.Theta());
+    h_Theta[2]->Fill(Sigma.Theta());
+    
+    h_ThetaCorr[0]->Fill(ProtonCosThetaCM,KaonCosThetaCM);
+    h_ThetaCorr[1]->Fill(ProtonCosThetaCM,SigmaCosThetaCM);
+    h_ThetaCorr[2]->Fill(SigmaCosThetaCM,KaonCosThetaCM);
+
+    
     //---------------Bins Cos Theta Kaon----------------//
 
     //0 is for PARA
     //1 is for PERP
     if (myDataList->getCoh_plan()==0){
-      if(KaonCosThetaCM < 0.51){
-	MEASPhi.at(0).push_back(KaonPhiCM);
-	MEASGammaP.at(0).push_back(PhotoPol);
-	h_kaonPhiPA[0]->Fill(KaonPhiCM);
+      if(KaonCosThetaCM < 0.668){
+	MEASGamma[myDataList->getCoh_edge_nom()].at(0).push_back(PhotoPol);
+	MEASPhip[myDataList->getCoh_edge_nom()].at(0).push_back(PhiCM);
+	h_KaonPhiPAR[myDataList->getCoh_edge_nom()][0]->Fill(PhiCM);
       }
-      else if (KaonCosThetaCM > 0.51){
-	MEASPhi.at(1).push_back(KaonPhiCM);
-	MEASGammaP.at(1).push_back(PhotoPol);
-	h_kaonPhiPA[1]->Fill(KaonPhiCM);
+      else if (KaonCosThetaCM > 0.668){
+	MEASGamma[myDataList->getCoh_edge_nom()].at(1).push_back(PhotoPol);
+	MEASPhip[myDataList->getCoh_edge_nom()].at(1).push_back(PhiCM);
+	h_KaonPhiPAR[myDataList->getCoh_edge_nom()][1]->Fill(PhiCM);
       }
     }
       
     else if (myDataList->getCoh_plan()==1){
-      if(KaonCosThetaCM < 0.51){
-	MEASPhi.at(0).push_back(KaonPhiCM);
-	MEASGammaP.at(0).push_back(-PhotoPol);
-	h_kaonPhiPE[0]->Fill(KaonPhiCM);
+      if(KaonCosThetaCM < 0.668){
+	MEASGamma[myDataList->getCoh_edge_nom()].at(0).push_back(-PhotoPol);
+	MEASPhip[myDataList->getCoh_edge_nom()].at(0).push_back(PhiCM);
+	h_KaonPhiPER[myDataList->getCoh_edge_nom()][0]->Fill(PhiCM);
       }
-      else if (KaonCosThetaCM > 0.51){
-	MEASPhi.at(1).push_back(KaonPhiCM);
-	MEASGammaP.at(1).push_back(-PhotoPol);
-	h_kaonPhiPE[1]->Fill(KaonPhiCM);
+      else if (KaonCosThetaCM > 0.668){
+	MEASGamma[myDataList->getCoh_edge_nom()].at(1).push_back(-PhotoPol);
+	MEASPhip[myDataList->getCoh_edge_nom()].at(1).push_back(PhiCM);
+	h_KaonPhiPER[myDataList->getCoh_edge_nom()][1]->Fill(PhiCM);
       }
     }
 
 
     //---------------Asymmetry Analysis----------------//
+
+    h_Asymm[myDataList->getCoh_edge_nom()][0]=(TH1F*)h_KaonPhiPAR[myDataList->getCoh_edge_nom()][0]->GetAsymmetry(h_KaonPhiPER[myDataList->getCoh_edge_nom()][0]);
+    h_Asymm[myDataList->getCoh_edge_nom()][1]=(TH1F*)h_KaonPhiPAR[myDataList->getCoh_edge_nom()][1]->GetAsymmetry(h_KaonPhiPER[myDataList->getCoh_edge_nom()][1]);
       
-    h_Asym[0]=(TH1F*)h_kaonPhiPA[0]->GetAsymmetry(h_kaonPhiPE[0]);
-    h_Asym[1]=(TH1F*)h_kaonPhiPA[1]->GetAsymmetry(h_kaonPhiPE[1]);
-      
-      
+
 
       
   }
