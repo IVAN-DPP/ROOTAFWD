@@ -5,8 +5,9 @@
 void Codigo(){
 
   Codecuts Cls;
-  Cls.CodeCuts();
-  
+  // Only active the method if CodeCuts SIGMA particle was changed
+  //Cls.CodeCuts(); 
+  Cls.CodeCutsAsym();
   remove("Codigo_C_ACLiC_dict_rdict.pcm");
   remove("Codigo_C.d");
   remove("Codigo_C.so");

@@ -115,15 +115,18 @@ protected:
   
   //--- Fiduciary cuts ---//
   TH2F *h_ThePhicut[3]                      		= {};
+
   
+  //-------Momentum proton------------------//
+
+  TH1F *h_MomentumProton                    		= NULL;
+
+    
   //----Costheta-Kaon Boost-------------------//
   TH1F *h_CosThetaCM[3]                      		= {};
   TH1F *h_CosThetaCM17[3]				= {};
   TH1F *h_Theta[3] 					= {};
   TH2F *h_ThetaCorr[3] 					= {};
-  
-  //-------Momentum proton------------------//
-  TH1F *h_MomentumProton                    		= NULL;
   
   //-----Kaon phi-------------------//
   TH1F *h_kaonPhiPA[10]                      		= {};
@@ -146,6 +149,7 @@ public:
   Histograms(){}
   void DoHistograms();
   void DoCanvas();
+  void DoCanvasAsym();
 };
 
 
@@ -436,7 +440,7 @@ void Histograms::DoHistograms(){
 
   //myEllipse = new TEllipse(offsetx,offsety,radx,rady,0,360,70);
 
-
+  
   //--------------KaonCosTheta Boost-------------//
 
   h_CosThetaCM[0] = new TH1F("h_CosThetaCM[0]","Proton Cos_Theta Boost", 100, -1, 1);
@@ -1291,27 +1295,52 @@ void Histograms::DoCanvas(){
 
   c41->SaveAs("imagenes/CorrelacionesXSIAL.eps");
 
-  //-----------
+
+}
+
+
+void Histograms::DoCanvasAsym(){
   
   TCanvas *cTCM0 = new TCanvas("cTCM0","cos Theta proton Boost", 1450, 500);
   cTCM0->cd(1);
-  h_CosThetaCM[0]->Draw();
-  cTCM0->SaveAs("imagenes/ThetaProtonBoost.eps");
+  h_CosThetaCM17[0]->Draw();
+  cTCM0->SaveAs("imagenes/ThetaProtonBoost17.eps");
   
   TCanvas *cTCM1 = new TCanvas("cTCM1","cos Theta Kaon Boost", 1450, 500);
-  HistoBinning *B = new HistoBinning(h_CosThetaCM[1],10);
+  HistoBinning *B = new HistoBinning(h_CosThetaCM17[1],10);
   B->DoHistoBinning();
   B->PrintLevel(2);
-  B->GetLatexTable("./CosBin.tex", "Cos Theta Binning", "COST");
+  B->GetLatexTable("./CosBin17.tex", "Cos Theta Binning", "COST");
   cTCM1->cd(1);
-  h_CosThetaCM[1]->Draw();
-  cTCM1->SaveAs("imagenes/ThetaKaonBoost.eps");
+  h_CosThetaCM17[1]->Draw();
+  cTCM1->SaveAs("imagenes/ThetaKaonBoost17.eps");
 
   TCanvas *cTCM2 = new TCanvas("cTCM2","cos Theta Sigma Boost", 1450, 500);
   cTCM2->cd(1);
-  h_CosThetaCM[2]->Draw();
-  cTCM2->SaveAs("imagenes/ThetaSigmaBoost.eps");
+  h_CosThetaCM17[2]->Draw();
+  cTCM2->SaveAs("imagenes/ThetaSigmaBoost17.eps");
 
+  
+  TCanvas *cCM0 = new TCanvas("cCM0","cos Theta proton Boost", 1450, 500);
+  cCM0->cd(1);
+  h_CosThetaCM[0]->Draw();
+  cCM0->SaveAs("imagenes/ThetaProtonBoost.eps");
+  
+  TCanvas *cCM1 = new TCanvas("cCM1","cos Theta Kaon Boost", 1450, 500);
+  HistoBinning *BB = new HistoBinning(h_CosThetaCM[1],10);
+  BB->DoHistoBinning();
+  BB->PrintLevel(2);
+  BB->GetLatexTable("./CosBin.tex", "Cos Theta Binning", "COST");
+  cCM1->cd(1);
+  h_CosThetaCM[1]->Draw();
+  cCM1->SaveAs("imagenes/ThetaKaonBoost.eps");
+
+  TCanvas *cCM2 = new TCanvas("cCM2","cos Theta Sigma Boost", 1450, 500);
+  cCM2->cd(1);
+  h_CosThetaCM[2]->Draw();
+  cCM2->SaveAs("imagenes/ThetaSigmaBoost.eps");
+
+  
   TCanvas *cTH0 = new TCanvas("CTH0","Theta proton",1450,500);
   cTH0->Divide(1,3);
   cTH0->cd(1);
@@ -1333,39 +1362,29 @@ void Histograms::DoCanvas(){
   h_ThetaCorr[2]->Draw("colz");
 
   cTHC0->SaveAs("imagenes/ThetaCorr.eps");
-  TCanvas *c28 = new TCanvas("","Phi distribution to Kaon", 1450, 500);
-  c28->Divide(2,2);
-  c28->cd(1);
-  h_kaonPhiPA[0]->Draw();
-  c28->cd(2);
-  h_kaonPhiPA[1]->Draw();
-  c28->cd(3);
-  h_kaonPhiPE[0]->Draw();
-  c28->cd(4);
-  h_kaonPhiPE[1]->Draw();
-  
-  c28->SaveAs("imagenes/PhiDistribution.eps");
-  
-  /*
-    TCanvas *c43 = new TCanvas("c43","Phi distribution to Kaon", 1450, 500);
-    c43->Divide(2,2);
-    c43->cd(1);
-    h_KaonPhiCM_PARA[0]->Draw();
-    c43->cd(2);
-    h_KaonPhiCM_PARA[1]->Draw();
-    c43->cd(3);
-    h_KaonPhiCM_PERP[0]->Draw();
-    c43->cd(4);
-    h_KaonPhiCM_PERP[1]->Draw();
 
-    c43->SaveAs("imagenes/Phi1Distribution.eps");
-  */
-
+  TCanvas *cPH0 = new TCanvas("","Phi PARA distribution to Kaon", 1450, 500);
+  cPH0->Divide(5,2);
+  for(int i = 0;i<10;i++){
+    cPH0->cd(i+1);
+    h_kaonPhiPA[i]->Draw();
+  }
+  cPH0->SaveAs("imagenes/PhiDistributionPARA.eps");
+  
+  TCanvas *cPH1 = new TCanvas("","Phi PERP distribution to Kaon", 1450, 500);
+  cPH1->Divide(5,2);
+  for (int i = 0; i < 10; i++) {
+    cPH1->cd(i+1);
+    h_kaonPhiPE[i]->Draw();
+  }
+  
+  cPH1->SaveAs("imagenes/PhiDistributionPERP.eps");
+  
   //--------- Binning method ----------------- //
   
-  TCanvas* CanvasAsym = new TCanvas("","",1000,1000);  
+
     
-  CanvasAsym = new TCanvas("","Asymmetry", 1450, 500);
+  TCanvas* CanvasAsym = new TCanvas("","Asymmetry", 1450, 500);
   CanvasAsym->Divide(3,3);
 
   for(UInt_t i=0; i<10; i++){
@@ -1395,27 +1414,27 @@ void Histograms::DoCanvas(){
     
   }
   CanvasAsym->SaveAs("imagenes/Asymmetry.eps");
-      // for(double k=1.3;k<=1.3;k+=0.2){
-	
-      //------------MaxLike Method------------//
-      
-      // ROOT::Math::Minimizer* minim = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
-      // // MaxLike Min(MEASPhi.at(i), MEASGammaP.at(i));
-      // MaxLike Min(MEASPhip[float(k)].at(i),MEASGamma[float(k)].at(i));
-      // ROOT::Math::Functor f(Min,2);
-      // minim->SetFunction(f);
-      // minim->SetVariable(0, "Sigma", 0, 0.01);
-      // minim->SetVariable(1, "Phi", 0, 0.01);
-      // minim->SetPrintLevel(1);
-      // minim->Minimize();
 
-      // const double *xs = minim->X();
-      // std::cout <<"To " << k << " minim: f(" << xs[0] << "," << xs[1] <<"): "
-      // 		<< minim->MinValue()  << std::endl;
-    // }
+  // for(double k=1.3;k<=1.3;k+=0.2){
+	
+  //------------MaxLike Method------------//
+      
+  // ROOT::Math::Minimizer* minim = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
+  // // MaxLike Min(MEASPhi.at(i), MEASGammaP.at(i));
+  // MaxLike Min(MEASPhip[float(k)].at(i),MEASGamma[float(k)].at(i));
+  // ROOT::Math::Functor f(Min,2);
+  // minim->SetFunction(f);
+  // minim->SetVariable(0, "Sigma", 0, 0.01);
+  // minim->SetVariable(1, "Phi", 0, 0.01);
+  // minim->SetPrintLevel(1);
+  // minim->Minimize();
+
+  // const double *xs = minim->X();
+  // std::cout <<"To " << k << " minim: f(" << xs[0] << "," << xs[1] <<"): "
+  // 		<< minim->MinValue()  << std::endl;
+  // }
 
 }
-
 
 //***************** Friend Functions ******************** //
 

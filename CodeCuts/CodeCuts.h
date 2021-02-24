@@ -20,6 +20,7 @@ private:
 public:
   Codecuts(){DoHistograms();}
   void CodeCuts();
+  void CodeCutsAsym();
 
 };
 
@@ -47,6 +48,27 @@ void Codecuts::CodeCuts(){
     char *cstr = const_cast<char *>(PolTableName[i].c_str());
     LoadPolTable(i,cstr,keysPlane);
   }
+
+  //----- Save Vars To MaxLike and Binning Method ---//
+  
+  TFile *Cuts = new TFile("Cuts.root","RECREATE");
+  TTree *FinalCut = new TTree("FinalCut","Final cuts for MaxLike and Binning method");
+  float CohE, CohEN, PhotoP;
+  int NumEv, CohP;
+  TLorentzVector Proton, Kaon, Sig, WB;
+
+
+  FinalCut->Branch("CohE",&CohE);
+  FinalCut->Branch("CohEN",&CohEN);
+  FinalCut->Branch("CohP",&CohP);
+  FinalCut->Branch("NumEv",&NumEv);
+  FinalCut->Branch("PhotoPol",&PhotoP);
+  FinalCut->Branch("VProton",&Proton);
+  FinalCut->Branch("VKaon",&Kaon);
+  FinalCut->Branch("VSig",&Sig);
+  FinalCut->Branch("VWBoost",&WB);
+  
+  
   
   while (myDataList->getEntry()<myDataList->getEntries()){
 
@@ -404,36 +426,101 @@ void Codecuts::CodeCuts(){
    
     //-----------------BOOST------------------------------//
 
-
-    TVector3 b=WBoost.BoostVector();
-    proton.Boost(-b);
-    kaon.Boost(-b);
-    Sigma.Boost(-b);
-    double ProtonCosThetaCM=TMath::Cos(proton.Theta());
-    double KaonCosThetaCM=TMath::Cos(kaon.Theta());
-    double SigmaCosThetaCM=TMath::Cos(Sigma.Theta());
-    double PhiCM=kaon.Phi()*TMath::RadToDeg();
+    CohE 	= myDataList->getCoh_edge();
+    CohEN	= myDataList->getCoh_edge_nom();
+    CohP	= myDataList->getCoh_plan();
+    PhotoP	= PhotoPol;
+    Proton 	= proton;
+    Kaon	= kaon;
+    Sig 	= Sigma;
+    WB		= WBoost;
+    NumEv	= myDataList->getHEAD_eventnum();
     
-    if(myDataList->getCoh_edge_nom() == float(1.7)){
+    FinalCut->Fill();
+         
+  }
+  cout<<endl;
 
+  FinalCut->Write();
+  Cuts->Write();
+  Cuts->Close();
+  GetPolAvTable(ItP,AvP);
+  GetPolAvTableLatex(ItP, AvP, "./PolTable.tex","Polarization Tables","poltab");
+  GetEventPercentLatex(Events, "./EventCuts.tex", "Event Cut Tables", "eventtab");
+  GetEventPercent(Events);
+  //DoCanvas();
+  
+}
+
+
+void Codecuts::CodeCutsAsym(){
+ 
+  TChain *Cuts = new TChain("FinalCut");
+  TLorentzVector *Proton = NULL , *Kaon = NULL, *Sigma = NULL, *WBoost = NULL;
+  float CohE = 0, CohEN = 0, PhotoPol = 0;
+  int NumEv = 0, Event = 0, CohP = 0;
+  
+  Cuts->Add("Cuts.root");
+  Cuts->SetBranchAddress("VProton",&Proton);
+  Cuts->SetBranchAddress("VKaon",&Kaon);
+  Cuts->SetBranchAddress("VSig",&Sigma);
+  Cuts->SetBranchAddress("VWBoost",&WBoost);
+  Cuts->SetBranchAddress("CohE",&CohE);
+  Cuts->SetBranchAddress("CohEN",&CohEN);
+  Cuts->SetBranchAddress("CohP",&CohP);
+  Cuts->SetBranchAddress("NumEv",&NumEv);
+  Cuts->SetBranchAddress("PhotoPol",&PhotoPol);
+  
+  while(Event < Cuts->GetEntries()){
+
+    if(Event < Cuts->GetEntries()){
+      Cuts->GetEvent(Event);
+      Event++;
+    }
+    
+    if (Event % 1000 == 0){
+      if(CohP == 0){
+	fprintf (stderr, "Looped %s : %.2f percent, CohEdge %f \r", "PARA" ,Event*100.0/Cuts->GetEntries(),CohEN);
+	fflush (stderr);
+      }
+      else {
+	fprintf (stderr, "Looped %s : %.2f percent, CohEdge %f \r", "PERP" ,Event*100.0/Cuts->GetEntries(),CohEN);
+	fflush (stderr);
+      }
+    }
+
+  
+    TVector3 b=WBoost->BoostVector();
+    Proton->Boost(-b);
+    Kaon->Boost(-b);
+    Sigma->Boost(-b);
+    double ProtonCosThetaCM=TMath::Cos(Proton->Theta());
+    double KaonCosThetaCM=TMath::Cos(Kaon->Theta());
+    double SigmaCosThetaCM=TMath::Cos(Sigma->Theta());
+    double PhiCM=Kaon->Phi()*TMath::RadToDeg();
+
+    
+    if(CohEN == float(1.7)){
+
+      
       h_CosThetaCM17[0]->Fill(ProtonCosThetaCM);
       h_CosThetaCM17[1]->Fill(KaonCosThetaCM);
       h_CosThetaCM17[2]->Fill(SigmaCosThetaCM);
-      
-      if (myDataList->getCoh_plan()==0){
-	if(KaonCosThetaCM < -0.72) h_kaonPhiPA[0]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= -0.72 && KaonCosThetaCM <= -0.48) h_kaonPhiPA[1]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= -0.48 && KaonCosThetaCM <= -0.16) h_kaonPhiPA[2]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= -0.16 && KaonCosThetaCM <= 0.04)  h_kaonPhiPA[3]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= 0.04 && KaonCosThetaCM <= 0.18)   h_kaonPhiPA[4]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= 0.18 && KaonCosThetaCM <= 0.28)   h_kaonPhiPA[5]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= 0.28 && KaonCosThetaCM <= 0.38)   h_kaonPhiPA[6]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= 0.38 && KaonCosThetaCM <= 0.46)   h_kaonPhiPA[7]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= 0.46 && KaonCosThetaCM <= 0.54)   h_kaonPhiPA[8]->Fill(PhiCM);
-	else if (KaonCosThetaCM > 0.54)  h_kaonPhiPA[9]->Fill(PhiCM); 
+
+      if (CohP == 0){
+	if(KaonCosThetaCM < -0.70) h_kaonPhiPA[0]->Fill(PhiCM);
+	else if (KaonCosThetaCM >= -0.70 && KaonCosThetaCM <= -0.36) h_kaonPhiPA[1]->Fill(PhiCM);
+	else if (KaonCosThetaCM >= -0.36 && KaonCosThetaCM <= -0.06) h_kaonPhiPA[2]->Fill(PhiCM);
+	else if (KaonCosThetaCM >= -0.06 && KaonCosThetaCM <= 0.12)  h_kaonPhiPA[3]->Fill(PhiCM);
+	else if (KaonCosThetaCM >= 0.12 && KaonCosThetaCM <= 0.26)   h_kaonPhiPA[4]->Fill(PhiCM);
+	else if (KaonCosThetaCM >= 0.26 && KaonCosThetaCM <= 0.36)   h_kaonPhiPA[5]->Fill(PhiCM);
+	else if (KaonCosThetaCM >= 0.36 && KaonCosThetaCM <= 0.44)   h_kaonPhiPA[6]->Fill(PhiCM);
+	else if (KaonCosThetaCM >= 0.44 && KaonCosThetaCM <= 0.52)   h_kaonPhiPA[7]->Fill(PhiCM);
+	else if (KaonCosThetaCM >= 0.52 && KaonCosThetaCM <= 0.6)   h_kaonPhiPA[8]->Fill(PhiCM);
+	else if (KaonCosThetaCM > 0.6)  h_kaonPhiPA[9]->Fill(PhiCM); 
       }
       
-      else if (myDataList->getCoh_plan()==1){	
+      else if (CohP == 1){	
 	if(KaonCosThetaCM < -0.72) h_kaonPhiPE[0]->Fill(PhiCM);
 	else if (KaonCosThetaCM >= -0.72 && KaonCosThetaCM <= -0.48) h_kaonPhiPE[1]->Fill(PhiCM);
 	else if (KaonCosThetaCM >= -0.48 && KaonCosThetaCM <= -0.16) h_kaonPhiPE[2]->Fill(PhiCM);
@@ -446,134 +533,130 @@ void Codecuts::CodeCuts(){
 	else if (KaonCosThetaCM > 0.54) h_kaonPhiPE[9]->Fill(PhiCM);     
       }
 
-      h_Asym[0]=(TH1F*)h_kaonPhiPA[0]->GetAsymmetry(h_kaonPhiPE[0]);
-      h_Asym[1]=(TH1F*)h_kaonPhiPA[1]->GetAsymmetry(h_kaonPhiPE[1]);
-      h_Asym[2]=(TH1F*)h_kaonPhiPA[2]->GetAsymmetry(h_kaonPhiPE[2]);
-      h_Asym[3]=(TH1F*)h_kaonPhiPA[3]->GetAsymmetry(h_kaonPhiPE[3]);
-      h_Asym[4]=(TH1F*)h_kaonPhiPA[4]->GetAsymmetry(h_kaonPhiPE[4]);
-      h_Asym[5]=(TH1F*)h_kaonPhiPA[5]->GetAsymmetry(h_kaonPhiPE[5]);
-      h_Asym[6]=(TH1F*)h_kaonPhiPA[6]->GetAsymmetry(h_kaonPhiPE[6]);
-      h_Asym[7]=(TH1F*)h_kaonPhiPA[7]->GetAsymmetry(h_kaonPhiPE[7]);
-      h_Asym[8]=(TH1F*)h_kaonPhiPA[8]->GetAsymmetry(h_kaonPhiPE[8]);
-      h_Asym[9]=(TH1F*)h_kaonPhiPA[9]->GetAsymmetry(h_kaonPhiPE[9]);
-
     }
-    
+
     
     h_CosThetaCM[0]->Fill(ProtonCosThetaCM);
     h_CosThetaCM[1]->Fill(KaonCosThetaCM);
     h_CosThetaCM[2]->Fill(SigmaCosThetaCM);
-    
 
-    h_Theta[0]->Fill(proton.Theta());
-    h_Theta[1]->Fill(kaon.Theta());
-    h_Theta[2]->Fill(Sigma.Theta());
+    h_Theta[0]->Fill(Proton->Theta());
+    h_Theta[1]->Fill(Kaon->Theta());
+    h_Theta[2]->Fill(Sigma->Theta());
     
     h_ThetaCorr[0]->Fill(ProtonCosThetaCM,KaonCosThetaCM);
     h_ThetaCorr[1]->Fill(ProtonCosThetaCM,SigmaCosThetaCM);
     h_ThetaCorr[2]->Fill(SigmaCosThetaCM,KaonCosThetaCM);
 
-    
+
+      
     //--------------- Bins Cos Theta Kaon----------------//
 
     //0 is for PARA
     //1 is for PERP
-    if (myDataList->getCoh_plan()==0){
-      if(KaonCosThetaCM < -0.72){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(0).push_back(PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(0).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= -0.72 && KaonCosThetaCM <= -0.48){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(1).push_back(PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(1).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= -0.48 && KaonCosThetaCM <= -0.16){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(2).push_back(PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(2).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= -0.16 && KaonCosThetaCM <= 0.04){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(3).push_back(PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(3).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= 0.04 && KaonCosThetaCM <= 0.18){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(4).push_back(PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(4).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= 0.18 && KaonCosThetaCM <= 0.28){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(5).push_back(PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(5).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= 0.28 && KaonCosThetaCM <= 0.38){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(6).push_back(PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(6).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= 0.38 && KaonCosThetaCM <= 0.46){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(7).push_back(PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(7).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= 0.46 && KaonCosThetaCM <= 0.54){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(8).push_back(PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(8).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM > 0.54){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(9).push_back(PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(9).push_back(PhiCM);
-      }
-    }
-      
-    else if (myDataList->getCoh_plan()==1){
-      if(KaonCosThetaCM < -0.72){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(0).push_back(-PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(0).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= -0.72 && KaonCosThetaCM <= -0.48){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(1).push_back(-PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(1).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= -0.48 && KaonCosThetaCM <= -0.16){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(2).push_back(-PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(2).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= -0.16 && KaonCosThetaCM <= 0.04){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(3).push_back(-PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(3).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= 0.04 && KaonCosThetaCM <= 0.18){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(4).push_back(-PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(4).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= 0.18 && KaonCosThetaCM <= 0.28){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(5).push_back(-PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(5).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= 0.28 && KaonCosThetaCM <= 0.38){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(6).push_back(-PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(6).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= 0.38 && KaonCosThetaCM <= 0.46){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(7).push_back(-PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(7).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM >= 0.46 && KaonCosThetaCM <= 0.54){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(8).push_back(-PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(8).push_back(PhiCM);
-      }
-      else if (KaonCosThetaCM > 0.54){
-	MEASGamma[myDataList->getCoh_edge_nom()].at(9).push_back(-PhotoPol);
-	MEASPhip[myDataList->getCoh_edge_nom()].at(9).push_back(PhiCM);
-      }
-    }
- 
-      
-  }
-  cout<<endl;
-
-  GetPolAvTable(ItP,AvP);
-  GetPolAvTableLatex(ItP, AvP, "./PolTable.tex","Polarization Tables","poltab");
-  GetEventPercentLatex(Events, "./EventCuts.tex", "Event Cut Tables", "eventtab");
-  GetEventPercent(Events);
-  DoCanvas();
   
+    if (CohP == 0){
+      if(KaonCosThetaCM < -0.72){
+	MEASGamma[CohEN].at(0).push_back(PhotoPol);
+	MEASPhip[CohEN].at(0).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= -0.72 && KaonCosThetaCM <= -0.48){
+	MEASGamma[CohEN].at(1).push_back(PhotoPol);
+	MEASPhip[CohEN].at(1).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= -0.48 && KaonCosThetaCM <= -0.16){
+	MEASGamma[CohEN].at(2).push_back(PhotoPol);
+	MEASPhip[CohEN].at(2).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= -0.16 && KaonCosThetaCM <= 0.04){
+	MEASGamma[CohEN].at(3).push_back(PhotoPol);
+	MEASPhip[CohEN].at(3).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= 0.04 && KaonCosThetaCM <= 0.18){
+	MEASGamma[CohEN].at(4).push_back(PhotoPol);
+	MEASPhip[CohEN].at(4).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= 0.18 && KaonCosThetaCM <= 0.28){
+	MEASGamma[CohEN].at(5).push_back(PhotoPol);
+	MEASPhip[CohEN].at(5).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= 0.28 && KaonCosThetaCM <= 0.38){
+	MEASGamma[CohEN].at(6).push_back(PhotoPol);
+	MEASPhip[CohEN].at(6).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= 0.38 && KaonCosThetaCM <= 0.46){
+	MEASGamma[CohEN].at(7).push_back(PhotoPol);
+	MEASPhip[CohEN].at(7).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= 0.46 && KaonCosThetaCM <= 0.54){
+	MEASGamma[CohEN].at(8).push_back(PhotoPol);
+	MEASPhip[CohEN].at(8).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM > 0.54){
+	MEASGamma[CohEN].at(9).push_back(PhotoPol);
+	MEASPhip[CohEN].at(9).push_back(PhiCM);
+      }
+    }
+      
+    else if (CohP == 1){
+      if(KaonCosThetaCM < -0.72){
+	MEASGamma[CohEN].at(0).push_back(-PhotoPol);
+	MEASPhip[CohEN].at(0).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= -0.72 && KaonCosThetaCM <= -0.48){
+	MEASGamma[CohEN].at(1).push_back(-PhotoPol);
+	MEASPhip[CohEN].at(1).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= -0.48 && KaonCosThetaCM <= -0.16){
+	MEASGamma[CohEN].at(2).push_back(-PhotoPol);
+	MEASPhip[CohEN].at(2).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= -0.16 && KaonCosThetaCM <= 0.04){
+	MEASGamma[CohEN].at(3).push_back(-PhotoPol);
+	MEASPhip[CohEN].at(3).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= 0.04 && KaonCosThetaCM <= 0.18){
+	MEASGamma[CohEN].at(4).push_back(-PhotoPol);
+	MEASPhip[CohEN].at(4).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= 0.18 && KaonCosThetaCM <= 0.28){
+	MEASGamma[CohEN].at(5).push_back(-PhotoPol);
+	MEASPhip[CohEN].at(5).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= 0.28 && KaonCosThetaCM <= 0.38){
+	MEASGamma[CohEN].at(6).push_back(-PhotoPol);
+	MEASPhip[CohEN].at(6).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= 0.38 && KaonCosThetaCM <= 0.46){
+	MEASGamma[CohEN].at(7).push_back(-PhotoPol);
+	MEASPhip[CohEN].at(7).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM >= 0.46 && KaonCosThetaCM <= 0.54){
+	MEASGamma[CohEN].at(8).push_back(-PhotoPol);
+	MEASPhip[CohEN].at(8).push_back(PhiCM);
+      }
+      else if (KaonCosThetaCM > 0.54){
+	MEASGamma[CohEN].at(9).push_back(-PhotoPol);
+	MEASPhip[CohEN].at(9).push_back(PhiCM);
+      }
+    }
+
+
+  }
+  
+
+  h_Asym[0]=(TH1F*)h_kaonPhiPA[0]->GetAsymmetry(h_kaonPhiPE[0]);
+  h_Asym[1]=(TH1F*)h_kaonPhiPA[1]->GetAsymmetry(h_kaonPhiPE[1]);
+  h_Asym[2]=(TH1F*)h_kaonPhiPA[2]->GetAsymmetry(h_kaonPhiPE[2]);
+  h_Asym[3]=(TH1F*)h_kaonPhiPA[3]->GetAsymmetry(h_kaonPhiPE[3]);
+  h_Asym[4]=(TH1F*)h_kaonPhiPA[4]->GetAsymmetry(h_kaonPhiPE[4]);
+  h_Asym[5]=(TH1F*)h_kaonPhiPA[5]->GetAsymmetry(h_kaonPhiPE[5]);
+  h_Asym[6]=(TH1F*)h_kaonPhiPA[6]->GetAsymmetry(h_kaonPhiPE[6]);
+  h_Asym[7]=(TH1F*)h_kaonPhiPA[7]->GetAsymmetry(h_kaonPhiPE[7]);
+  h_Asym[8]=(TH1F*)h_kaonPhiPA[8]->GetAsymmetry(h_kaonPhiPE[8]);
+  h_Asym[9]=(TH1F*)h_kaonPhiPA[9]->GetAsymmetry(h_kaonPhiPE[9]);
+
+  DoCanvasAsym();
 }
 
 #endif
