@@ -118,6 +118,7 @@ protected:
   
   //----Costheta-Kaon Boost-------------------//
   TH1F *h_CosThetaCM[3]                      		= {};
+  TH1F *h_CosThetaCM17[3]				= {};
   TH1F *h_Theta[3] 					= {};
   TH2F *h_ThetaCorr[3] 					= {};
   
@@ -125,24 +126,21 @@ protected:
   TH1F *h_MomentumProton                    		= NULL;
   
   //-----Kaon phi-------------------//
-  TH1F *h_kaonPhiPA[2]                      		= {};
-  TH1F *h_kaonPhiPE[2]                      		= {};
+  TH1F *h_kaonPhiPA[10]                      		= {};
+  TH1F *h_kaonPhiPE[10]                      		= {};
     
   //---------Function to do asymmetry fit----//
   
-  vector<vector<double> > MEASPhi{2}; //2 is the number of binning
-  vector<vector<double> > MEASGammaP{2};
+  vector<vector<double> > MEASPhi{10}; 			//2 is the number of binning
+  vector<vector<double> > MEASGammaP{10};
 
   map<float,vector<vector<double>>> MEASGamma;
   map<float,vector<vector<double>>> MEASPhip;
 
 
   TF1 *FuncAsym                             		= NULL;
-  TH1F *h_Asym[2]                           		= {};
+  TH1F *h_Asym[10]                           		= {};
 
-  map<float,TH1F**> h_Asymm;
-  map<float,TH1F**> h_KaonPhiPAR;
-  map<float,TH1F**> h_KaonPhiPER;
    
 public:
   Histograms(){}
@@ -444,6 +442,10 @@ void Histograms::DoHistograms(){
   h_CosThetaCM[0] = new TH1F("h_CosThetaCM[0]","Proton Cos_Theta Boost", 100, -1, 1);
   h_CosThetaCM[1] = new TH1F("h_CosThetaCM[1]","Kaon Cos_Theta Boost", 100, -1, 1);
   h_CosThetaCM[2] = new TH1F("h_CosThetaCM[2]","Sigma Cos_Theta Boost", 100, -1, 1);
+
+  h_CosThetaCM17[0] = new TH1F("h_CosThetaCM17[0]","Proton Cos_Theta Boost", 100, -1, 1);
+  h_CosThetaCM17[1] = new TH1F("h_CosThetaCM17[1]","Kaon Cos_Theta Boost", 100, -1, 1);
+  h_CosThetaCM17[2] = new TH1F("h_CosThetaCM17[2]","Sigma Cos_Theta Boost", 100, -1, 1);
   
   h_Theta[0] = new TH1F("h_ThetaCM[0]","Proton Cos_Theta Boost", 100 ,0 ,3.14159);
   h_Theta[1] = new TH1F("h_ThetaCM[1]","Kaon Cos_Theta Boost", 100 ,0 ,3.14159);
@@ -458,15 +460,25 @@ void Histograms::DoHistograms(){
   
   h_kaonPhiPA[0] = new TH1F("h_kaonPhiPA[0]","First partition Kaon_Phi (PARA)",200, -180, 180);
   h_kaonPhiPA[1] = new TH1F("h_kaonPhiPA[1]","Second partition Kaon_Phi (PARA)",200, -180, 180);
+  h_kaonPhiPA[2] = new TH1F("h_kaonPhiPA[2]","Second partition Kaon_Phi (PARA)",200, -180, 180);
+  h_kaonPhiPA[3] = new TH1F("h_kaonPhiPA[3]","Second partition Kaon_Phi (PARA)",200, -180, 180);
+  h_kaonPhiPA[4] = new TH1F("h_kaonPhiPA[4]","Second partition Kaon_Phi (PARA)",200, -180, 180);
+  h_kaonPhiPA[5] = new TH1F("h_kaonPhiPA[5]","Second partition Kaon_Phi (PARA)",200, -180, 180);
+  h_kaonPhiPA[6] = new TH1F("h_kaonPhiPA[6]","Second partition Kaon_Phi (PARA)",200, -180, 180);
+  h_kaonPhiPA[7] = new TH1F("h_kaonPhiPA[7]","Second partition Kaon_Phi (PARA)",200, -180, 180);
+  h_kaonPhiPA[8] = new TH1F("h_kaonPhiPA[8]","Second partition Kaon_Phi (PARA)",200, -180, 180);
+  h_kaonPhiPA[9] = new TH1F("h_kaonPhiPA[9]","Second partition Kaon_Phi (PARA)",200, -180, 180);
   h_kaonPhiPE[0] = new TH1F("h_kaonPhiPE[0]","First partition Kaon_Phi (PERP)",200, -180, 180);
   h_kaonPhiPE[1] = new TH1F("h_kaonPhiPE[1]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
+  h_kaonPhiPE[2] = new TH1F("h_kaonPhiPE[2]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
+  h_kaonPhiPE[3] = new TH1F("h_kaonPhiPE[3]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
+  h_kaonPhiPE[4] = new TH1F("h_kaonPhiPE[4]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
+  h_kaonPhiPE[5] = new TH1F("h_kaonPhiPE[5]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
+  h_kaonPhiPE[6] = new TH1F("h_kaonPhiPE[6]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
+  h_kaonPhiPE[7] = new TH1F("h_kaonPhiPE[7]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
+  h_kaonPhiPE[8] = new TH1F("h_kaonPhiPE[8]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
+  h_kaonPhiPE[9] = new TH1F("h_kaonPhiPE[9]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
 
-  h_KaonPhiPAR[1.3]=h_kaonPhiPA;		h_KaonPhiPER[1.3]=h_kaonPhiPE;
-  h_KaonPhiPAR[1.5]=h_kaonPhiPA;		h_KaonPhiPER[1.5]=h_kaonPhiPE;
-  h_KaonPhiPAR[1.7]=h_kaonPhiPA;		h_KaonPhiPER[1.7]=h_kaonPhiPE;
-  h_KaonPhiPAR[1.9]=h_kaonPhiPA;		h_KaonPhiPER[1.9]=h_kaonPhiPE;
-  h_KaonPhiPAR[2.1]=h_kaonPhiPA;		h_KaonPhiPER[2.1]=h_kaonPhiPE;
-  h_KaonPhiPAR[2.3]=h_kaonPhiPA;		h_KaonPhiPER[2.3]=h_kaonPhiPE;
   
   //---------------  Fit to Asymmetry ------------//
 
@@ -480,14 +492,14 @@ void Histograms::DoHistograms(){
   
   h_Asym[0] = new TH1F("h_Asym[0]","Asymmetry first partition", 100, -180, 180);
   h_Asym[1] = new TH1F("h_Asym[1]","Asymmetry Second partition",100, -180, 180);
-  
-  h_Asymm[1.3]=h_Asym;
-  h_Asymm[1.5]=h_Asym;
-  h_Asymm[1.7]=h_Asym;
-  h_Asymm[1.9]=h_Asym;
-  h_Asymm[2.1]=h_Asym;
-  h_Asymm[2.3]=h_Asym;
- 		  
+  h_Asym[2] = new TH1F("h_Asym[2]","Asymmetry Second partition",100, -180, 180);
+  h_Asym[3] = new TH1F("h_Asym[3]","Asymmetry Second partition",100, -180, 180);
+  h_Asym[4] = new TH1F("h_Asym[4]","Asymmetry Second partition",100, -180, 180);
+  h_Asym[5] = new TH1F("h_Asym[5]","Asymmetry Second partition",100, -180, 180);
+  h_Asym[6] = new TH1F("h_Asym[6]","Asymmetry Second partition",100, -180, 180);
+  h_Asym[7] = new TH1F("h_Asym[7]","Asymmetry Second partition",100, -180, 180);
+  h_Asym[8] = new TH1F("h_Asym[8]","Asymmetry Second partition",100, -180, 180);
+  h_Asym[9] = new TH1F("h_Asym[9]","Asymmetry Second partition",100, -180, 180);
   
   //Asymmetry
   MEASGamma[1.3]=MEASGammaP;		MEASPhip[1.3]=MEASPhi;
@@ -1348,65 +1360,59 @@ void Histograms::DoCanvas(){
 
     c43->SaveAs("imagenes/Phi1Distribution.eps");
   */
-  
-  vector<TCanvas*> CanvasAsym(6);
-  int CanvasCount=0;
 
-  for(double k=1.3;k<=2.5;k+=0.2){
+  //--------- Binning method ----------------- //
+  
+  TCanvas* CanvasAsym = new TCanvas("","",1000,1000);  
+    
+  CanvasAsym = new TCanvas("","Asymmetry", 1450, 500);
+  CanvasAsym->Divide(3,3);
+
+  for(UInt_t i=0; i<10; i++){
 
     double PPara=0, PPerp=0;
     int iPara=0, iPerp=0;
-    
-    CanvasAsym[CanvasCount] = new TCanvas("","Asymmetry", 1450, 500);
-    CanvasAsym[CanvasCount]->Divide(1,2);
-
-    for(UInt_t i=0; i<MEASGamma[float(k)].size(); i++){
-
-      //---------Binning method---------------------
-      for(UInt_t j=0; j<MEASGamma[float(k)].at(i).size(); j++){
-	if(MEASGamma[float(k)][i][j]>0){
-	  PPara+=MEASGamma[float(k)][i][j];
-	  iPara++;
-	}
-	else {
-	  PPerp+=abs(MEASGamma[float(k)][i][j]);
-	  iPerp++;
-	}
+      
+    for(UInt_t j=0; j<MEASGamma[1.7].at(i).size(); j++){
+      if(MEASGamma[1.7][i][j]>0){
+	PPara+=MEASGamma[1.7][i][j];
+	iPara++;
       }
-      PPara=PPara/iPara;
-      PPerp=PPerp/iPerp;
-      FuncAsym->FixParameter(1,PPara/PPerp);
-      FuncAsym->FixParameter(2,(PPara+PPerp)/2.0);
-      FuncAsym->SetParLimits(3,-1.2,1.2);
-      FuncAsym->SetParLimits(0,0.4,2.4);
-      CanvasAsym[CanvasCount]->cd(i+1);
-      h_Asymm[float(k)][i]->Fit("FuncAsym","R");
-      h_Asymm[float(k)][i]->Draw();
-      
-      string AsymS("imagenes/Asymmetry");
-      AsymS = AsymS + to_string(CanvasCount)+ ".eps";
-      CanvasAsym[CanvasCount]->SaveAs(AsymS.c_str());
-      
+      else {
+	PPerp+=abs(MEASGamma[1.7][i][j]);
+	iPerp++;
+      }
+    }
+    PPara=PPara/iPara;
+    PPerp=PPerp/iPerp;
+    FuncAsym->FixParameter(1,PPara/PPerp);
+    FuncAsym->FixParameter(2,(PPara+PPerp)/2.0);
+    FuncAsym->SetParLimits(3,-1.2,1.2);
+    FuncAsym->SetParLimits(0,0.4,2.4);
+    CanvasAsym->cd(i+1);
+    h_Asym[i]->Draw();
+    FuncAsym->Draw("same");
+    
+  }
+  CanvasAsym->SaveAs("imagenes/Asymmetry.eps");
+      // for(double k=1.3;k<=1.3;k+=0.2){
+	
       //------------MaxLike Method------------//
       
-      ROOT::Math::Minimizer* minim = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
-      // MaxLike Min(MEASPhi.at(i), MEASGammaP.at(i));
-      MaxLike Min(MEASPhip[float(k)].at(i),MEASGamma[float(k)].at(i));
-      ROOT::Math::Functor f(Min,2);
-      minim->SetFunction(f);
-      minim->SetVariable(0, "Sigma", 0, 0.01);
-      minim->SetVariable(1, "Phi", 0, 0.01);
-      minim->SetPrintLevel(1);
-      minim->Minimize();
+      // ROOT::Math::Minimizer* minim = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
+      // // MaxLike Min(MEASPhi.at(i), MEASGammaP.at(i));
+      // MaxLike Min(MEASPhip[float(k)].at(i),MEASGamma[float(k)].at(i));
+      // ROOT::Math::Functor f(Min,2);
+      // minim->SetFunction(f);
+      // minim->SetVariable(0, "Sigma", 0, 0.01);
+      // minim->SetVariable(1, "Phi", 0, 0.01);
+      // minim->SetPrintLevel(1);
+      // minim->Minimize();
 
-      const double *xs = minim->X();
-      std::cout <<"To " << k << " minim: f(" << xs[0] << "," << xs[1] <<"): "
-		<< minim->MinValue()  << std::endl;
-    }
-    
-    CanvasCount++;
- 
-  }
+      // const double *xs = minim->X();
+      // std::cout <<"To " << k << " minim: f(" << xs[0] << "," << xs[1] <<"): "
+      // 		<< minim->MinValue()  << std::endl;
+    // }
 
 }
 
