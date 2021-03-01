@@ -117,5 +117,24 @@ void HistoBinning::GetLatexTable(string Path,string Caption,string Label){
 
 }
 
+void HistoBinning::GetPoints(vector<double>& AvValue,vector<double>& Error){
+  double Err = 0;
+  double AvV = 0;
+  for (UInt_t i = 0; i < Point.size()-1; i++) {
+    if(Point[i] <= 0){
+      Err = (Point[i]-Point[i+1])/2;
+      AvV = Err+Point[i+1];
+    }
+    else {
+      Err = (Point[i+1]-Point[i])/2;
+      AvV = Err+Point[i];
+    }
+
+    AvValue.push_back(AvV);
+    Error.push_back(abs(Err));
+
+  }
+
+}
 
 #endif

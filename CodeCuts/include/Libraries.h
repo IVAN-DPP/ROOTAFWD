@@ -11,6 +11,7 @@
 #include "TROOT.h"
 #include "TFile.h"
 #include "TTree.h"
+#include "TMultiGraph.h"
 #include "TH1F.h"
 #include "TH2F.h"
 #include "TCanvas.h"

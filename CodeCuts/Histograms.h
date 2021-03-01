@@ -129,8 +129,12 @@ protected:
   TH2F *h_ThetaCorr[3] 					= {};
   
   //-----Kaon phi-------------------//
-  TH1F *h_kaonPhiPA[10]                      		= {};
-  TH1F *h_kaonPhiPE[10]                      		= {};
+  TH1F *h_kaonPhiPA1[10]                      		= {};
+  TH1F *h_kaonPhiPE1[10]                      		= {};
+  TH1F *h_kaonPhiPA2[10]                      		= {};
+  TH1F *h_kaonPhiPE2[10]                      		= {};
+  TH1F *h_kaonPhiPA3[10]                      		= {};
+  TH1F *h_kaonPhiPE3[10]                      		= {};
     
   //---------Function to do asymmetry fit----//
   
@@ -142,8 +146,9 @@ protected:
 
 
   TF1 *FuncAsym                             		= NULL;
-  TH1F *h_Asym[10]                           		= {};
-
+  TH1F *h_Asym1[10]                           		= {};
+  TH1F *h_Asym2[10]                           		= {};
+  TH1F *h_Asym3[10]                           		= {};
    
 public:
   Histograms(){}
@@ -461,28 +466,96 @@ void Histograms::DoHistograms(){
   h_ThetaCorr[2] = new TH2F("h_ThetaCorr[2]","Sigma Kaon", 100 ,-1 ,1, 100 ,-1 ,1);
   
   //-----------------Kaon phi-------------------//
-  
-  h_kaonPhiPA[0] = new TH1F("h_kaonPhiPA[0]","First partition Kaon_Phi (PARA)",200, -180, 180);
-  h_kaonPhiPA[1] = new TH1F("h_kaonPhiPA[1]","Second partition Kaon_Phi (PARA)",200, -180, 180);
-  h_kaonPhiPA[2] = new TH1F("h_kaonPhiPA[2]","Second partition Kaon_Phi (PARA)",200, -180, 180);
-  h_kaonPhiPA[3] = new TH1F("h_kaonPhiPA[3]","Second partition Kaon_Phi (PARA)",200, -180, 180);
-  h_kaonPhiPA[4] = new TH1F("h_kaonPhiPA[4]","Second partition Kaon_Phi (PARA)",200, -180, 180);
-  h_kaonPhiPA[5] = new TH1F("h_kaonPhiPA[5]","Second partition Kaon_Phi (PARA)",200, -180, 180);
-  h_kaonPhiPA[6] = new TH1F("h_kaonPhiPA[6]","Second partition Kaon_Phi (PARA)",200, -180, 180);
-  h_kaonPhiPA[7] = new TH1F("h_kaonPhiPA[7]","Second partition Kaon_Phi (PARA)",200, -180, 180);
-  h_kaonPhiPA[8] = new TH1F("h_kaonPhiPA[8]","Second partition Kaon_Phi (PARA)",200, -180, 180);
-  h_kaonPhiPA[9] = new TH1F("h_kaonPhiPA[9]","Second partition Kaon_Phi (PARA)",200, -180, 180);
-  h_kaonPhiPE[0] = new TH1F("h_kaonPhiPE[0]","First partition Kaon_Phi (PERP)",200, -180, 180);
-  h_kaonPhiPE[1] = new TH1F("h_kaonPhiPE[1]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
-  h_kaonPhiPE[2] = new TH1F("h_kaonPhiPE[2]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
-  h_kaonPhiPE[3] = new TH1F("h_kaonPhiPE[3]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
-  h_kaonPhiPE[4] = new TH1F("h_kaonPhiPE[4]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
-  h_kaonPhiPE[5] = new TH1F("h_kaonPhiPE[5]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
-  h_kaonPhiPE[6] = new TH1F("h_kaonPhiPE[6]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
-  h_kaonPhiPE[7] = new TH1F("h_kaonPhiPE[7]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
-  h_kaonPhiPE[8] = new TH1F("h_kaonPhiPE[8]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
-  h_kaonPhiPE[9] = new TH1F("h_kaonPhiPE[9]","Second partition Kaon_Phi (PERP)", 200, -180, 180);
 
+  vector<vector<float>> XLOW;
+  
+  for (UInt_t BinsFid = 2; BinsFid <= 6; BinsFid+=2){   	//#of bins/fiducial region. This number has to be edited!! 
+    int NSector=6; 						//# of CLAS sectors
+    int TotBins=(BinsFid*NSector)+NSector+1; 			//Size of the array xlow{}
+    float Width=float(50)/BinsFid; 				//Width of each bin within fiducial region
+    int Tot=TotBins;
+    vector<float> xlow(Tot); xlow[0]=-180;
+    int it=0,i=1,itP = 0;
+    if(BinsFid%2 == 0)
+      it=0.5*BinsFid+1;
+    itP = it;
+    while(it < Tot+itP){
+      if((it%(BinsFid+1)) == 0)					//Coils regions
+	xlow[i]=xlow[i-1]+10;
+      else
+	xlow[i]=xlow[i-1]+Width; 				//Fiducial regions
+      it++;
+      i++;
+    }
+    XLOW.push_back(xlow);
+  }
+
+  
+  h_kaonPhiPA1[0] = new TH1F("h_kaonPhiPA1[0]","First partition Kaon_Phi (PARA)",(XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPA1[1] = new TH1F("h_kaonPhiPA1[1]","Second partition Kaon_Phi (PARA)",(XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPA1[2] = new TH1F("h_kaonPhiPA1[2]","Second partition Kaon_Phi (PARA)",(XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPA1[3] = new TH1F("h_kaonPhiPA1[3]","Second partition Kaon_Phi (PARA)",(XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPA1[4] = new TH1F("h_kaonPhiPA1[4]","Second partition Kaon_Phi (PARA)",(XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPA1[5] = new TH1F("h_kaonPhiPA1[5]","Second partition Kaon_Phi (PARA)",(XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPA1[6] = new TH1F("h_kaonPhiPA1[6]","Second partition Kaon_Phi (PARA)",(XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPA1[7] = new TH1F("h_kaonPhiPA1[7]","Second partition Kaon_Phi (PARA)",(XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPA1[8] = new TH1F("h_kaonPhiPA1[8]","Second partition Kaon_Phi (PARA)",(XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPA1[9] = new TH1F("h_kaonPhiPA1[9]","Second partition Kaon_Phi (PARA)",(XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPE1[0] = new TH1F("h_kaonPhiPE1[0]","First partition Kaon_Phi (PERP)",(XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPE1[1] = new TH1F("h_kaonPhiPE1[1]","Second partition Kaon_Phi (PERP)", (XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPE1[2] = new TH1F("h_kaonPhiPE1[2]","Second partition Kaon_Phi (PERP)", (XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPE1[3] = new TH1F("h_kaonPhiPE1[3]","Second partition Kaon_Phi (PERP)", (XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPE1[4] = new TH1F("h_kaonPhiPE1[4]","Second partition Kaon_Phi (PERP)", (XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPE1[5] = new TH1F("h_kaonPhiPE1[5]","Second partition Kaon_Phi (PERP)", (XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPE1[6] = new TH1F("h_kaonPhiPE1[6]","Second partition Kaon_Phi (PERP)", (XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPE1[7] = new TH1F("h_kaonPhiPE1[7]","Second partition Kaon_Phi (PERP)", (XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPE1[8] = new TH1F("h_kaonPhiPE1[8]","Second partition Kaon_Phi (PERP)", (XLOW[0].size()-1), XLOW[0].data());
+  h_kaonPhiPE1[9] = new TH1F("h_kaonPhiPE1[9]","Second partition Kaon_Phi (PERP)", (XLOW[0].size()-1), XLOW[0].data());
+  
+  
+  h_kaonPhiPA2[0] = new TH1F("h_kaonPhiPA2[0]","First partition Kaon_Phi (PARA)",(XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPA2[1] = new TH1F("h_kaonPhiPA2[1]","Second partition Kaon_Phi (PARA)",(XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPA2[2] = new TH1F("h_kaonPhiPA2[2]","Second partition Kaon_Phi (PARA)",(XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPA2[3] = new TH1F("h_kaonPhiPA2[3]","Second partition Kaon_Phi (PARA)",(XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPA2[4] = new TH1F("h_kaonPhiPA2[4]","Second partition Kaon_Phi (PARA)",(XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPA2[5] = new TH1F("h_kaonPhiPA2[5]","Second partition Kaon_Phi (PARA)",(XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPA2[6] = new TH1F("h_kaonPhiPA2[6]","Second partition Kaon_Phi (PARA)",(XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPA2[7] = new TH1F("h_kaonPhiPA2[7]","Second partition Kaon_Phi (PARA)",(XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPA2[8] = new TH1F("h_kaonPhiPA2[8]","Second partition Kaon_Phi (PARA)",(XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPA2[9] = new TH1F("h_kaonPhiPA2[9]","Second partition Kaon_Phi (PARA)",(XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPE2[0] = new TH1F("h_kaonPhiPE2[0]","First partition Kaon_Phi (PERP)",(XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPE2[1] = new TH1F("h_kaonPhiPE2[1]","Second partition Kaon_Phi (PERP)", (XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPE2[2] = new TH1F("h_kaonPhiPE2[2]","Second partition Kaon_Phi (PERP)", (XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPE2[3] = new TH1F("h_kaonPhiPE2[3]","Second partition Kaon_Phi (PERP)", (XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPE2[4] = new TH1F("h_kaonPhiPE2[4]","Second partition Kaon_Phi (PERP)", (XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPE2[5] = new TH1F("h_kaonPhiPE2[5]","Second partition Kaon_Phi (PERP)", (XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPE2[6] = new TH1F("h_kaonPhiPE2[6]","Second partition Kaon_Phi (PERP)", (XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPE2[7] = new TH1F("h_kaonPhiPE2[7]","Second partition Kaon_Phi (PERP)", (XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPE2[8] = new TH1F("h_kaonPhiPE2[8]","Second partition Kaon_Phi (PERP)", (XLOW[1].size()-1), XLOW[1].data());
+  h_kaonPhiPE2[9] = new TH1F("h_kaonPhiPE2[9]","Second partition Kaon_Phi (PERP)", (XLOW[1].size()-1), XLOW[1].data());
+  
+  
+  h_kaonPhiPA3[0] = new TH1F("h_kaonPhiPA3[0]","First partition Kaon_Phi (PARA)",(XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPA3[1] = new TH1F("h_kaonPhiPA3[1]","Second partition Kaon_Phi (PARA)",(XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPA3[2] = new TH1F("h_kaonPhiPA3[2]","Second partition Kaon_Phi (PARA)",(XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPA3[3] = new TH1F("h_kaonPhiPA3[3]","Second partition Kaon_Phi (PARA)",(XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPA3[4] = new TH1F("h_kaonPhiPA3[4]","Second partition Kaon_Phi (PARA)",(XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPA3[5] = new TH1F("h_kaonPhiPA3[5]","Second partition Kaon_Phi (PARA)",(XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPA3[6] = new TH1F("h_kaonPhiPA3[6]","Second partition Kaon_Phi (PARA)",(XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPA3[7] = new TH1F("h_kaonPhiPA3[7]","Second partition Kaon_Phi (PARA)",(XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPA3[8] = new TH1F("h_kaonPhiPA3[8]","Second partition Kaon_Phi (PARA)",(XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPA3[9] = new TH1F("h_kaonPhiPA3[9]","Second partition Kaon_Phi (PARA)",(XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPE3[0] = new TH1F("h_kaonPhiPE3[0]","First partition Kaon_Phi (PERP)",(XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPE3[1] = new TH1F("h_kaonPhiPE3[1]","Second partition Kaon_Phi (PERP)", (XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPE3[2] = new TH1F("h_kaonPhiPE3[2]","Second partition Kaon_Phi (PERP)", (XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPE3[3] = new TH1F("h_kaonPhiPE3[3]","Second partition Kaon_Phi (PERP)", (XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPE3[4] = new TH1F("h_kaonPhiPE3[4]","Second partition Kaon_Phi (PERP)", (XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPE3[5] = new TH1F("h_kaonPhiPE3[5]","Second partition Kaon_Phi (PERP)", (XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPE3[6] = new TH1F("h_kaonPhiPE3[6]","Second partition Kaon_Phi (PERP)", (XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPE3[7] = new TH1F("h_kaonPhiPE3[7]","Second partition Kaon_Phi (PERP)", (XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPE3[8] = new TH1F("h_kaonPhiPE3[8]","Second partition Kaon_Phi (PERP)", (XLOW[2].size()-1), XLOW[2].data());
+  h_kaonPhiPE3[9] = new TH1F("h_kaonPhiPE3[9]","Second partition Kaon_Phi (PERP)", (XLOW[2].size()-1), XLOW[2].data());
+  
   
   //---------------  Fit to Asymmetry ------------//
 
@@ -493,17 +566,6 @@ void Histograms::DoHistograms(){
   
   //----------------- Histograms Asymmetry -------//
 
-  
-  h_Asym[0] = new TH1F("h_Asym[0]","Asymmetry first partition", 100, -180, 180);
-  h_Asym[1] = new TH1F("h_Asym[1]","Asymmetry Second partition",100, -180, 180);
-  h_Asym[2] = new TH1F("h_Asym[2]","Asymmetry Second partition",100, -180, 180);
-  h_Asym[3] = new TH1F("h_Asym[3]","Asymmetry Second partition",100, -180, 180);
-  h_Asym[4] = new TH1F("h_Asym[4]","Asymmetry Second partition",100, -180, 180);
-  h_Asym[5] = new TH1F("h_Asym[5]","Asymmetry Second partition",100, -180, 180);
-  h_Asym[6] = new TH1F("h_Asym[6]","Asymmetry Second partition",100, -180, 180);
-  h_Asym[7] = new TH1F("h_Asym[7]","Asymmetry Second partition",100, -180, 180);
-  h_Asym[8] = new TH1F("h_Asym[8]","Asymmetry Second partition",100, -180, 180);
-  h_Asym[9] = new TH1F("h_Asym[9]","Asymmetry Second partition",100, -180, 180);
   
   //Asymmetry
   MEASGamma[1.3]=MEASGammaP;		MEASPhip[1.3]=MEASPhi;
@@ -1367,73 +1429,134 @@ void Histograms::DoCanvasAsym(){
   cPH0->Divide(5,2);
   for(int i = 0;i<10;i++){
     cPH0->cd(i+1);
-    h_kaonPhiPA[i]->Draw();
+    h_kaonPhiPA1[i]->Draw();
   }
   cPH0->SaveAs("imagenes/PhiDistributionPARA.eps");
-  
+
   TCanvas *cPH1 = new TCanvas("","Phi PERP distribution to Kaon", 1450, 500);
   cPH1->Divide(5,2);
   for (int i = 0; i < 10; i++) {
     cPH1->cd(i+1);
-    h_kaonPhiPE[i]->Draw();
+    h_kaonPhiPE1[i]->Draw();
   }
   
   cPH1->SaveAs("imagenes/PhiDistributionPERP.eps");
   
   //--------- Binning method ----------------- //
   
-
-    
-  TCanvas* CanvasAsym = new TCanvas("","Asymmetry", 1450, 500);
-  CanvasAsym->Divide(3,3);
-
-  for(UInt_t i=0; i<10; i++){
-
-    double PPara=0, PPerp=0;
-    int iPara=0, iPerp=0;
+  vector<double> Asym1, AsymE1;
+  vector<double> Asym2, AsymE2;
+  vector<double> Asym3, AsymE3;
       
-    for(UInt_t j=0; j<MEASGamma[1.7].at(i).size(); j++){
-      if(MEASGamma[1.7][i][j]>0){
-	PPara+=MEASGamma[1.7][i][j];
-	iPara++;
+  TCanvas *CanvasAsym[3]	= {};
+  gStyle->SetOptFit(1111);
+
+  for (UInt_t k = 0; k < 3; k++) {
+    CanvasAsym[k] = new TCanvas("","Asymmetry", 1450, 500);
+    CanvasAsym[k]->Divide(3,4);
+    for(UInt_t i=0; i<10; i++){
+    
+      double PPara=0, PPerp=0;
+      int iPara=0, iPerp=0;
+      
+      for(UInt_t j=0; j<MEASGamma[1.7].at(i).size(); j++){
+	if(MEASGamma[1.7][i][j]>0){
+	  PPara+=MEASGamma[1.7][i][j];
+	  iPara++;
+	}
+	else {
+	  PPerp+=abs(MEASGamma[1.7][i][j]);
+	  iPerp++;
+	}
+      }
+      PPara=PPara/iPara;
+      PPerp=PPerp/iPerp;
+      FuncAsym->FixParameter(1,PPara/PPerp);
+      FuncAsym->FixParameter(2,(PPara+PPerp)/2.0);
+      FuncAsym->SetParLimits(3,-1.2,1.2);
+      FuncAsym->SetParLimits(0,0.4,2.4);
+      CanvasAsym[k]->cd(i+1);
+      if(k == 0){
+	h_Asym1[i]->Draw();
+	h_Asym1[i]->Fit(FuncAsym);
+	Asym1.push_back(FuncAsym->GetParameter(3));
+	AsymE1.push_back(FuncAsym->GetParError(3));
+      }
+      else if(k == 1){
+	h_Asym2[i]->Draw();
+	h_Asym2[i]->Fit(FuncAsym);
+	Asym2.push_back(FuncAsym->GetParameter(3));
+	AsymE2.push_back(FuncAsym->GetParError(3));
       }
       else {
-	PPerp+=abs(MEASGamma[1.7][i][j]);
-	iPerp++;
+	h_Asym3[i]->Draw();
+	h_Asym3[i]->Fit(FuncAsym);
+	Asym3.push_back(FuncAsym->GetParameter(3));
+	AsymE3.push_back(FuncAsym->GetParError(3));
       }
     }
-    PPara=PPara/iPara;
-    PPerp=PPerp/iPerp;
-    FuncAsym->FixParameter(1,PPara/PPerp);
-    FuncAsym->FixParameter(2,(PPara+PPerp)/2.0);
-    FuncAsym->SetParLimits(3,-1.2,1.2);
-    FuncAsym->SetParLimits(0,0.4,2.4);
-    CanvasAsym->cd(i+1);
-    h_Asym[i]->Draw();
-    FuncAsym->Draw("same");
-    
-  }
-  CanvasAsym->SaveAs("imagenes/Asymmetry.eps");
+    string AsymS;
+    AsymS = "imagenes/Asymmetry" + std::to_string(k) + ".eps";
+    CanvasAsym[k]->SaveAs(AsymS.c_str());
+  } 
 
-  // for(double k=1.3;k<=1.3;k+=0.2){
-	
   //------------MaxLike Method------------//
+
+  vector<double> MaxL, MaxLE;
+  for(double k=1.7;k<=1.7;k+=0.2){
+
+    for (UInt_t i = 0; i < MEASPhip[float(k)].size(); i++) {
       
-  // ROOT::Math::Minimizer* minim = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
-  // // MaxLike Min(MEASPhi.at(i), MEASGammaP.at(i));
-  // MaxLike Min(MEASPhip[float(k)].at(i),MEASGamma[float(k)].at(i));
-  // ROOT::Math::Functor f(Min,2);
-  // minim->SetFunction(f);
-  // minim->SetVariable(0, "Sigma", 0, 0.01);
-  // minim->SetVariable(1, "Phi", 0, 0.01);
-  // minim->SetPrintLevel(1);
-  // minim->Minimize();
+      ROOT::Math::Minimizer* minim = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
+      MaxLike Min(MEASPhip[float(k)].at(i),MEASGamma[float(k)].at(i));
+      ROOT::Math::Functor f(Min,1);
+      minim->SetFunction(f);
+      minim->SetVariable(0, "Sigma", 0, 0.01);
+      minim->SetPrintLevel(1);
+      minim->Minimize();
+      const double *xs = minim->X();
+      const double *ee = minim->Errors();
+      MaxL.push_back(xs[0]);
+      MaxLE.push_back(ee[0]);
+    }
+  }
 
-  // const double *xs = minim->X();
-  // std::cout <<"To " << k << " minim: f(" << xs[0] << "," << xs[1] <<"): "
-  // 		<< minim->MinValue()  << std::endl;
-  // }
+  vector<double> AvValue, Error;
+  B->GetPoints(AvValue,Error);
+  TCanvas *cASMB = new TCanvas("","",900,450);
+  cASMB->cd(1);
+  TMultiGraph *AsymBB = new TMultiGraph();
+  TGraphErrors *AsymG[3];
+  AsymG[0] = new TGraphErrors(Asym1.size(),&(AvValue[0]),&(Asym1[0]),&(Error[0]),&(AsymE1[0]));
+  AsymG[1] = new TGraphErrors(Asym2.size(),&(AvValue[0]),&(Asym2[0]),&(Error[0]),&(AsymE2[0]));
+  AsymG[2] = new TGraphErrors(Asym3.size(),&(AvValue[0]),&(Asym3[0]),&(Error[0]),&(AsymE3[0]));
+  AsymG[0]->SetTitle("19 Bins"); AsymG[0]->SetLineColor(kBlue);
+  AsymG[1]->SetTitle("31 Bins"); AsymG[1]->SetLineColor(kRed);
+  AsymG[2]->SetTitle("43 Bins"); AsymG[2]->SetLineColor(kGreen);
+  AsymBB->Add(AsymG[0]);
+  AsymBB->Add(AsymG[1]);
+  AsymBB->Add(AsymG[2]);
+  AsymBB->Draw("AP");
+  AsymBB->GetXaxis()->SetTitle("cos(#theta^{cm}_{K^{+}})");
+  AsymBB->GetYaxis()->SetTitle("#Sigma");
+  cASMB->BuildLegend();
 
+  cASMB->SaveAs("imagenes/SigmaAsymBin.eps");
+  
+  TCanvas *cASM = new TCanvas("","",900,450);
+  TGraphErrors *AsymM = new TGraphErrors(Asym1.size(),&(AvValue[0]),&(MaxL[0]),&(Error[0]),&(MaxLE[0]));
+  TMultiGraph *AsymT = new TMultiGraph();
+  AsymM->SetLineColor(kBlack);
+  AsymM->SetTitle("Max Like");
+  AsymT->Add(AsymG[0]);
+  AsymT->Add(AsymG[1]);
+  AsymT->Add(AsymG[2]);
+  AsymT->Add(AsymM);
+  AsymT->Draw("AP");
+  AsymT->GetXaxis()->SetTitle("cos(#theta^{cm}_{K^{+}})");
+  AsymT->GetYaxis()->SetTitle("#Sigma");
+  cASM->BuildLegend();
+  cASM->SaveAs("imagenes/SigmaAsymBinMaxLike.eps");
 }
 
 //***************** Friend Functions ******************** //

@@ -508,31 +508,50 @@ void Codecuts::CodeCutsAsym(){
       h_CosThetaCM17[2]->Fill(SigmaCosThetaCM);
 
       if (CohP == 0){
-	if(KaonCosThetaCM < -0.70) h_kaonPhiPA[0]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= -0.70 && KaonCosThetaCM <= -0.36) h_kaonPhiPA[1]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= -0.36 && KaonCosThetaCM <= -0.06) h_kaonPhiPA[2]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= -0.06 && KaonCosThetaCM <= 0.12)  h_kaonPhiPA[3]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= 0.12 && KaonCosThetaCM <= 0.26)   h_kaonPhiPA[4]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= 0.26 && KaonCosThetaCM <= 0.36)   h_kaonPhiPA[5]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= 0.36 && KaonCosThetaCM <= 0.44)   h_kaonPhiPA[6]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= 0.44 && KaonCosThetaCM <= 0.52)   h_kaonPhiPA[7]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= 0.52 && KaonCosThetaCM <= 0.6)   h_kaonPhiPA[8]->Fill(PhiCM);
-	else if (KaonCosThetaCM > 0.6)  h_kaonPhiPA[9]->Fill(PhiCM); 
+	if(KaonCosThetaCM < -0.70) 
+	  { h_kaonPhiPA1[0]->Fill(PhiCM); h_kaonPhiPA2[0]->Fill(PhiCM); h_kaonPhiPA3[0]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= -0.70 && KaonCosThetaCM <= -0.36)
+	  { h_kaonPhiPA1[1]->Fill(PhiCM); h_kaonPhiPA2[1]->Fill(PhiCM); h_kaonPhiPA3[1]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= -0.36 && KaonCosThetaCM <= -0.06)
+	  { h_kaonPhiPA1[2]->Fill(PhiCM); h_kaonPhiPA2[2]->Fill(PhiCM); h_kaonPhiPA3[2]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= -0.06 && KaonCosThetaCM <= 0.12)
+	  { h_kaonPhiPA1[3]->Fill(PhiCM); h_kaonPhiPA2[3]->Fill(PhiCM); h_kaonPhiPA3[3]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= 0.12 && KaonCosThetaCM <= 0.26)
+	  { h_kaonPhiPA1[4]->Fill(PhiCM); h_kaonPhiPA2[4]->Fill(PhiCM); h_kaonPhiPA3[4]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= 0.26 && KaonCosThetaCM <= 0.36)
+	  { h_kaonPhiPA1[5]->Fill(PhiCM); h_kaonPhiPA2[5]->Fill(PhiCM); h_kaonPhiPA3[5]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= 0.36 && KaonCosThetaCM <= 0.44)
+	  { h_kaonPhiPA1[6]->Fill(PhiCM); h_kaonPhiPA2[6]->Fill(PhiCM); h_kaonPhiPA3[6]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= 0.44 && KaonCosThetaCM <= 0.52)
+	  { h_kaonPhiPA1[7]->Fill(PhiCM); h_kaonPhiPA2[7]->Fill(PhiCM); h_kaonPhiPA3[7]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= 0.52 && KaonCosThetaCM <= 0.6)
+	  { h_kaonPhiPA1[8]->Fill(PhiCM); h_kaonPhiPA2[8]->Fill(PhiCM); h_kaonPhiPA3[8]->Fill(PhiCM); }
+	else if (KaonCosThetaCM > 0.6)
+	  { h_kaonPhiPA1[9]->Fill(PhiCM); h_kaonPhiPA2[9]->Fill(PhiCM); h_kaonPhiPA3[9]->Fill(PhiCM); }
       }
       
       else if (CohP == 1){	
-	if(KaonCosThetaCM < -0.72) h_kaonPhiPE[0]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= -0.72 && KaonCosThetaCM <= -0.48) h_kaonPhiPE[1]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= -0.48 && KaonCosThetaCM <= -0.16) h_kaonPhiPE[2]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= -0.16 && KaonCosThetaCM <= 0.04)  h_kaonPhiPE[3]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= 0.04 && KaonCosThetaCM <= 0.18)   h_kaonPhiPE[4]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= 0.18 && KaonCosThetaCM <= 0.28)   h_kaonPhiPE[5]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= 0.28 && KaonCosThetaCM <= 0.38)   h_kaonPhiPE[6]->Fill(PhiCM);    
-	else if (KaonCosThetaCM >= 0.38 && KaonCosThetaCM <= 0.46)   h_kaonPhiPE[7]->Fill(PhiCM);
-	else if (KaonCosThetaCM >= 0.46 && KaonCosThetaCM <= 0.54)   h_kaonPhiPE[8]->Fill(PhiCM);
-	else if (KaonCosThetaCM > 0.54) h_kaonPhiPE[9]->Fill(PhiCM);     
+	if(KaonCosThetaCM < -0.70) 
+	  { h_kaonPhiPE1[0]->Fill(PhiCM); h_kaonPhiPE2[0]->Fill(PhiCM); h_kaonPhiPE3[0]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= -0.70 && KaonCosThetaCM <= -0.36)
+	  { h_kaonPhiPE1[1]->Fill(PhiCM); h_kaonPhiPE2[1]->Fill(PhiCM); h_kaonPhiPE3[1]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= -0.36 && KaonCosThetaCM <= -0.06)
+	  { h_kaonPhiPE1[2]->Fill(PhiCM); h_kaonPhiPE2[2]->Fill(PhiCM); h_kaonPhiPE3[2]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= -0.06 && KaonCosThetaCM <= 0.12)
+	  { h_kaonPhiPE1[3]->Fill(PhiCM); h_kaonPhiPE2[3]->Fill(PhiCM); h_kaonPhiPE3[3]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= 0.12 && KaonCosThetaCM <= 0.26)
+	  { h_kaonPhiPE1[4]->Fill(PhiCM); h_kaonPhiPE2[4]->Fill(PhiCM); h_kaonPhiPE3[4]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= 0.26 && KaonCosThetaCM <= 0.36)
+	  { h_kaonPhiPE1[5]->Fill(PhiCM); h_kaonPhiPE2[5]->Fill(PhiCM); h_kaonPhiPE3[5]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= 0.36 && KaonCosThetaCM <= 0.44)
+	  { h_kaonPhiPE1[6]->Fill(PhiCM); h_kaonPhiPE2[6]->Fill(PhiCM); h_kaonPhiPE3[6]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= 0.44 && KaonCosThetaCM <= 0.52)
+	  { h_kaonPhiPE1[7]->Fill(PhiCM); h_kaonPhiPE2[7]->Fill(PhiCM); h_kaonPhiPE3[7]->Fill(PhiCM); }
+	else if (KaonCosThetaCM >= 0.52 && KaonCosThetaCM <= 0.6)
+	  { h_kaonPhiPE1[8]->Fill(PhiCM); h_kaonPhiPE2[8]->Fill(PhiCM); h_kaonPhiPE3[8]->Fill(PhiCM); }
+	else if (KaonCosThetaCM > 0.6)
+	  { h_kaonPhiPE1[9]->Fill(PhiCM); h_kaonPhiPE2[9]->Fill(PhiCM); h_kaonPhiPE3[9]->Fill(PhiCM); }
       }
-
     }
 
     
@@ -645,16 +664,39 @@ void Codecuts::CodeCutsAsym(){
   }
   
 
-  h_Asym[0]=(TH1F*)h_kaonPhiPA[0]->GetAsymmetry(h_kaonPhiPE[0]);
-  h_Asym[1]=(TH1F*)h_kaonPhiPA[1]->GetAsymmetry(h_kaonPhiPE[1]);
-  h_Asym[2]=(TH1F*)h_kaonPhiPA[2]->GetAsymmetry(h_kaonPhiPE[2]);
-  h_Asym[3]=(TH1F*)h_kaonPhiPA[3]->GetAsymmetry(h_kaonPhiPE[3]);
-  h_Asym[4]=(TH1F*)h_kaonPhiPA[4]->GetAsymmetry(h_kaonPhiPE[4]);
-  h_Asym[5]=(TH1F*)h_kaonPhiPA[5]->GetAsymmetry(h_kaonPhiPE[5]);
-  h_Asym[6]=(TH1F*)h_kaonPhiPA[6]->GetAsymmetry(h_kaonPhiPE[6]);
-  h_Asym[7]=(TH1F*)h_kaonPhiPA[7]->GetAsymmetry(h_kaonPhiPE[7]);
-  h_Asym[8]=(TH1F*)h_kaonPhiPA[8]->GetAsymmetry(h_kaonPhiPE[8]);
-  h_Asym[9]=(TH1F*)h_kaonPhiPA[9]->GetAsymmetry(h_kaonPhiPE[9]);
+  h_Asym1[0]=(TH1F*)h_kaonPhiPA1[0]->GetAsymmetry(h_kaonPhiPE1[0]);
+  h_Asym1[1]=(TH1F*)h_kaonPhiPA1[1]->GetAsymmetry(h_kaonPhiPE1[1]);
+  h_Asym1[2]=(TH1F*)h_kaonPhiPA1[2]->GetAsymmetry(h_kaonPhiPE1[2]);
+  h_Asym1[3]=(TH1F*)h_kaonPhiPA1[3]->GetAsymmetry(h_kaonPhiPE1[3]);
+  h_Asym1[4]=(TH1F*)h_kaonPhiPA1[4]->GetAsymmetry(h_kaonPhiPE1[4]);
+  h_Asym1[5]=(TH1F*)h_kaonPhiPA1[5]->GetAsymmetry(h_kaonPhiPE1[5]);
+  h_Asym1[6]=(TH1F*)h_kaonPhiPA1[6]->GetAsymmetry(h_kaonPhiPE1[6]);
+  h_Asym1[7]=(TH1F*)h_kaonPhiPA1[7]->GetAsymmetry(h_kaonPhiPE1[7]);
+  h_Asym1[8]=(TH1F*)h_kaonPhiPA1[8]->GetAsymmetry(h_kaonPhiPE1[8]);
+  h_Asym1[9]=(TH1F*)h_kaonPhiPA1[9]->GetAsymmetry(h_kaonPhiPE1[9]);
+
+  h_Asym2[0]=(TH1F*)h_kaonPhiPA2[0]->GetAsymmetry(h_kaonPhiPE2[0]);
+  h_Asym2[1]=(TH1F*)h_kaonPhiPA2[1]->GetAsymmetry(h_kaonPhiPE2[1]);
+  h_Asym2[2]=(TH1F*)h_kaonPhiPA2[2]->GetAsymmetry(h_kaonPhiPE2[2]);
+  h_Asym2[3]=(TH1F*)h_kaonPhiPA2[3]->GetAsymmetry(h_kaonPhiPE2[3]);
+  h_Asym2[4]=(TH1F*)h_kaonPhiPA2[4]->GetAsymmetry(h_kaonPhiPE2[4]);
+  h_Asym2[5]=(TH1F*)h_kaonPhiPA2[5]->GetAsymmetry(h_kaonPhiPE2[5]);
+  h_Asym2[6]=(TH1F*)h_kaonPhiPA2[6]->GetAsymmetry(h_kaonPhiPE2[6]);
+  h_Asym2[7]=(TH1F*)h_kaonPhiPA2[7]->GetAsymmetry(h_kaonPhiPE2[7]);
+  h_Asym2[8]=(TH1F*)h_kaonPhiPA2[8]->GetAsymmetry(h_kaonPhiPE2[8]);
+  h_Asym2[9]=(TH1F*)h_kaonPhiPA2[9]->GetAsymmetry(h_kaonPhiPE2[9]);
+
+  h_Asym3[0]=(TH1F*)h_kaonPhiPA3[0]->GetAsymmetry(h_kaonPhiPE3[0]);
+  h_Asym3[1]=(TH1F*)h_kaonPhiPA3[1]->GetAsymmetry(h_kaonPhiPE3[1]);
+  h_Asym3[2]=(TH1F*)h_kaonPhiPA3[2]->GetAsymmetry(h_kaonPhiPE3[2]);
+  h_Asym3[3]=(TH1F*)h_kaonPhiPA3[3]->GetAsymmetry(h_kaonPhiPE3[3]);
+  h_Asym3[4]=(TH1F*)h_kaonPhiPA3[4]->GetAsymmetry(h_kaonPhiPE3[4]);
+  h_Asym3[5]=(TH1F*)h_kaonPhiPA3[5]->GetAsymmetry(h_kaonPhiPE3[5]);
+  h_Asym3[6]=(TH1F*)h_kaonPhiPA3[6]->GetAsymmetry(h_kaonPhiPE3[6]);
+  h_Asym3[7]=(TH1F*)h_kaonPhiPA3[7]->GetAsymmetry(h_kaonPhiPE3[7]);
+  h_Asym3[8]=(TH1F*)h_kaonPhiPA3[8]->GetAsymmetry(h_kaonPhiPE3[8]);
+  h_Asym3[9]=(TH1F*)h_kaonPhiPA3[9]->GetAsymmetry(h_kaonPhiPE3[9]);
+
 
   DoCanvasAsym();
 }

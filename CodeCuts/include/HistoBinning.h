@@ -37,6 +37,7 @@ public:
   void DoHistoBinning();
   void PrintLevel(UInt_t);
   void GetLatexTable(string,string,string);
+  void GetPoints(vector<double> &,vector<double> &);
 };
 
 

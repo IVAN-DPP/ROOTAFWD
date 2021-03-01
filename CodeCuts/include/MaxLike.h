@@ -22,7 +22,7 @@ public:
         typedef vector<int>::size_type vec_sz;
         vec_sz m=Phi.size();
         for (vec_sz i=0; i<m; i++) {
-	  sum+=-TMath::Log(1-GammaP[i]*x[0]*TMath::Cos((2*Phi[i]+2*x[1])*TMath::DegToRad()));
+	  sum+=-TMath::Log(1-GammaP[i]*x[0]*TMath::Cos((2*Phi[i])*TMath::DegToRad()));
 	    
         }
         return sum;
