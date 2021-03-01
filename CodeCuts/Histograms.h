@@ -1502,11 +1502,12 @@ void Histograms::DoCanvasAsym(){
 
   //------------MaxLike Method------------//
 
-  vector<double> MaxL, MaxLE;
-  for(double k=1.7;k<=1.7;k+=0.2){
+  vector<vector<double>> MaxL(6), MaxLE(6);
+  UInt_t it = 0;
+  for(double k=1.3;k<=2.5;k+=0.2){
 
     for (UInt_t i = 0; i < MEASPhip[float(k)].size(); i++) {
-      
+      cout << "Energy: " << k <<"\n";
       ROOT::Math::Minimizer* minim = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
       MaxLike Min(MEASPhip[float(k)].at(i),MEASGamma[float(k)].at(i));
       ROOT::Math::Functor f(Min,1);
@@ -1516,9 +1517,10 @@ void Histograms::DoCanvasAsym(){
       minim->Minimize();
       const double *xs = minim->X();
       const double *ee = minim->Errors();
-      MaxL.push_back(xs[0]);
-      MaxLE.push_back(ee[0]);
+      MaxL[it].push_back(xs[0]);
+      MaxLE[it].push_back(ee[0]);
     }
+    it++;
   }
 
   vector<double> AvValue, Error;
@@ -1544,7 +1546,7 @@ void Histograms::DoCanvasAsym(){
   cASMB->SaveAs("imagenes/SigmaAsymBin.eps");
   
   TCanvas *cASM = new TCanvas("","",900,450);
-  TGraphErrors *AsymM = new TGraphErrors(Asym1.size(),&(AvValue[0]),&(MaxL[0]),&(Error[0]),&(MaxLE[0]));
+  TGraphErrors *AsymM = new TGraphErrors(Asym1.size(),&(AvValue[0]),MaxL[2].data(),&(Error[0]),MaxLE[2].data());
   TMultiGraph *AsymT = new TMultiGraph();
   AsymM->SetLineColor(kBlack);
   AsymM->SetTitle("Max Like");
@@ -1557,6 +1559,27 @@ void Histograms::DoCanvasAsym(){
   AsymT->GetYaxis()->SetTitle("#Sigma");
   cASM->BuildLegend();
   cASM->SaveAs("imagenes/SigmaAsymBinMaxLike.eps");
+
+  TCanvas *cASME[6];
+  float BimEn = 1.3;
+
+  for (UInt_t i = 0; i < 6; i++) {
+    cASME [i] = new TCanvas("","",900,450);
+    TGraphErrors *AsymME = new TGraphErrors(Asym1.size(),&(AvValue[0]),MaxL[i].data(),&(Error[0]),MaxLE[i].data());
+    string Name;
+    Name = "Max Like " + std::to_string(BimEn);
+    AsymME->SetTitle(Name.c_str());
+    AsymME->GetXaxis()->SetTitle("cos(#theta^{cm}_{K^{+}})");
+    AsymME->GetYaxis()->SetTitle("#Sigma");
+    AsymME->Draw("AP");
+    string AsymS;
+    AsymS = "imagenes/SigmaAsymMaxLike" + std::to_string(i) + ".eps";
+    cASME[i]->SaveAs(AsymS.c_str());
+    BimEn+=0.2;
+  }
+
+
+  
 }
 
 //***************** Friend Functions ******************** //
