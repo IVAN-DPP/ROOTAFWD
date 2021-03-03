@@ -125,8 +125,10 @@ protected:
   //----Costheta-Kaon Boost-------------------//
   TH1F *h_CosThetaCM[3]                      		= {};
   TH1F *h_CosThetaCM17[3]				= {};
+  double PARTCOSK[9]					= {};
+  double PARTCOSK17[9]					= {};
   TH1F *h_Theta[3] 					= {};
-  TH2F *h_ThetaCorr[3] 					= {};
+  TH2F *h_CosThetaCorr[3]				= {};
   
   //-----Kaon phi-------------------//
   TH1F *h_kaonPhiPA1[10]                      		= {};
@@ -138,7 +140,7 @@ protected:
     
   //---------Function to do asymmetry fit----//
   
-  vector<vector<double> > MEASPhi{10}; 			//2 is the number of binning
+  vector<vector<double> > MEASPhi{10}; 			//10 is the number of binning
   vector<vector<double> > MEASGammaP{10};
 
   map<float,vector<vector<double>>> MEASGamma;
@@ -455,15 +457,28 @@ void Histograms::DoHistograms(){
   h_CosThetaCM17[0] = new TH1F("h_CosThetaCM17[0]","Proton Cos_Theta Boost", 100, -1, 1);
   h_CosThetaCM17[1] = new TH1F("h_CosThetaCM17[1]","Kaon Cos_Theta Boost", 100, -1, 1);
   h_CosThetaCM17[2] = new TH1F("h_CosThetaCM17[2]","Sigma Cos_Theta Boost", 100, -1, 1);
+
+  PARTCOSK17[0] = -0.7;		  PARTCOSK17[5] = 0.36;
+  PARTCOSK17[1] = -0.36;	  PARTCOSK17[6] = 0.44;
+  PARTCOSK17[2] = -0.06;	  PARTCOSK17[7] = 0.52;
+  PARTCOSK17[3] = 0.12;		  PARTCOSK17[8] = 0.6;
+  PARTCOSK17[4] = 0.26;
+
+  
+  PARTCOSK[0] = -0.7;		PARTCOSK[5] = 0.34;
+  PARTCOSK[1] = -0.38;	  	PARTCOSK[6] = 0.42;
+  PARTCOSK[2] = -0.08;	  	PARTCOSK[7] = 0.5;
+  PARTCOSK[3] = 0.01;	  	PARTCOSK[8] = 0.58;
+  PARTCOSK[4] = 0.24;	
   
   h_Theta[0] = new TH1F("h_ThetaCM[0]","Proton Cos_Theta Boost", 100 ,0 ,3.14159);
   h_Theta[1] = new TH1F("h_ThetaCM[1]","Kaon Cos_Theta Boost", 100 ,0 ,3.14159);
   h_Theta[2] = new TH1F("h_ThetaCM[2]","Sigma Cos_Theta Boost", 100 ,0 ,3.14159);
 
 
-  h_ThetaCorr[0] = new TH2F("h_ThetaCorr[0]","Proton Kaon", 100 ,-1 ,1, 100 ,-1 ,1);
-  h_ThetaCorr[1] = new TH2F("h_ThetaCorr[1]","Proton Sigma", 100 ,-1 ,1, 100 ,-1 ,1);
-  h_ThetaCorr[2] = new TH2F("h_ThetaCorr[2]","Sigma Kaon", 100 ,-1 ,1, 100 ,-1 ,1);
+  h_CosThetaCorr[0] = new TH2F("h_CosThetaCorr[0]","Proton Kaon", 100 ,-1 ,1, 100 ,-1 ,1);
+  h_CosThetaCorr[1] = new TH2F("h_CosThetaCorr[1]","Proton Sigma", 100 ,-1 ,1, 100 ,-1 ,1);
+  h_CosThetaCorr[2] = new TH2F("h_CosThetaCorr[2]","Sigma Kaon", 100 ,-1 ,1, 100 ,-1 ,1);
   
   //-----------------Kaon phi-------------------//
 
@@ -1373,8 +1388,61 @@ void Histograms::DoCanvasAsym(){
   B->DoHistoBinning();
   B->PrintLevel(2);
   B->GetLatexTable("./CosBin17.tex", "Cos Theta Binning", "COST");
+  vector<double> AvValue17, Error17;
+  B->GetPoints(AvValue17,Error17);
   cTCM1->cd(1);
   h_CosThetaCM17[1]->Draw();
+
+  TLine *COSL17[9];
+  double MaxGraphCosK17 = h_CosThetaCM17[1]->GetMaximum();
+
+  COSL17[0] = new TLine(PARTCOSK17[0],0, PARTCOSK17[0],MaxGraphCosK17);
+  COSL17[1] = new TLine(PARTCOSK17[1],0, PARTCOSK17[1],MaxGraphCosK17);
+  COSL17[2] = new TLine(PARTCOSK17[2],0, PARTCOSK17[2],MaxGraphCosK17);
+  COSL17[3] = new TLine(PARTCOSK17[3],0, PARTCOSK17[3],MaxGraphCosK17);
+  COSL17[4] = new TLine(PARTCOSK17[4],0, PARTCOSK17[4],MaxGraphCosK17);
+  COSL17[5] = new TLine(PARTCOSK17[5],0, PARTCOSK17[5],MaxGraphCosK17);
+  COSL17[6] = new TLine(PARTCOSK17[6],0, PARTCOSK17[6],MaxGraphCosK17);
+  COSL17[7] = new TLine(PARTCOSK17[7],0, PARTCOSK17[7],MaxGraphCosK17);
+  COSL17[8] = new TLine(PARTCOSK17[8],0, PARTCOSK17[8],MaxGraphCosK17);
+  
+  COSL17[0]->Draw("same");
+  COSL17[1]->Draw("same");
+  COSL17[2]->Draw("same");
+  COSL17[3]->Draw("same");
+  COSL17[4]->Draw("same");
+  COSL17[5]->Draw("same");
+  COSL17[6]->Draw("same");
+  COSL17[7]->Draw("same");
+  COSL17[8]->Draw("same");
+
+  TText *TextCosK17[10];
+
+  TextCosK17[0] = new TText(AvValue17[0],MaxGraphCosK17/2,"Bin 1");
+  TextCosK17[1] = new TText(AvValue17[1],MaxGraphCosK17/2,"Bin 2");
+  TextCosK17[2] = new TText(AvValue17[2],MaxGraphCosK17/2,"Bin 3");
+  TextCosK17[3] = new TText(AvValue17[3],MaxGraphCosK17/2,"Bin 4");
+  TextCosK17[4] = new TText(AvValue17[4],MaxGraphCosK17/2,"Bin 5");
+  TextCosK17[5] = new TText(AvValue17[5],MaxGraphCosK17/2,"Bin 6");
+  TextCosK17[6] = new TText(AvValue17[6],MaxGraphCosK17/2,"Bin 7");
+  TextCosK17[7] = new TText(AvValue17[7],MaxGraphCosK17/2,"Bin 8");
+  TextCosK17[8] = new TText(AvValue17[8],MaxGraphCosK17/2,"Bin 9");
+  TextCosK17[9] = new TText(AvValue17[9],MaxGraphCosK17/2,"Bin 10");
+
+  TextCosK17[0]->SetTextAngle(90);	  TextCosK17[5]->SetTextAngle(90);
+  TextCosK17[1]->SetTextAngle(90);	  TextCosK17[6]->SetTextAngle(90);
+  TextCosK17[2]->SetTextAngle(90);	  TextCosK17[7]->SetTextAngle(90);
+  TextCosK17[3]->SetTextAngle(90);	  TextCosK17[8]->SetTextAngle(90);
+  TextCosK17[4]->SetTextAngle(90);	  TextCosK17[9]->SetTextAngle(90);
+	  
+
+  TextCosK17[0]->Draw("same");	  TextCosK17[5]->Draw("same");
+  TextCosK17[1]->Draw("same");	  TextCosK17[6]->Draw("same");
+  TextCosK17[2]->Draw("same");	  TextCosK17[7]->Draw("same");
+  TextCosK17[3]->Draw("same");	  TextCosK17[8]->Draw("same");
+  TextCosK17[4]->Draw("same");	  TextCosK17[9]->Draw("same");
+	  
+  
   cTCM1->SaveAs("imagenes/ThetaKaonBoost17.eps");
 
   TCanvas *cTCM2 = new TCanvas("cTCM2","cos Theta Sigma Boost", 1450, 500);
@@ -1393,10 +1461,62 @@ void Histograms::DoCanvasAsym(){
   BB->DoHistoBinning();
   BB->PrintLevel(2);
   BB->GetLatexTable("./CosBin.tex", "Cos Theta Binning", "COST");
+  vector<double> AvValue, Error;
+  BB->GetPoints(AvValue, Error);
   cCM1->cd(1);
   h_CosThetaCM[1]->Draw();
-  cCM1->SaveAs("imagenes/ThetaKaonBoost.eps");
 
+  TLine *COSL[9];	
+  double MaxGraphCosK = h_CosThetaCM[1]->GetMaximum();
+  
+  COSL[0] = new TLine(PARTCOSK[0],0, PARTCOSK[0], MaxGraphCosK);
+  COSL[1] = new TLine(PARTCOSK[1],0, PARTCOSK[1], MaxGraphCosK);
+  COSL[2] = new TLine(PARTCOSK[2],0, PARTCOSK[2], MaxGraphCosK);
+  COSL[3] = new TLine(PARTCOSK[3],0, PARTCOSK[3], MaxGraphCosK);
+  COSL[4] = new TLine(PARTCOSK[4],0, PARTCOSK[4], MaxGraphCosK);
+  COSL[5] = new TLine(PARTCOSK[5],0, PARTCOSK[5], MaxGraphCosK);
+  COSL[6] = new TLine(PARTCOSK[6],0, PARTCOSK[6], MaxGraphCosK);
+  COSL[7] = new TLine(PARTCOSK[7],0, PARTCOSK[7], MaxGraphCosK);
+  COSL[8] = new TLine(PARTCOSK[8],0, PARTCOSK[8], MaxGraphCosK);
+  
+  COSL[0]->Draw("same");
+  COSL[1]->Draw("same");
+  COSL[2]->Draw("same");
+  COSL[3]->Draw("same");
+  COSL[4]->Draw("same");
+  COSL[5]->Draw("same");
+  COSL[6]->Draw("same");
+  COSL[7]->Draw("same");
+  COSL[8]->Draw("same");
+
+  TText *TextCosK[10];
+
+  TextCosK[0] = new TText(AvValue[0],MaxGraphCosK/2,"Bin 1");
+  TextCosK[1] = new TText(AvValue[1],MaxGraphCosK/2,"Bin 2");
+  TextCosK[2] = new TText(AvValue[2],MaxGraphCosK/2,"Bin 3");
+  TextCosK[3] = new TText(AvValue[3],MaxGraphCosK/2,"Bin 4");
+  TextCosK[4] = new TText(AvValue[4],MaxGraphCosK/2,"Bin 5");
+  TextCosK[5] = new TText(AvValue[5],MaxGraphCosK/2,"Bin 6");
+  TextCosK[6] = new TText(AvValue[6],MaxGraphCosK/2,"Bin 7");
+  TextCosK[7] = new TText(AvValue[7],MaxGraphCosK/2,"Bin 8");
+  TextCosK[8] = new TText(AvValue[8],MaxGraphCosK/2,"Bin 9");
+  TextCosK[9] = new TText(AvValue[9],MaxGraphCosK/2,"Bin 10");
+
+  TextCosK[0]->SetTextAngle(90);	  TextCosK[5]->SetTextAngle(90);
+  TextCosK[1]->SetTextAngle(90);	  TextCosK[6]->SetTextAngle(90);
+  TextCosK[2]->SetTextAngle(90);	  TextCosK[7]->SetTextAngle(90);
+  TextCosK[3]->SetTextAngle(90);	  TextCosK[8]->SetTextAngle(90);
+  TextCosK[4]->SetTextAngle(90);	  TextCosK[9]->SetTextAngle(90);
+	  
+
+  TextCosK[0]->Draw("same");	  TextCosK[5]->Draw("same");
+  TextCosK[1]->Draw("same");	  TextCosK[6]->Draw("same");
+  TextCosK[2]->Draw("same");	  TextCosK[7]->Draw("same");
+  TextCosK[3]->Draw("same");	  TextCosK[8]->Draw("same");
+  TextCosK[4]->Draw("same");	  TextCosK[9]->Draw("same");
+
+  cCM1->SaveAs("imagenes/ThetaKaonBoost.eps");
+  
   TCanvas *cCM2 = new TCanvas("cCM2","cos Theta Sigma Boost", 1450, 500);
   cCM2->cd(1);
   h_CosThetaCM[2]->Draw();
@@ -1417,11 +1537,11 @@ void Histograms::DoCanvasAsym(){
   TCanvas *cTHC0 = new TCanvas("CTHC0","Theta proton",1450,500);
   cTHC0->Divide(3,1);
   cTHC0->cd(1);
-  h_ThetaCorr[0]->Draw("colz");
+  h_CosThetaCorr[0]->Draw("colz");
   cTHC0->cd(2);
-  h_ThetaCorr[1]->Draw("colz");
+  h_CosThetaCorr[1]->Draw("colz");
   cTHC0->cd(3);
-  h_ThetaCorr[2]->Draw("colz");
+  h_CosThetaCorr[2]->Draw("colz");
 
   cTHC0->SaveAs("imagenes/ThetaCorr.eps");
 
@@ -1451,7 +1571,7 @@ void Histograms::DoCanvasAsym(){
   TCanvas *CanvasAsym[3]	= {};
   gStyle->SetOptFit(1111);
 
-  for (UInt_t k = 0; k < 3; k++) {
+  for (UInt_t k = 0; k < 3; k++) {				// # Of binning 2,4 and 6
     CanvasAsym[k] = new TCanvas("","Asymmetry", 1450, 500);
     CanvasAsym[k]->Divide(3,4);
     for(UInt_t i=0; i<10; i++){
@@ -1505,9 +1625,8 @@ void Histograms::DoCanvasAsym(){
   vector<vector<double>> MaxL(6), MaxLE(6);
   UInt_t it = 0;
   for(double k=1.3;k<=2.5;k+=0.2){
-
+    cout << "//------Energy------// : " << k <<"\n";
     for (UInt_t i = 0; i < MEASPhip[float(k)].size(); i++) {
-      cout << "Energy: " << k <<"\n";
       ROOT::Math::Minimizer* minim = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
       MaxLike Min(MEASPhip[float(k)].at(i),MEASGamma[float(k)].at(i));
       ROOT::Math::Functor f(Min,1);
@@ -1523,8 +1642,6 @@ void Histograms::DoCanvasAsym(){
     it++;
   }
 
-  vector<double> AvValue, Error;
-  B->GetPoints(AvValue,Error);
   TCanvas *cASMB = new TCanvas("","",900,450);
   cASMB->cd(1);
   TMultiGraph *AsymBB = new TMultiGraph();
@@ -1544,7 +1661,7 @@ void Histograms::DoCanvasAsym(){
   cASMB->BuildLegend();
 
   cASMB->SaveAs("imagenes/SigmaAsymBin.eps");
-  
+
   TCanvas *cASM = new TCanvas("","",900,450);
   TGraphErrors *AsymM = new TGraphErrors(Asym1.size(),&(AvValue[0]),MaxL[2].data(),&(Error[0]),MaxLE[2].data());
   TMultiGraph *AsymT = new TMultiGraph();

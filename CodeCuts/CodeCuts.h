@@ -508,48 +508,48 @@ void Codecuts::CodeCutsAsym(){
       h_CosThetaCM17[2]->Fill(SigmaCosThetaCM);
 
       if (CohP == 0){
-	if(KaonCosThetaCM < -0.70) 
+	if(KaonCosThetaCM < PARTCOSK[0]) 
 	  { h_kaonPhiPA1[0]->Fill(PhiCM); h_kaonPhiPA2[0]->Fill(PhiCM); h_kaonPhiPA3[0]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= -0.70 && KaonCosThetaCM <= -0.36)
+	else if (KaonCosThetaCM >= PARTCOSK[0] && KaonCosThetaCM <= PARTCOSK[1])
 	  { h_kaonPhiPA1[1]->Fill(PhiCM); h_kaonPhiPA2[1]->Fill(PhiCM); h_kaonPhiPA3[1]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= -0.36 && KaonCosThetaCM <= -0.06)
+	else if (KaonCosThetaCM >= PARTCOSK[1] && KaonCosThetaCM <= PARTCOSK[2])
 	  { h_kaonPhiPA1[2]->Fill(PhiCM); h_kaonPhiPA2[2]->Fill(PhiCM); h_kaonPhiPA3[2]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= -0.06 && KaonCosThetaCM <= 0.12)
+	else if (KaonCosThetaCM >= PARTCOSK[2] && KaonCosThetaCM <= PARTCOSK[3])
 	  { h_kaonPhiPA1[3]->Fill(PhiCM); h_kaonPhiPA2[3]->Fill(PhiCM); h_kaonPhiPA3[3]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= 0.12 && KaonCosThetaCM <= 0.26)
+	else if (KaonCosThetaCM >= PARTCOSK[3] && KaonCosThetaCM <= PARTCOSK[4])
 	  { h_kaonPhiPA1[4]->Fill(PhiCM); h_kaonPhiPA2[4]->Fill(PhiCM); h_kaonPhiPA3[4]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= 0.26 && KaonCosThetaCM <= 0.36)
+	else if (KaonCosThetaCM >= PARTCOSK[4] && KaonCosThetaCM <= PARTCOSK[5])
 	  { h_kaonPhiPA1[5]->Fill(PhiCM); h_kaonPhiPA2[5]->Fill(PhiCM); h_kaonPhiPA3[5]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= 0.36 && KaonCosThetaCM <= 0.44)
+	else if (KaonCosThetaCM >= PARTCOSK[5] && KaonCosThetaCM <= PARTCOSK[6])
 	  { h_kaonPhiPA1[6]->Fill(PhiCM); h_kaonPhiPA2[6]->Fill(PhiCM); h_kaonPhiPA3[6]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= 0.44 && KaonCosThetaCM <= 0.52)
+	else if (KaonCosThetaCM >= PARTCOSK[6] && KaonCosThetaCM <= PARTCOSK[7])
 	  { h_kaonPhiPA1[7]->Fill(PhiCM); h_kaonPhiPA2[7]->Fill(PhiCM); h_kaonPhiPA3[7]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= 0.52 && KaonCosThetaCM <= 0.6)
+	else if (KaonCosThetaCM >= PARTCOSK[7] && KaonCosThetaCM <= PARTCOSK[8])
 	  { h_kaonPhiPA1[8]->Fill(PhiCM); h_kaonPhiPA2[8]->Fill(PhiCM); h_kaonPhiPA3[8]->Fill(PhiCM); }
-	else if (KaonCosThetaCM > 0.6)
+	else if (KaonCosThetaCM > PARTCOSK[8])
 	  { h_kaonPhiPA1[9]->Fill(PhiCM); h_kaonPhiPA2[9]->Fill(PhiCM); h_kaonPhiPA3[9]->Fill(PhiCM); }
       }
       
       else if (CohP == 1){	
-	if(KaonCosThetaCM < -0.70) 
+	if(KaonCosThetaCM < PARTCOSK[0]) 
 	  { h_kaonPhiPE1[0]->Fill(PhiCM); h_kaonPhiPE2[0]->Fill(PhiCM); h_kaonPhiPE3[0]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= -0.70 && KaonCosThetaCM <= -0.36)
+	else if (KaonCosThetaCM >= PARTCOSK[0] && KaonCosThetaCM <= PARTCOSK[1])
 	  { h_kaonPhiPE1[1]->Fill(PhiCM); h_kaonPhiPE2[1]->Fill(PhiCM); h_kaonPhiPE3[1]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= -0.36 && KaonCosThetaCM <= -0.06)
+	else if (KaonCosThetaCM >= PARTCOSK[1] && KaonCosThetaCM <= PARTCOSK[2])
 	  { h_kaonPhiPE1[2]->Fill(PhiCM); h_kaonPhiPE2[2]->Fill(PhiCM); h_kaonPhiPE3[2]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= -0.06 && KaonCosThetaCM <= 0.12)
+	else if (KaonCosThetaCM >= PARTCOSK[2] && KaonCosThetaCM <= PARTCOSK[3])
 	  { h_kaonPhiPE1[3]->Fill(PhiCM); h_kaonPhiPE2[3]->Fill(PhiCM); h_kaonPhiPE3[3]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= 0.12 && KaonCosThetaCM <= 0.26)
+	else if (KaonCosThetaCM >= PARTCOSK[3] && KaonCosThetaCM <= PARTCOSK[4])
 	  { h_kaonPhiPE1[4]->Fill(PhiCM); h_kaonPhiPE2[4]->Fill(PhiCM); h_kaonPhiPE3[4]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= 0.26 && KaonCosThetaCM <= 0.36)
+	else if (KaonCosThetaCM >= PARTCOSK[4] && KaonCosThetaCM <= PARTCOSK[5])
 	  { h_kaonPhiPE1[5]->Fill(PhiCM); h_kaonPhiPE2[5]->Fill(PhiCM); h_kaonPhiPE3[5]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= 0.36 && KaonCosThetaCM <= 0.44)
+	else if (KaonCosThetaCM >= PARTCOSK[5]  && KaonCosThetaCM <= PARTCOSK[6])
 	  { h_kaonPhiPE1[6]->Fill(PhiCM); h_kaonPhiPE2[6]->Fill(PhiCM); h_kaonPhiPE3[6]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= 0.44 && KaonCosThetaCM <= 0.52)
+	else if (KaonCosThetaCM >= PARTCOSK[6]  && KaonCosThetaCM <= PARTCOSK[7])
 	  { h_kaonPhiPE1[7]->Fill(PhiCM); h_kaonPhiPE2[7]->Fill(PhiCM); h_kaonPhiPE3[7]->Fill(PhiCM); }
-	else if (KaonCosThetaCM >= 0.52 && KaonCosThetaCM <= 0.6)
+	else if (KaonCosThetaCM >= PARTCOSK[7]  && KaonCosThetaCM <= PARTCOSK[8])
 	  { h_kaonPhiPE1[8]->Fill(PhiCM); h_kaonPhiPE2[8]->Fill(PhiCM); h_kaonPhiPE3[8]->Fill(PhiCM); }
-	else if (KaonCosThetaCM > 0.6)
+	else if (KaonCosThetaCM >  PARTCOSK[8] )
 	  { h_kaonPhiPE1[9]->Fill(PhiCM); h_kaonPhiPE2[9]->Fill(PhiCM); h_kaonPhiPE3[9]->Fill(PhiCM); }
       }
     }
@@ -563,9 +563,9 @@ void Codecuts::CodeCutsAsym(){
     h_Theta[1]->Fill(Kaon->Theta());
     h_Theta[2]->Fill(Sigma->Theta());
     
-    h_ThetaCorr[0]->Fill(ProtonCosThetaCM,KaonCosThetaCM);
-    h_ThetaCorr[1]->Fill(ProtonCosThetaCM,SigmaCosThetaCM);
-    h_ThetaCorr[2]->Fill(SigmaCosThetaCM,KaonCosThetaCM);
+    h_CosThetaCorr[0]->Fill(ProtonCosThetaCM,KaonCosThetaCM);
+    h_CosThetaCorr[1]->Fill(ProtonCosThetaCM,SigmaCosThetaCM);
+    h_CosThetaCorr[2]->Fill(SigmaCosThetaCM,KaonCosThetaCM);
 
 
       
@@ -575,86 +575,86 @@ void Codecuts::CodeCutsAsym(){
     //1 is for PERP
   
     if (CohP == 0){
-      if(KaonCosThetaCM < -0.72){
+      if(KaonCosThetaCM < PARTCOSK[0]){
 	MEASGamma[CohEN].at(0).push_back(PhotoPol);
 	MEASPhip[CohEN].at(0).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= -0.72 && KaonCosThetaCM <= -0.48){
+      else if (KaonCosThetaCM >= PARTCOSK[0] && KaonCosThetaCM <= PARTCOSK[1]){
 	MEASGamma[CohEN].at(1).push_back(PhotoPol);
 	MEASPhip[CohEN].at(1).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= -0.48 && KaonCosThetaCM <= -0.16){
+      else if (KaonCosThetaCM >= PARTCOSK[1] && KaonCosThetaCM <= PARTCOSK[2]){
 	MEASGamma[CohEN].at(2).push_back(PhotoPol);
 	MEASPhip[CohEN].at(2).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= -0.16 && KaonCosThetaCM <= 0.04){
+      else if (KaonCosThetaCM >= PARTCOSK[2] && KaonCosThetaCM <= PARTCOSK[3]){
 	MEASGamma[CohEN].at(3).push_back(PhotoPol);
 	MEASPhip[CohEN].at(3).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= 0.04 && KaonCosThetaCM <= 0.18){
+      else if (KaonCosThetaCM >= PARTCOSK[3] && KaonCosThetaCM <= PARTCOSK[4]){
 	MEASGamma[CohEN].at(4).push_back(PhotoPol);
 	MEASPhip[CohEN].at(4).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= 0.18 && KaonCosThetaCM <= 0.28){
+      else if (KaonCosThetaCM >= PARTCOSK[4] && KaonCosThetaCM <= PARTCOSK[5]){
 	MEASGamma[CohEN].at(5).push_back(PhotoPol);
 	MEASPhip[CohEN].at(5).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= 0.28 && KaonCosThetaCM <= 0.38){
+      else if (KaonCosThetaCM >= PARTCOSK[5] && KaonCosThetaCM <= PARTCOSK[6]){
 	MEASGamma[CohEN].at(6).push_back(PhotoPol);
 	MEASPhip[CohEN].at(6).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= 0.38 && KaonCosThetaCM <= 0.46){
+      else if (KaonCosThetaCM >= PARTCOSK[6] && KaonCosThetaCM <= PARTCOSK[7]){
 	MEASGamma[CohEN].at(7).push_back(PhotoPol);
 	MEASPhip[CohEN].at(7).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= 0.46 && KaonCosThetaCM <= 0.54){
+      else if (KaonCosThetaCM >= PARTCOSK[7] && KaonCosThetaCM <= PARTCOSK[8]){
 	MEASGamma[CohEN].at(8).push_back(PhotoPol);
 	MEASPhip[CohEN].at(8).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM > 0.54){
+      else if (KaonCosThetaCM > PARTCOSK[8]){
 	MEASGamma[CohEN].at(9).push_back(PhotoPol);
 	MEASPhip[CohEN].at(9).push_back(PhiCM);
       }
     }
       
     else if (CohP == 1){
-      if(KaonCosThetaCM < -0.72){
+      if(KaonCosThetaCM < PARTCOSK[0]){
 	MEASGamma[CohEN].at(0).push_back(-PhotoPol);
 	MEASPhip[CohEN].at(0).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= -0.72 && KaonCosThetaCM <= -0.48){
+      else if (KaonCosThetaCM >= PARTCOSK[0] && KaonCosThetaCM <= PARTCOSK[1]){
 	MEASGamma[CohEN].at(1).push_back(-PhotoPol);
 	MEASPhip[CohEN].at(1).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= -0.48 && KaonCosThetaCM <= -0.16){
+      else if (KaonCosThetaCM >= PARTCOSK[1] && KaonCosThetaCM <= PARTCOSK[2]){
 	MEASGamma[CohEN].at(2).push_back(-PhotoPol);
 	MEASPhip[CohEN].at(2).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= -0.16 && KaonCosThetaCM <= 0.04){
+      else if (KaonCosThetaCM >= PARTCOSK[2] && KaonCosThetaCM <= PARTCOSK[3]){
 	MEASGamma[CohEN].at(3).push_back(-PhotoPol);
 	MEASPhip[CohEN].at(3).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= 0.04 && KaonCosThetaCM <= 0.18){
+      else if (KaonCosThetaCM >= PARTCOSK[3] && KaonCosThetaCM <= PARTCOSK[4]){
 	MEASGamma[CohEN].at(4).push_back(-PhotoPol);
 	MEASPhip[CohEN].at(4).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= 0.18 && KaonCosThetaCM <= 0.28){
+      else if (KaonCosThetaCM >= PARTCOSK[4] && KaonCosThetaCM <= PARTCOSK[5]){
 	MEASGamma[CohEN].at(5).push_back(-PhotoPol);
 	MEASPhip[CohEN].at(5).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= 0.28 && KaonCosThetaCM <= 0.38){
+      else if (KaonCosThetaCM >= PARTCOSK[5] && KaonCosThetaCM <= PARTCOSK[6]){
 	MEASGamma[CohEN].at(6).push_back(-PhotoPol);
 	MEASPhip[CohEN].at(6).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= 0.38 && KaonCosThetaCM <= 0.46){
+      else if (KaonCosThetaCM >= PARTCOSK[6] && KaonCosThetaCM <= PARTCOSK[7]){
 	MEASGamma[CohEN].at(7).push_back(-PhotoPol);
 	MEASPhip[CohEN].at(7).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM >= 0.46 && KaonCosThetaCM <= 0.54){
+      else if (KaonCosThetaCM >= PARTCOSK[7] && KaonCosThetaCM <= PARTCOSK[8]){
 	MEASGamma[CohEN].at(8).push_back(-PhotoPol);
 	MEASPhip[CohEN].at(8).push_back(PhiCM);
       }
-      else if (KaonCosThetaCM > 0.54){
+      else if (KaonCosThetaCM > PARTCOSK[8]){
 	MEASGamma[CohEN].at(9).push_back(-PhotoPol);
 	MEASPhip[CohEN].at(9).push_back(PhiCM);
       }
