@@ -450,13 +450,13 @@ void Histograms::DoHistograms(){
   
   //--------------KaonCosTheta Boost-------------//
 
-  h_CosThetaCM[0] = new TH1F("h_CosThetaCM[0]","Proton Cos_Theta Boost", 100, -1, 1);
-  h_CosThetaCM[1] = new TH1F("h_CosThetaCM[1]","Kaon Cos_Theta Boost", 100, -1, 1);
-  h_CosThetaCM[2] = new TH1F("h_CosThetaCM[2]","Sigma Cos_Theta Boost", 100, -1, 1);
+  h_CosThetaCM[0] = new TH1F("h_CosThetaCM[0]",";cos(#theta^{cm});Frequency", 100, -1, 1);
+  h_CosThetaCM[1] = new TH1F("h_CosThetaCM[1]",";cos(#theta^{cm});Frequency", 100, -1, 1);
+  h_CosThetaCM[2] = new TH1F("h_CosThetaCM[2]",";cos(#theta^{cm});Frequency", 100, -1, 1);
 
-  h_CosThetaCM17[0] = new TH1F("h_CosThetaCM17[0]","Proton Cos_Theta Boost", 100, -1, 1);
-  h_CosThetaCM17[1] = new TH1F("h_CosThetaCM17[1]","Kaon Cos_Theta Boost", 100, -1, 1);
-  h_CosThetaCM17[2] = new TH1F("h_CosThetaCM17[2]","Sigma Cos_Theta Boost", 100, -1, 1);
+  h_CosThetaCM17[0] = new TH1F("h_CosThetaCM17[0]",";cos(#theta^{cm});Frequency", 100, -1, 1);
+  h_CosThetaCM17[1] = new TH1F("h_CosThetaCM17[1]",";cos(#theta^{cm});Frequency", 100, -1, 1);
+  h_CosThetaCM17[2] = new TH1F("h_CosThetaCM17[2]",";cos(#theta^{cm});Frequency", 100, -1, 1);
 
   PARTCOSK17[0] = -0.7;		  PARTCOSK17[5] = 0.36;
   PARTCOSK17[1] = -0.36;	  PARTCOSK17[6] = 0.44;
@@ -1455,7 +1455,8 @@ void Histograms::DoCanvasAsym(){
   cCM0->cd(1);
   h_CosThetaCM[0]->Draw();
   cCM0->SaveAs("imagenes/ThetaProtonBoost.eps");
-  
+
+  gStyle->SetOptStat("me");
   TCanvas *cCM1 = new TCanvas("cCM1","cos Theta Kaon Boost", 1450, 500);
   HistoBinning *BB = new HistoBinning(h_CosThetaCM[1],10);
   BB->DoHistoBinning();
@@ -1570,12 +1571,13 @@ void Histograms::DoCanvasAsym(){
       
   TCanvas *CanvasAsym[3]	= {};
   gStyle->SetOptFit(1111);
-
+  gStyle->SetOptStat("me");
+  
   for (UInt_t k = 0; k < 3; k++) {				// # Of binning 2,4 and 6
     CanvasAsym[k] = new TCanvas("","Asymmetry", 1450, 500);
     CanvasAsym[k]->Divide(3,4);
     for(UInt_t i=0; i<10; i++){
-    
+      
       double PPara=0, PPerp=0;
       int iPara=0, iPerp=0;
       
@@ -1595,7 +1597,8 @@ void Histograms::DoCanvasAsym(){
       FuncAsym->FixParameter(2,(PPara+PPerp)/2.0);
       FuncAsym->SetParLimits(3,-1.2,1.2);
       FuncAsym->SetParLimits(0,0.4,2.4);
-      CanvasAsym[k]->cd(i+1);
+      if(i == 9) CanvasAsym[k]->cd(i+2);
+      else	 CanvasAsym[k]->cd(i+1);
       if(k == 0){
 	h_Asym1[i]->Draw();
 	h_Asym1[i]->Fit(FuncAsym);
@@ -1614,6 +1617,16 @@ void Histograms::DoCanvasAsym(){
 	Asym3.push_back(FuncAsym->GetParameter(3));
 	AsymE3.push_back(FuncAsym->GetParError(3));
       }
+
+      h_Asym1[i]->GetXaxis()->SetTitle("Azimuthal Angle  #phi #circ (Lab)");
+      h_Asym1[i]->GetYaxis()->SetTitle("(N_{PARA}-N_{PERP})/(N_{PARA}+N_{PERP})");
+      h_Asym1[i]->SetTitle(" ");
+      h_Asym2[i]->GetXaxis()->SetTitle("Azimuthal Angle  #phi #circ (Lab)");
+      h_Asym2[i]->GetYaxis()->SetTitle("(N_{PARA}-N_{PERP})/(N_{PARA}+N_{PERP})");
+      h_Asym2[i]->SetTitle(" ");
+      h_Asym3[i]->GetXaxis()->SetTitle("Azimuthal Angle  #phi #circ (Lab)");
+      h_Asym3[i]->GetYaxis()->SetTitle("(N_{PARA}-N_{PERP})/(N_{PARA}+N_{PERP})");
+      h_Asym3[i]->SetTitle(" ");
     }
     string AsymS;
     AsymS = "imagenes/Asymmetry" + std::to_string(k) + ".eps";
@@ -1659,7 +1672,6 @@ void Histograms::DoCanvasAsym(){
   AsymBB->GetXaxis()->SetTitle("cos(#theta^{cm}_{K^{+}})");
   AsymBB->GetYaxis()->SetTitle("#Sigma");
   cASMB->BuildLegend();
-
   cASMB->SaveAs("imagenes/SigmaAsymBin.eps");
 
   TCanvas *cASM = new TCanvas("","",900,450);
