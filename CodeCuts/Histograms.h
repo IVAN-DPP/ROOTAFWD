@@ -66,21 +66,22 @@ protected:
   TH1F *h_MissingMass_kaonpioncut         		= NULL;
   
   TH2F *h_MissingMass_vsMissingMasskaonpion[2] 		= {};
-  TH2F *h_MissingMass_vsMissingMasskaonproton[2] 	= {};
-  TH2F *h_MissingMass_vsMissingMasspionkaon[2] 		= {};
+  TH2F *h_MissingMass_vsMissingMassPi0[2]       	= {};
 
   TH1F *h_MissingMass_kaonpion            		= NULL;
-  TH1F *h_MissingMass_kaonproton 			= NULL;
-  TH1F *h_MissingMass_pionkaon	 			= NULL;
-
+  TH1F *h_MissingMass_pi0             			= NULL;
+  TH1F *h_MissingMass_Pion				= NULL;
+  TH1F *h_MissingMass_Lambda				= NULL;
   TH1F *h_MissingP[2]                      		= {};
   TH1F *h_MissingPcut[2]                   		= {};
-  TH2F *h_MissingPvsIMMass[2]                		= {};
+  TH2F *h_MissingMvsIMMass[2]                		= {};
   TH2F *h_MissingMassvsSigmaMass          		= NULL;
   TH2F *h_MissingPvsSigmaMass             		= NULL;
 
   TH1F *h_InvariantMass                   		= NULL;
   TH1F *h_InvariantMasscut[4]                		= {};
+  TH1F *h_IMSigmaComparation[3]				= {};
+  TH1F *h_MissingMassFinal_Neutron			= NULL;
 
   //---- Lambda and Lambda Fit ---- //
   
@@ -103,6 +104,10 @@ protected:
   
   //-----Correlation Momentums (lambda and Sigma)----//
   TH2F *h_CorrelationMMomentum            		= NULL;
+
+  //-----Correlation Beta VS momentum (Neutron)----//
+  TH2F *h_BetaVsMomNeu                         		= NULL;
+
   
 
   //--- Ellipse Cuts ---- //
@@ -265,14 +270,9 @@ void Histograms::DoHistograms(){
 				    "; MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
 				    100, 0.7, 1.2);
 
-  h_MissingMass_kaonproton = new TH1F("h_missingmass_kaonproton",
-				    "; MM(#gamma d #rightarrow p #pi^{-} X p) [GeV/c^{2}]; Frequency",
-				    100, 0, 1.2);
-
-  h_MissingMass_pionkaon = new TH1F("h_missingmass_pionkaon",
-				    "; MM(#gamma d #rightarrow K^{+} K^{-} X p) [GeV/c^{2}]; Frequency",
-				    100, 0, 1.2);
-
+  h_MissingMass_pi0 = new TH1F("h_missingmass_pi0",
+				    "; MM(#gamma d #rightarrow K^{+} #pi^{-}npX) [GeV/c^{2}]; Frequency",
+				    100, -0.05, 0.4);
   
   h_MissingMasscut = new TH1F("h_missingmasscut",
 			      "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
@@ -282,6 +282,17 @@ void Histograms::DoHistograms(){
 				       " ; MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
 				       100, 0.7, 1.2);
 
+   h_MissingMass_Pion = new TH1F(" h_MissingMass_Pion",
+				       " ; MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
+				       100, 0.7, 1.2);
+ 
+   h_MissingMass_Lambda  = new TH1F("h_MissingMass_Lambda",
+				       " ; MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
+				       100, 0.7, 1.2);
+
+   h_MissingMassFinal_Neutron = new TH1F("h_MissingMassFinal_Neutron",
+				       " ; MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
+				       100, 0.7, 1.2);
   
 
   h_MissingMass_vsMissingMasskaonpion[0] = new TH2F("MissingMass_correlationKaonPion",
@@ -292,16 +303,11 @@ void Histograms::DoHistograms(){
 						    "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]",
 						    300, 0.7, 1.2, 300, 0.7, 1.2);
 
-  h_MissingMass_vsMissingMasskaonproton[0] = new TH2F("MissingMass_correlationKaonProton",
-						      "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow p #pi^{-} X p) [GeV/c^{2}]",
+ 
+  h_MissingMass_vsMissingMassPi0[0] = new TH2F("MissingMass_correlationPionKaon",
+						    "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow K^{+} #pi^{-}npX) [GeV/c^{2}]",
 						      300, 0.7, 1.2, 300, 0, 1.2);
-  h_MissingMass_vsMissingMasskaonproton[1] = new TH2F("MissingMass_correlationKaonProton_Cut",
-						      "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow p #pi^{-} X p) [GeV/c^{2}]",
-						      300, 0.7, 1.2, 300, 0, 1.2);
-  h_MissingMass_vsMissingMasspionkaon[0] = new TH2F("MissingMass_correlationPionKaon",
-						    "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow K^{+} K^{-} X p) [GeV/c^{2}]",
-						      300, 0.7, 1.2, 300, 0, 1.2);
-  h_MissingMass_vsMissingMasspionkaon[1] = new TH2F("MissingMass_correlationPionKaon_Cut",
+  h_MissingMass_vsMissingMassPi0[1] = new TH2F("h_MissingMass_vsMissingMassPi0_Cut",
 						    "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow K^{+} K^{-} X p) [GeV/c^{2}]",
 						      300, 0.7, 1.2, 300, 0, 1.2);
 
@@ -320,13 +326,13 @@ void Histograms::DoHistograms(){
 			      100, 0.0, 1.5);
   
   
-  h_MissingPvsIMMass[0] = new TH2F("h_missingpvsmSigma",
-				 "; IM(#pi^{-} n) [GeV/c^{2}]; Missing Momentum (#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c]",
-				 100, 0.7, 1.2, 100, 0.0, 1.5);
+  h_MissingMvsIMMass[0] = new TH2F("h_missingMvsmSigma",
+				 "; IM(#pi^{-} n) [GeV/c^{2}]; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}]",
+				 200, 1.0, 1.5, 200, 0.7, 1.2);
 
-  h_MissingPvsIMMass[1] = new TH2F("h_missingpvsmLambda",
-				 "; IM(#pi^{-} p) [GeV/c^{2}]; Missing Momentum (#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c]",
-				 100, 0.7, 1.2, 100, 0.0, 1.5);
+  h_MissingMvsIMMass[1] = new TH2F("h_missingMvsmLambda",
+				 "; IM(#pi^{-} p) [GeV/c^{2}]; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}]",
+				 200, 1.08, 1.16, 200, 0.85, 1.1);
 
 
   // ------- This aren't important -------- //
@@ -359,6 +365,18 @@ void Histograms::DoHistograms(){
 				   100, 1.0, 1.5);
   
   h_InvariantMasscut[3] = new TH1F("h_InvariantMasscut_ACP",
+				   "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
+				   100, 1.0, 1.5);
+
+  h_IMSigmaComparation[0]  = new TH1F("h_IMSigmaComparation",
+				   "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
+				   100, 1.0, 1.5);
+
+  h_IMSigmaComparation[1] = new TH1F("h_IMSigmaComparation",
+				   "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
+				   100, 1.0, 1.5);
+
+  h_IMSigmaComparation[2] = new TH1F("h_IMSigmaComparation",
 				   "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
 				   100, 1.0, 1.5);
 
@@ -410,7 +428,12 @@ void Histograms::DoHistograms(){
 				     "; IM(#pi^{-} n) momentum [GeV/c^{2}]; IM(#pi^{-} p) momentum [GeV/c^{2}] [GeV/c^{2}]",
 				     200,0, 1.6 , 200, 0, 1.6);
 
+  // Ensayo momentum vs beta
+  h_BetaVsMomNeu = new TH2F(" h_BetaVsMomNeu",
+				     "; MM(K^{+}#pi^{-}p)[GeV/c^{2}];#Delta #Beta_{N}",
+			    300, 0, 1.5, 300, -0.15, 0.15);
 
+  
 
   
   //---------------Missing mass Sigma-----------------------------//
@@ -442,7 +465,7 @@ void Histograms::DoHistograms(){
 
 
   //--------------KaonCosTheta Boost-------------//
-  h_KCosThetaCM = new TH1F("h_KCosThetaCM","Kaon Cos_Theta Boost", 100, -0.4, 2.);
+  h_KCosThetaCM = new TH1F("h_KCosThetaCM","Kaon Cos_Theta Boost", 100, -1.0, 1.0);
 
   
   //-----------------Kaon phi-------------------//
@@ -919,64 +942,22 @@ void Histograms::DoCanvas(){
   //myEllipse->SetLineColor(kRed);
   //myEllipse->Draw("same");
   c0ELLC->SaveAs("imagenes/MIS_Identification_KPi_C.eps");
-
   
-  //---------- MM Kaon-Proton Correlation without cut ---------------//
-  
-  TCanvas *c1ELL=new TCanvas("c1ELL","Correlation of MM", 900, 500);
-  c1ELL->cd(1);
-  h_MissingMass_vsMissingMasskaonproton[0]->SetTitleSize(0.045, "XY");  
-  h_MissingMass_vsMissingMasskaonproton[0]->Draw("colz");
-  TLine *MMCorrLine1;
-  MMCorrLine1 = new TLine(0.7, 0.75,1.2, 0.75);
-  MMCorrLine1->SetLineWidth(2);
-  MMCorrLine1->SetLineColor(2);
-  MMCorrLine1->Draw("same");
-  
-  //myEllipse->SetFillStyle(0);
-  //myEllipse->SetLineColor(kRed);
-  //myEllipse->Draw("same");
-  c1ELL->SaveAs("imagenes/MIS_Identification_KP.eps");
-
-  //---------- MM Kaon-Proton Correlation with cut ---------------//
-  
-  TCanvas *c1ELLC=new TCanvas("c1ELLC","Correlation of MM", 900, 500);
-  c1ELLC->cd(1);
-  h_MissingMass_vsMissingMasskaonproton[1]->SetTitleSize(0.045, "XY");  
-  h_MissingMass_vsMissingMasskaonproton[1]->Draw("colz");
-  //myEllipse->SetFillStyle(0);
-  //myEllipse->SetLineColor(kRed);
-  //myEllipse->Draw("same");
-  c1ELLC->SaveAs("imagenes/MIS_Identification_KP_C.eps");
-
-  
-  //---------- MM Pion-Kaon Correlation without cut ---------------//
+  //---------- MM Pion_0 Correlation without cut ---------------//
   
   TCanvas *c2ELL=new TCanvas("c2ELL","Correlation of MM", 900, 500);
   c2ELL->cd(1);
-  h_MissingMass_vsMissingMasspionkaon[0]->SetTitleSize(0.045, "XY");  
-  h_MissingMass_vsMissingMasspionkaon[0]->Draw("colz");
-  TLine *MMCorrLine2;
-  MMCorrLine2 = new TLine(0.7, 0.70,1.2, 0.70);
-  MMCorrLine2->SetLineWidth(2);
-  MMCorrLine2->SetLineColor(2);
-  MMCorrLine2->Draw("same");
-  
-  //myEllipse->SetFillStyle(0);
-  //myEllipse->SetLineColor(kRed);
-  //myEllipse->Draw("same");
-  c2ELL->SaveAs("imagenes/MIS_Identification_PiK.eps");
+  h_MissingMass_vsMissingMassPi0[0]->SetTitleSize(0.045, "XY");  
+  h_MissingMass_vsMissingMassPi0[0]->Draw("colz");
+  c2ELL->SaveAs("imagenes/MIS_Identification_Pi0.eps");
 
-  //---------- MM Pion-Kaon Correlation with cut ---------------//
+  //---------- MM Pion_0 Correlation with cut ---------------//
   
   TCanvas *c2ELLC=new TCanvas("c2ELLC","Correlation of MM", 900, 500);
   c2ELLC->cd(1);
-  h_MissingMass_vsMissingMasspionkaon[1]->SetTitleSize(0.045, "XY");  
-  h_MissingMass_vsMissingMasspionkaon[1]->Draw("colz");
-  //myEllipse->SetFillStyle(0);
-  //myEllipse->SetLineColor(kRed);
-  //myEllipse->Draw("same");
-  c2ELLC->SaveAs("imagenes/MIS_Identification_Pik_C.eps");
+  h_MissingMass_vsMissingMassPi0[1]->SetTitleSize(0.045, "XY");  
+  h_MissingMass_vsMissingMassPi0[1]->Draw("colz");
+  c2ELLC->SaveAs("imagenes/MIS_Identification_Pi0_C.eps");
 
   //----------- MM After Cuts for MM correlation ------- //
   
@@ -990,17 +971,20 @@ void Histograms::DoCanvas(){
   h_MissingMass->SetTitleSize(0.043, "XY");
   h_MissingMass->Draw();
   h_MissingMasscut->SetFillColor(kRed-7);
+  h_MissingMass_Lambda->SetFillColor(kGreen-7);
+  
   vector<TH1*> LHMM;
-  LHMM.push_back(h_MissingMass);
   LHMM.push_back(h_MissingMasscut);
+  LHMM.push_back(h_MissingMass_Lambda);
   gStyle->SetOptStat(110);
-  TPaveStateModify MMC0(h_MissingMass,h_MissingMasscut);
+  TPaveStateModify MMC0(h_MissingMass, LHMM);
   MMC0.BoxPosition(1.05, h_MissingMass->GetMaximum()/2, 1.2, h_MissingMass->GetMaximum()+100);
   MMC0.BoxTextSize(0.045);
   MMC0.BoxOptStat("em",2);
   MMC0.SaveChanges();
   h_MissingMasscut->Draw("same");
-
+  h_MissingMass_Lambda->Draw("same");
+ 
   c0MMC->SaveAs("imagenes/MissingMass_Kaon.eps");
   
   //------ MIS-identification ---//
@@ -1025,17 +1009,23 @@ void Histograms::DoCanvas(){
 
   TCanvas *c2MM=new TCanvas("c2MM","Missing mass", 1200, 500);
   c2MM->cd(1);
-  h_MissingMass_kaonproton->Draw();
+  h_MissingMass_pi0->Draw();
+  TLine *MMLinePi0;
+  MMLinePi0 = new TLine(0.03, 0.0,0.03, 17500);
+  MMLinePi0->SetLineWidth(2);
+  MMLinePi0->SetLineColor(2);
+  MMLinePi0->Draw("same");
+  c2MM->SaveAs("imagenes/MissingMass_Pi0.eps");
 
-  c2MM->SaveAs("imagenes/MissingMass_Proton.eps");
+  //------Missing mass Neutron after cuts---------------//
 
-  TCanvas *c3MM=new TCanvas("c3MM","Missing mass", 1200, 500);
-  c3MM->cd(1);
-  h_MissingMass_pionkaon->Draw();
+  TCanvas *cMMF=new TCanvas("cMMF","Missing mass neutron final", 1200, 500);
+  cMMF->cd(1);
+  h_MissingMassFinal_Neutron->Draw();
+  cMMF->SaveAs("imagenes/MissingMassFinalNeutron.eps");
 
-  c3MM->SaveAs("imagenes/MissingMass_PionK.eps");
-  
-  
+ 
+ 
   //------------ Missing Momentum -----------------//
   
   TCanvas *MMP=new TCanvas("MMP","Missing Momentum", 1450, 500);
@@ -1065,20 +1055,20 @@ void Histograms::DoCanvas(){
   
 
   
-  TCanvas *c312=new TCanvas("c312","Missing Momentum vs Missing Mass", 1450, 500);
-  c312->Divide(2,1);
+  TCanvas *c312=new TCanvas("c312","MM Neutron vs IM Sigma", 1450, 500);
   c312->cd(1);
-  h_MissingPvsIMMass[0]->SetLabelSize(0.05, "XY");
-  h_MissingPvsIMMass[0]->SetTitleSize(0.045, "XY");
-  h_MissingPvsIMMass[0]->Draw("colz");
-  
+  h_MissingMvsIMMass[0]->SetLabelSize(0.05, "XY");
+  h_MissingMvsIMMass[0]->SetTitleSize(0.045, "XY");
+  h_MissingMvsIMMass[0]->Draw("colz");
+  c312->SaveAs("imagenes/MMvsInvMassCorrelationSigma.eps");
 
-  c312->cd(2);
-  h_MissingPvsIMMass[1]->SetLabelSize(0.05, "XY");
-  h_MissingPvsIMMass[1]->SetTitleSize(0.045, "XY");
-  h_MissingPvsIMMass[1]->Draw("colz");
-  
-  c312->SaveAs("imagenes/MissingMomentumCorrelation.eps");
+  TCanvas *c314=new TCanvas("c314","MM Neutron vs IM Lambda", 1450, 500);
+  c314->cd(1);
+  h_MissingMvsIMMass[1]->SetLabelSize(0.05, "XY");
+  h_MissingMvsIMMass[1]->SetTitleSize(0.045, "XY");
+  h_MissingMvsIMMass[1]->Draw("colz");
+   
+  c314->SaveAs("imagenes/MMvsInvMassCorrelationLambda.eps");
 
 
   //-----------------Std Desviation Comparation------------------//
@@ -1136,13 +1126,35 @@ void Histograms::DoCanvas(){
   
   IVM->SaveAs("imagenes/InvariantMassComparation_Sigma.eps");
 
+  //-------Sigma Comparation------------------------------//
+  
+  TCanvas *IVMC = new TCanvas("IVMC","Invariant mass comparation", 900, 500);
+  IVMC->cd(1);
+  h_IMSigmaComparation[0]->SetLabelSize(0.045, "XY");
+  h_IMSigmaComparation[0]->SetTitleSize(0.043, "XY");
+  h_IMSigmaComparation[0]->Draw();
+  gStyle->SetOptStat("me");
+  h_IMSigmaComparation[1]->SetFillColor(kRed-7);
+  h_IMSigmaComparation[2]->SetFillColor(kGreen-7);
+  vector<TH1*> IVMCHistos;
+  IVMCHistos.push_back(h_IMSigmaComparation[1]);
+  IVMCHistos.push_back(h_IMSigmaComparation[2]);
+  TPaveStateModify IVMCStat(h_IMSigmaComparation[0], IVMCHistos);
+  IVMCStat.BoxOptStat("em", 2);
+  IVMCStat.BoxTextSize(0.04);
+  IVMCStat.BoxPosition(1.35,0.4*h_IMSigmaComparation[0]->GetMaximum(),1.5,h_IMSigmaComparation[0]->GetMaximum());
+  IVMCStat.SaveChanges();
+  h_IMSigmaComparation[1]->Draw("same");
+  h_IMSigmaComparation[2]->Draw("same");
+ 
+  IVMC->SaveAs("imagenes/IMSigmaComparation.eps");
   //-------------Momentum proton--------------//
   TCanvas *cMP=new TCanvas("cMP","Momentum proton", 900, 500);
   cMP->cd(1);
   h_MomentumProton->SetTitleSize(0.045, "XY");  
   h_MomentumProton->Draw();
   
-  cMP->SaveAs("imagenes/MomentumProton.eps");    
+  IVMC->SaveAs("imagenes/MomentumProton.eps");    
   
   //--------------Correlation Invariant masses (Lambda vs Sigma)----//
   TCanvas *cIMLS=new TCanvas("cIMLS","Correlation of Invariant masses", 900, 500);
@@ -1178,7 +1190,24 @@ void Histograms::DoCanvas(){
   h_CorrelationMMomentum->Draw("colz");
   
   cMMom->SaveAs("imagenes/CorrelationMissingMomentums.eps");
-  
+
+  // ensayo momentum vs beta
+   TCanvas *cMMomN=new TCanvas("cMMomN","Correlation Momentum", 900, 500);
+  cMMomN->cd(1);
+  h_BetaVsMomNeu->SetTitleSize(0.045, "XY");  
+  h_BetaVsMomNeu->Draw("colz");
+  TLine *CutDBLines[2]={};
+  CutDBLines[0] = new TLine(h_BetaVsMomNeu->GetMinimum(), 0.005,1.5, 0.005);
+  CutDBLines[1] = new TLine(h_BetaVsMomNeu->GetMinimum(), -0.005,1.5, -0.005);
+
+  CutDBLines[0]->SetLineWidth(2);
+  CutDBLines[1]->SetLineWidth(2);
+  CutDBLines[0]->SetLineColor(2);
+  CutDBLines[1]->SetLineColor(2);
+
+  CutDBLines[0]->Draw("same");
+  CutDBLines[1]->Draw("same");
+  cMMomN->SaveAs("imagenes/MomentumVsBetaNeutron.eps");
   
   //---------------Missing mass Sigma-----------------------//
   
