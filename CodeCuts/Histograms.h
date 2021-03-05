@@ -430,7 +430,7 @@ void Histograms::DoHistograms(){
 
   // Ensayo momentum vs beta
   h_BetaVsMomNeu = new TH2F(" h_BetaVsMomNeu",
-				     "; MM(K^{+}#pi^{-}p)[GeV/c^{2}];#Delta #Beta_{N}",
+				     "; Missing Momentum (#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c];#Delta #beta_{Neutron}",
 			    300, 0, 1.5, 300, -0.15, 0.15);
 
   
@@ -1149,12 +1149,13 @@ void Histograms::DoCanvas(){
  
   IVMC->SaveAs("imagenes/IMSigmaComparation.eps");
   //-------------Momentum proton--------------//
+
   TCanvas *cMP=new TCanvas("cMP","Momentum proton", 900, 500);
   cMP->cd(1);
   h_MomentumProton->SetTitleSize(0.045, "XY");  
   h_MomentumProton->Draw();
   
-  IVMC->SaveAs("imagenes/MomentumProton.eps");    
+  cMP->SaveAs("imagenes/MomentumProton.eps");    
   
   //--------------Correlation Invariant masses (Lambda vs Sigma)----//
   TCanvas *cIMLS=new TCanvas("cIMLS","Correlation of Invariant masses", 900, 500);
@@ -1192,7 +1193,7 @@ void Histograms::DoCanvas(){
   cMMom->SaveAs("imagenes/CorrelationMissingMomentums.eps");
 
   // ensayo momentum vs beta
-   TCanvas *cMMomN=new TCanvas("cMMomN","Correlation Momentum", 900, 500);
+  TCanvas *cMMomN=new TCanvas("cMMomN","Correlation Momentum", 900, 500);
   cMMomN->cd(1);
   h_BetaVsMomNeu->SetTitleSize(0.045, "XY");  
   h_BetaVsMomNeu->Draw("colz");
