@@ -520,12 +520,12 @@ void Histograms::DoHistograms(){
     int TotBins=(BinsFid*NSector)+NSector+1; 			//Size of the array xlow{}
     float Width=float(50)/BinsFid; 				//Width of each bin within fiducial region
     int Tot=TotBins;
-    vector<float> xlow(Tot+1); xlow[0]=-180;
+    vector<float> xlow(Tot); xlow[0]=-180;
     int it=0,i=1,itP = 0;
     if(BinsFid%2 == 0)
       it=0.5*BinsFid+1;
     itP = it;
-    while(it < Tot+itP){
+    while(it < Tot+itP-1){
       if((it%(BinsFid+1)) == 0)					//Coils regions
 	xlow[i]=xlow[i-1]+10;
       else
@@ -1714,12 +1714,60 @@ void Histograms::DoCanvasAsym(){
   AsymBB->Add(AsymG[0]);
   AsymBB->Add(AsymG[1]);
   AsymBB->Add(AsymG[2]);
+  AsymBB->GetHistogram()->GetYaxis()->SetRangeUser(-0.5,1);
   AsymBB->Draw("AP");
   AsymBB->GetXaxis()->SetTitle("cos(#theta^{cm}_{K^{+}})");
   AsymBB->GetYaxis()->SetTitle("#Sigma");
   cASMB->BuildLegend();
   cASMB->SaveAs("imagenes/SigmaAsymBin.eps");
 
+
+  TCanvas *cASMBSyE[3];
+  TGraphErrors *BinSysError[3];
+  vector<double> SysBin1, SysBinErrors1;
+  vector<double> SysBin2, SysBinErrors2;
+  vector<double> SysBin3, SysBinErrors3;
+      
+
+  for (UInt_t i = 0; i < Asym1.size(); i++) {
+    SysBin1.push_back(Asym1[i]-Asym2[i]);	SysBinErrors1.push_back(sqrt(pow(AsymE1[i],2)+pow(AsymE2[i],2)));
+    SysBin2.push_back(Asym1[i]-Asym3[i]);	SysBinErrors2.push_back(sqrt(pow(AsymE1[i],2)+pow(AsymE3[i],2)));
+    SysBin3.push_back(Asym2[i]-Asym3[i]);	SysBinErrors3.push_back(sqrt(pow(AsymE2[i],2)+pow(AsymE3[i],2)));
+  }
+
+
+
+  cASMBSyE[0] = new TCanvas("","",900,450);  
+  cASMBSyE[0]->cd(1);
+  BinSysError[0] = new TGraphErrors(SysBin1.size(),AvValue.data(),SysBin1.data(),Error.data(),SysBinErrors1.data());
+  BinSysError[0]->GetHistogram()->GetYaxis()->SetRangeUser(-1,1);
+  BinSysError[0]->SetTitle("");
+  BinSysError[0]->GetXaxis()->SetTitle("cos(#theta^{cm})");
+  BinSysError[0]->GetYaxis()->SetTitle("#Delta #Sigma");
+  BinSysError[0]->Draw("AP");
+  cASMBSyE[0]->SaveAs("imagenes/SigmaAsymBinSysErrors1_2.eps");
+
+  cASMBSyE[1] = new TCanvas("","",900,450);  
+  cASMBSyE[1]->cd(1);
+  BinSysError[1] = new TGraphErrors(SysBin2.size(),AvValue.data(),SysBin2.data(),Error.data(),SysBinErrors2.data());
+  BinSysError[1]->GetHistogram()->GetYaxis()->SetRangeUser(-1,1);
+  BinSysError[1]->SetTitle("");
+  BinSysError[1]->GetXaxis()->SetTitle("cos(#theta^{cm})");
+  BinSysError[1]->GetYaxis()->SetTitle("#Delta #Sigma");
+  BinSysError[1]->Draw("AP");
+  cASMBSyE[1]->SaveAs("imagenes/SigmaAsymBinSysErrors1_3.eps");
+
+  cASMBSyE[2] = new TCanvas("","",900,450);  
+  cASMBSyE[2]->cd(1);
+  BinSysError[2] = new TGraphErrors(SysBin3.size(),AvValue.data(),SysBin3.data(),Error.data(),SysBinErrors3.data());
+  BinSysError[2]->GetHistogram()->GetYaxis()->SetRangeUser(-1,1);
+  BinSysError[2]->SetTitle("");
+  BinSysError[2]->GetXaxis()->SetTitle("cos(#theta^{cm})");
+  BinSysError[2]->GetYaxis()->SetTitle("#Delta #Sigma");
+  BinSysError[2]->Draw("AP");
+  cASMBSyE[2]->SaveAs("imagenes/SigmaAsymBinSysErrors2_3.eps");
+  
+  
   TCanvas *cASM = new TCanvas("","",900,450);
   TGraphErrors *AsymM = new TGraphErrors(Asym1.size(),&(AvValue[0]),MaxL[2].data(),&(Error[0]),MaxLE[2].data());
   TMultiGraph *AsymT = new TMultiGraph();
@@ -1746,6 +1794,7 @@ void Histograms::DoCanvasAsym(){
     AsymME->SetTitle(Name.c_str());
     AsymME->GetXaxis()->SetTitle("cos(#theta^{cm}_{K^{+}})");
     AsymME->GetYaxis()->SetTitle("#Sigma");
+    AsymME->GetHistogram()->GetYaxis()->SetRangeUser(-0.5,1);
     AsymME->Draw("AP");
     string AsymS;
     AsymS = "imagenes/SigmaAsymMaxLike" + std::to_string(i) + ".eps";
