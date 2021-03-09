@@ -137,4 +137,8 @@ void HistoBinning::GetPoints(vector<double>& AvValue,vector<double>& Error){
 
 }
 
+vector<double> HistoBinning::GetPartitions(){
+  return Point;
+}
+
 #endif

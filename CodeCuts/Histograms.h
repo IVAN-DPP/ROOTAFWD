@@ -130,8 +130,11 @@ protected:
     
   //----Costheta-Kaon Boost-------------------//
   TH1F *h_CosThetaCM[3]                      		= {};
-  TH1F *h_CosThetaCM17[3]				= {};
+  TH1F *h_CosThetaCMT[6]				= {};
   double PARTCOSK[9]					= {};
+  vector<vector<double>> PART				= {};
+  vector<vector<double>> AvValueG			= {};
+  vector<vector<double>> ErrorG				= {};
   double PARTCOSK17[9]					= {};
   TH1F *h_Theta[3] 					= {};
   TH2F *h_CosThetaCorr[3]				= {};
@@ -162,6 +165,7 @@ public:
   Histograms(){}
   void DoHistograms();
   void DoCanvas();
+  void DoCanvasCosPart();
   void DoCanvasAsym();
 };
 
@@ -482,12 +486,15 @@ void Histograms::DoHistograms(){
   //--------------KaonCosTheta Boost-------------//
 
   h_CosThetaCM[0] = new TH1F("h_CosThetaCM[0]",";cos(#theta^{cm});Frequency", 100, -1, 1);
-  h_CosThetaCM[1] = new TH1F("h_CosThetaCM[1]",";cos(#theta^{cm});Frequency", 100, -1, 1);
+  h_CosThetaCM[1] = new TH1F("h_CosThetaCM[1]",";cos(#theta^{cm});Frequency", 900, -1, 1);
   h_CosThetaCM[2] = new TH1F("h_CosThetaCM[2]",";cos(#theta^{cm});Frequency", 100, -1, 1);
 
-  h_CosThetaCM17[0] = new TH1F("h_CosThetaCM17[0]",";cos(#theta^{cm});Frequency", 100, -1, 1);
-  h_CosThetaCM17[1] = new TH1F("h_CosThetaCM17[1]",";cos(#theta^{cm});Frequency", 100, -1, 1);
-  h_CosThetaCM17[2] = new TH1F("h_CosThetaCM17[2]",";cos(#theta^{cm});Frequency", 100, -1, 1);
+  h_CosThetaCMT[0] = new TH1F("h_CosThetaCMT[0]",";cos(#theta^{cm});Frequency", 900, -1, 1);
+  h_CosThetaCMT[1] = new TH1F("h_CosThetaCMT[1]",";cos(#theta^{cm});Frequency", 900, -1, 1);
+  h_CosThetaCMT[2] = new TH1F("h_CosThetaCMT[2]",";cos(#theta^{cm});Frequency", 900, -1, 1);
+  h_CosThetaCMT[3] = new TH1F("h_CosThetaCMT[3]",";cos(#theta^{cm});Frequency", 900, -1, 1);
+  h_CosThetaCMT[4] = new TH1F("h_CosThetaCMT[4]",";cos(#theta^{cm});Frequency", 900, -1, 1);
+  h_CosThetaCMT[5] = new TH1F("h_CosThetaCMT[5]",";cos(#theta^{cm});Frequency", 900, -1, 1);
 
   PARTCOSK17[0] = -0.7;		  PARTCOSK17[5] = 0.36;
   PARTCOSK17[1] = -0.36;	  PARTCOSK17[6] = 0.44;
@@ -496,11 +503,11 @@ void Histograms::DoHistograms(){
   PARTCOSK17[4] = 0.26;
 
   
-  PARTCOSK[0] = -0.7;		PARTCOSK[5] = 0.34;
-  PARTCOSK[1] = -0.38;	  	PARTCOSK[6] = 0.42;
-  PARTCOSK[2] = -0.08;	  	PARTCOSK[7] = 0.5;
-  PARTCOSK[3] = 0.01;	  	PARTCOSK[8] = 0.58;
-  PARTCOSK[4] = 0.24;	
+  PARTCOSK[0] = -0.31;		PARTCOSK[5] = 0.53;
+  PARTCOSK[1] = 0.009;	  	PARTCOSK[6] = 0.61;
+  PARTCOSK[2] = 0.21;	  	PARTCOSK[7] = 0.70;
+  PARTCOSK[3] = 0.34;	  	PARTCOSK[8] = 0.76;
+  PARTCOSK[4] = 0.44;	
   
   h_Theta[0] = new TH1F("h_ThetaCM[0]","Proton Cos_Theta Boost", 100 ,0 ,3.14159);
   h_Theta[1] = new TH1F("h_ThetaCM[1]","Kaon Cos_Theta Boost", 100 ,0 ,3.14159);
@@ -1422,80 +1429,23 @@ void Histograms::DoCanvas(){
 }
 
 
+void Histograms::DoCanvasCosPart(){
+
+  for (UInt_t i = 0; i < 6; i++) {
+    HistoBinning *BT = new HistoBinning(h_CosThetaCMT[i],10);
+    vector<double> AvValue, Error;
+    BT->DoHistoBinning();
+    BT->GetPoints(AvValue, Error);
+    AvValueG.push_back(AvValue);
+    ErrorG.push_back(Error);
+    PART.push_back(BT->GetPartitions());
+    PART[i].pop_back();
+    PART[i].erase(PART[i].begin(),PART[i].begin()+1);
+  }
+
+}
+
 void Histograms::DoCanvasAsym(){
-  
-  TCanvas *cTCM0 = new TCanvas("cTCM0","cos Theta proton Boost", 1450, 500);
-  cTCM0->cd(1);
-  h_CosThetaCM17[0]->Draw();
-  cTCM0->SaveAs("imagenes/ThetaProtonBoost17.eps");
-  
-  TCanvas *cTCM1 = new TCanvas("cTCM1","cos Theta Kaon Boost", 1450, 500);
-  HistoBinning *B = new HistoBinning(h_CosThetaCM17[1],10);
-  B->DoHistoBinning();
-  B->PrintLevel(2);
-  B->GetLatexTable("./CosBin17.tex", "Cos Theta Binning", "COST");
-  vector<double> AvValue17, Error17;
-  B->GetPoints(AvValue17,Error17);
-  cTCM1->cd(1);
-  h_CosThetaCM17[1]->Draw();
-
-  TLine *COSL17[9];
-  double MaxGraphCosK17 = h_CosThetaCM17[1]->GetMaximum();
-
-  COSL17[0] = new TLine(PARTCOSK17[0],0, PARTCOSK17[0],MaxGraphCosK17);
-  COSL17[1] = new TLine(PARTCOSK17[1],0, PARTCOSK17[1],MaxGraphCosK17);
-  COSL17[2] = new TLine(PARTCOSK17[2],0, PARTCOSK17[2],MaxGraphCosK17);
-  COSL17[3] = new TLine(PARTCOSK17[3],0, PARTCOSK17[3],MaxGraphCosK17);
-  COSL17[4] = new TLine(PARTCOSK17[4],0, PARTCOSK17[4],MaxGraphCosK17);
-  COSL17[5] = new TLine(PARTCOSK17[5],0, PARTCOSK17[5],MaxGraphCosK17);
-  COSL17[6] = new TLine(PARTCOSK17[6],0, PARTCOSK17[6],MaxGraphCosK17);
-  COSL17[7] = new TLine(PARTCOSK17[7],0, PARTCOSK17[7],MaxGraphCosK17);
-  COSL17[8] = new TLine(PARTCOSK17[8],0, PARTCOSK17[8],MaxGraphCosK17);
-  
-  COSL17[0]->Draw("same");
-  COSL17[1]->Draw("same");
-  COSL17[2]->Draw("same");
-  COSL17[3]->Draw("same");
-  COSL17[4]->Draw("same");
-  COSL17[5]->Draw("same");
-  COSL17[6]->Draw("same");
-  COSL17[7]->Draw("same");
-  COSL17[8]->Draw("same");
-
-  TText *TextCosK17[10];
-
-  TextCosK17[0] = new TText(AvValue17[0],MaxGraphCosK17/2,"Bin 1");
-  TextCosK17[1] = new TText(AvValue17[1],MaxGraphCosK17/2,"Bin 2");
-  TextCosK17[2] = new TText(AvValue17[2],MaxGraphCosK17/2,"Bin 3");
-  TextCosK17[3] = new TText(AvValue17[3],MaxGraphCosK17/2,"Bin 4");
-  TextCosK17[4] = new TText(AvValue17[4],MaxGraphCosK17/2,"Bin 5");
-  TextCosK17[5] = new TText(AvValue17[5],MaxGraphCosK17/2,"Bin 6");
-  TextCosK17[6] = new TText(AvValue17[6],MaxGraphCosK17/2,"Bin 7");
-  TextCosK17[7] = new TText(AvValue17[7],MaxGraphCosK17/2,"Bin 8");
-  TextCosK17[8] = new TText(AvValue17[8],MaxGraphCosK17/2,"Bin 9");
-  TextCosK17[9] = new TText(AvValue17[9],MaxGraphCosK17/2,"Bin 10");
-
-  TextCosK17[0]->SetTextAngle(90);	  TextCosK17[5]->SetTextAngle(90);
-  TextCosK17[1]->SetTextAngle(90);	  TextCosK17[6]->SetTextAngle(90);
-  TextCosK17[2]->SetTextAngle(90);	  TextCosK17[7]->SetTextAngle(90);
-  TextCosK17[3]->SetTextAngle(90);	  TextCosK17[8]->SetTextAngle(90);
-  TextCosK17[4]->SetTextAngle(90);	  TextCosK17[9]->SetTextAngle(90);
-	  
-
-  TextCosK17[0]->Draw("same");	  TextCosK17[5]->Draw("same");
-  TextCosK17[1]->Draw("same");	  TextCosK17[6]->Draw("same");
-  TextCosK17[2]->Draw("same");	  TextCosK17[7]->Draw("same");
-  TextCosK17[3]->Draw("same");	  TextCosK17[8]->Draw("same");
-  TextCosK17[4]->Draw("same");	  TextCosK17[9]->Draw("same");
-	  
-  
-  cTCM1->SaveAs("imagenes/ThetaKaonBoost17.eps");
-
-  TCanvas *cTCM2 = new TCanvas("cTCM2","cos Theta Sigma Boost", 1450, 500);
-  cTCM2->cd(1);
-  h_CosThetaCM17[2]->Draw();
-  cTCM2->SaveAs("imagenes/ThetaSigmaBoost17.eps");
-
   
   TCanvas *cCM0 = new TCanvas("cCM0","cos Theta proton Boost", 1450, 500);
   cCM0->cd(1);
@@ -1503,6 +1453,7 @@ void Histograms::DoCanvasAsym(){
   cCM0->SaveAs("imagenes/ThetaProtonBoost.eps");
 
   gStyle->SetOptStat("me");
+  
   TCanvas *cCM1 = new TCanvas("cCM1","cos Theta Kaon Boost", 1450, 500);
   HistoBinning *BB = new HistoBinning(h_CosThetaCM[1],10);
   BB->DoHistoBinning();
@@ -1569,6 +1520,63 @@ void Histograms::DoCanvasAsym(){
   h_CosThetaCM[2]->Draw();
   cCM2->SaveAs("imagenes/ThetaSigmaBoost.eps");
 
+
+  TCanvas *cCMT = new TCanvas("cCMT","cos Theta Kaon Boost", 1450, 500);
+  cCMT->Divide(2,3);
+  for (UInt_t i = 0; i < 6; i++) {
+    cCMT->cd(i+1);
+    h_CosThetaCMT[i]->Draw();
+    
+    TLine *COSLT[9];	
+    double MaxGraphCosKT = h_CosThetaCMT[i]->GetMaximum();
+  
+    COSLT[0] = new TLine(PART[i][0],0, PART[i][0], MaxGraphCosKT);
+    COSLT[1] = new TLine(PART[i][1],0, PART[i][1], MaxGraphCosKT);
+    COSLT[2] = new TLine(PART[i][2],0, PART[i][2], MaxGraphCosKT);
+    COSLT[3] = new TLine(PART[i][3],0, PART[i][3], MaxGraphCosKT);
+    COSLT[4] = new TLine(PART[i][4],0, PART[i][4], MaxGraphCosKT);
+    COSLT[5] = new TLine(PART[i][5],0, PART[i][5], MaxGraphCosKT);
+    COSLT[6] = new TLine(PART[i][6],0, PART[i][6], MaxGraphCosKT);
+    COSLT[7] = new TLine(PART[i][7],0, PART[i][7], MaxGraphCosKT);
+    COSLT[8] = new TLine(PART[i][8],0, PART[i][8], MaxGraphCosKT);
+  
+    COSLT[0]->Draw("same");
+    COSLT[1]->Draw("same");
+    COSLT[2]->Draw("same");
+    COSLT[3]->Draw("same");
+    COSLT[4]->Draw("same");
+    COSLT[5]->Draw("same");
+    COSLT[6]->Draw("same");
+    COSLT[7]->Draw("same");
+    COSLT[8]->Draw("same");
+
+    TText *TextCosKT[10];
+
+    TextCosKT[0] = new TText(AvValueG[i][0],MaxGraphCosKT/2,"Bin 1");
+    TextCosKT[1] = new TText(AvValueG[i][1],MaxGraphCosKT/2,"Bin 2");
+    TextCosKT[2] = new TText(AvValueG[i][2],MaxGraphCosKT/2,"Bin 3");
+    TextCosKT[3] = new TText(AvValueG[i][3],MaxGraphCosKT/2,"Bin 4");
+    TextCosKT[4] = new TText(AvValueG[i][4],MaxGraphCosKT/2,"Bin 5");
+    TextCosKT[5] = new TText(AvValueG[i][5],MaxGraphCosKT/2,"Bin 6");
+    TextCosKT[6] = new TText(AvValueG[i][6],MaxGraphCosKT/2,"Bin 7");
+    TextCosKT[7] = new TText(AvValueG[i][7],MaxGraphCosKT/2,"Bin 8");
+    TextCosKT[8] = new TText(AvValueG[i][8],MaxGraphCosKT/2,"Bin 9");
+    TextCosKT[9] = new TText(AvValueG[i][9],MaxGraphCosKT/2,"Bin 10");
+
+    TextCosKT[0]->SetTextAngle(90);	  TextCosKT[5]->SetTextAngle(90);
+    TextCosKT[1]->SetTextAngle(90);	  TextCosKT[6]->SetTextAngle(90);
+    TextCosKT[2]->SetTextAngle(90);	  TextCosKT[7]->SetTextAngle(90);
+    TextCosKT[3]->SetTextAngle(90);	  TextCosKT[8]->SetTextAngle(90);
+    TextCosKT[4]->SetTextAngle(90);	  TextCosKT[9]->SetTextAngle(90);
+	  
+
+    TextCosKT[0]->Draw("same");	  TextCosKT[5]->Draw("same");
+    TextCosKT[1]->Draw("same");	  TextCosKT[6]->Draw("same");
+    TextCosKT[2]->Draw("same");	  TextCosKT[7]->Draw("same");
+    TextCosKT[3]->Draw("same");	  TextCosKT[8]->Draw("same");
+    TextCosKT[4]->Draw("same");	  TextCosKT[9]->Draw("same");
+  }
+  cCMT->SaveAs("imagenes/ThetaKaonBinBoost.eps");
   
   TCanvas *cTH0 = new TCanvas("CTH0","Theta proton",1450,500);
   cTH0->Divide(1,3);
@@ -1627,13 +1635,13 @@ void Histograms::DoCanvasAsym(){
       double PPara=0, PPerp=0;
       int iPara=0, iPerp=0;
       
-      for(UInt_t j=0; j<MEASGamma[1.7].at(i).size(); j++){
-	if(MEASGamma[1.7][i][j]>0){
-	  PPara+=MEASGamma[1.7][i][j];
+      for(UInt_t j=0; j<MEASGamma[2.3].at(i).size(); j++){
+	if(MEASGamma[2.3][i][j]>0){
+	  PPara+=MEASGamma[2.3][i][j];
 	  iPara++;
 	}
 	else {
-	  PPerp+=abs(MEASGamma[1.7][i][j]);
+	  PPerp+=abs(MEASGamma[2.3][i][j]);
 	  iPerp++;
 	}
       }
@@ -1648,19 +1656,19 @@ void Histograms::DoCanvasAsym(){
       if(k == 0){
 	h_Asym1[i]->Draw();
 	h_Asym1[i]->Fit(FuncAsym);
-	Asym1.push_back(FuncAsym->GetParameter(3));
+	Asym1.push_back(FuncAsym->GetParameter(3)*25.0*TMath::DegToRad()/sin(25.0*TMath::DegToRad()));
 	AsymE1.push_back(FuncAsym->GetParError(3));
       }
       else if(k == 1){
 	h_Asym2[i]->Draw();
 	h_Asym2[i]->Fit(FuncAsym);
-	Asym2.push_back(FuncAsym->GetParameter(3));
+	Asym2.push_back(FuncAsym->GetParameter(3)*12.5*TMath::DegToRad()/sin(12.5*TMath::DegToRad()));
 	AsymE2.push_back(FuncAsym->GetParError(3));
       }
       else {
 	h_Asym3[i]->Draw();
 	h_Asym3[i]->Fit(FuncAsym);
-	Asym3.push_back(FuncAsym->GetParameter(3));
+	Asym3.push_back(FuncAsym->GetParameter(3)*8.33*TMath::DegToRad()/sin(8.33*TMath::DegToRad()));
 	AsymE3.push_back(FuncAsym->GetParError(3));
       }
 
@@ -1701,20 +1709,22 @@ void Histograms::DoCanvasAsym(){
     it++;
   }
 
+  // -------- Delta Phi Binning Comparation ------ //
+  
   TCanvas *cASMB = new TCanvas("","",900,450);
   cASMB->cd(1);
   TMultiGraph *AsymBB = new TMultiGraph();
   TGraphErrors *AsymG[3];
-  AsymG[0] = new TGraphErrors(Asym1.size(),&(AvValue[0]),&(Asym1[0]),&(Error[0]),&(AsymE1[0]));
-  AsymG[1] = new TGraphErrors(Asym2.size(),&(AvValue[0]),&(Asym2[0]),&(Error[0]),&(AsymE2[0]));
-  AsymG[2] = new TGraphErrors(Asym3.size(),&(AvValue[0]),&(Asym3[0]),&(Error[0]),&(AsymE3[0]));
-  AsymG[0]->SetTitle("19 Bins"); AsymG[0]->SetLineColor(kBlue);
-  AsymG[1]->SetTitle("31 Bins"); AsymG[1]->SetLineColor(kRed);
-  AsymG[2]->SetTitle("43 Bins"); AsymG[2]->SetLineColor(kGreen);
+  AsymG[0] = new TGraphErrors(Asym1.size(),&(AvValueG[5][0]),&(Asym1[0]),&(ErrorG[5][0]),&(AsymE1[0]));
+  AsymG[1] = new TGraphErrors(Asym2.size(),&(AvValueG[5][0]),&(Asym2[0]),&(ErrorG[5][0]),&(AsymE2[0]));
+  AsymG[2] = new TGraphErrors(Asym3.size(),&(AvValueG[5][0]),&(Asym3[0]),&(ErrorG[5][0]),&(AsymE3[0]));
+  AsymG[0]->SetTitle("#Delta #phi = 25.0^{#circ}"); AsymG[0]->SetLineColor(kBlue);
+  AsymG[1]->SetTitle("#Delta #phi = 12.5^{#circ}"); AsymG[1]->SetLineColor(kRed);
+  AsymG[2]->SetTitle("#Delta #phi = 8.3^{#circ}"); AsymG[2]->SetLineColor(kGreen);
   AsymBB->Add(AsymG[0]);
   AsymBB->Add(AsymG[1]);
   AsymBB->Add(AsymG[2]);
-  AsymBB->GetHistogram()->GetYaxis()->SetRangeUser(-0.5,1);
+  AsymBB->GetHistogram()->GetYaxis()->SetRangeUser(-1,1);
   AsymBB->Draw("AP");
   AsymBB->GetXaxis()->SetTitle("cos(#theta^{cm}_{K^{+}})");
   AsymBB->GetYaxis()->SetTitle("#Sigma");
@@ -1722,6 +1732,8 @@ void Histograms::DoCanvasAsym(){
   cASMB->SaveAs("imagenes/SigmaAsymBin.eps");
 
 
+  // -------- Delta Phi Binning Systematic Errors ------ //
+  
   TCanvas *cASMBSyE[3];
   TGraphErrors *BinSysError[3];
   vector<double> SysBin1, SysBinErrors1;
@@ -1736,65 +1748,154 @@ void Histograms::DoCanvasAsym(){
   }
 
 
-
+  TF1 *FitBinnError1[3];
+  FitBinnError1[0]	= new TF1("E1","[0]",-1,1);
+  FitBinnError1[0]->SetParNames("#Delta #Sigma _{syst}");
+  
   cASMBSyE[0] = new TCanvas("","",900,450);  
   cASMBSyE[0]->cd(1);
-  BinSysError[0] = new TGraphErrors(SysBin1.size(),AvValue.data(),SysBin1.data(),Error.data(),SysBinErrors1.data());
-  BinSysError[0]->GetHistogram()->GetYaxis()->SetRangeUser(-1,1);
+  BinSysError[0] = new TGraphErrors(SysBin1.size(),AvValueG[5].data(),SysBin1.data(),ErrorG[5].data(),SysBinErrors1.data());
+  BinSysError[0]->GetHistogram()->GetYaxis()->SetRangeUser(-0.5,0.5);
   BinSysError[0]->SetTitle("");
   BinSysError[0]->GetXaxis()->SetTitle("cos(#theta^{cm})");
   BinSysError[0]->GetYaxis()->SetTitle("#Delta #Sigma");
   BinSysError[0]->Draw("AP");
+  BinSysError[0]->Fit(FitBinnError1[0]);
+  string FitErrorsBin1 = FitBinnError1[0]->GetName();
+  FitErrorsBin1 = FitErrorsBin1 + "+" + std::to_string(FitBinnError1[0]->GetParError(0));
+  FitBinnError1[1] = new TF1("ER1",FitErrorsBin1.c_str(),-1,1);
+  FitErrorsBin1 = FitBinnError1[0]->GetName();
+  FitErrorsBin1 = FitErrorsBin1 + "-" + std::to_string(FitBinnError1[0]->GetParError(0));
+  FitBinnError1[2] = new TF1("ER1",FitErrorsBin1.c_str(),-1,1);
+
+  FitBinnError1[1]->SetLineStyle(2);
+  FitBinnError1[2]->SetLineStyle(2);
+  FitBinnError1[1]->Draw("same");
+  FitBinnError1[2]->Draw("same");
+  FitBinnError1[0]->Draw("same");
   cASMBSyE[0]->SaveAs("imagenes/SigmaAsymBinSysErrors1_2.eps");
+
+  TF1 *FitBinnError2[3];
+  FitBinnError2[0]	= new TF1("E1","[0]",-1,1);
+  FitBinnError2[0]->SetParNames("#Delta #Sigma _{syst}");
+  
 
   cASMBSyE[1] = new TCanvas("","",900,450);  
   cASMBSyE[1]->cd(1);
-  BinSysError[1] = new TGraphErrors(SysBin2.size(),AvValue.data(),SysBin2.data(),Error.data(),SysBinErrors2.data());
-  BinSysError[1]->GetHistogram()->GetYaxis()->SetRangeUser(-1,1);
+  BinSysError[1] = new TGraphErrors(SysBin2.size(),AvValueG[5].data(),SysBin2.data(),ErrorG[5].data(),SysBinErrors2.data());
+  BinSysError[1]->GetHistogram()->GetYaxis()->SetRangeUser(-0.5,0.5);
   BinSysError[1]->SetTitle("");
   BinSysError[1]->GetXaxis()->SetTitle("cos(#theta^{cm})");
   BinSysError[1]->GetYaxis()->SetTitle("#Delta #Sigma");
   BinSysError[1]->Draw("AP");
+  BinSysError[1]->Fit(FitBinnError2[0]);
+  string FitErrorsBin2 = FitBinnError2[0]->GetName();
+  FitErrorsBin2 = FitErrorsBin2 + "+" + std::to_string(FitBinnError2[0]->GetParError(0));
+  FitBinnError2[1] = new TF1("ER1",FitErrorsBin2.c_str(),-1,1);
+  FitErrorsBin2 = FitBinnError2[0]->GetName();
+  FitErrorsBin2 = FitErrorsBin2 + "-" + std::to_string(FitBinnError2[0]->GetParError(0));
+  FitBinnError2[2] = new TF1("ER1",FitErrorsBin2.c_str(),-1,1);
+
+  FitBinnError2[1]->SetLineStyle(2);
+  FitBinnError2[2]->SetLineStyle(2);
+  FitBinnError2[1]->Draw("same");
+  FitBinnError2[2]->Draw("same");
+  FitBinnError2[0]->Draw("same");
+  
   cASMBSyE[1]->SaveAs("imagenes/SigmaAsymBinSysErrors1_3.eps");
 
+  TF1 *FitBinnError3[3];
+  FitBinnError3[0]	= new TF1("E1","[0]",-1,1);
+  FitBinnError3[0]->SetParNames("#Delta #Sigma _{syst}");
+  
   cASMBSyE[2] = new TCanvas("","",900,450);  
   cASMBSyE[2]->cd(1);
-  BinSysError[2] = new TGraphErrors(SysBin3.size(),AvValue.data(),SysBin3.data(),Error.data(),SysBinErrors3.data());
-  BinSysError[2]->GetHistogram()->GetYaxis()->SetRangeUser(-1,1);
+  BinSysError[2] = new TGraphErrors(SysBin3.size(),AvValueG[5].data(),SysBin3.data(),ErrorG[5].data(),SysBinErrors3.data());
+  BinSysError[2]->GetHistogram()->GetYaxis()->SetRangeUser(-0.5,0.5);
   BinSysError[2]->SetTitle("");
   BinSysError[2]->GetXaxis()->SetTitle("cos(#theta^{cm})");
   BinSysError[2]->GetYaxis()->SetTitle("#Delta #Sigma");
   BinSysError[2]->Draw("AP");
+  BinSysError[2]->Fit(FitBinnError3[0]);
+  string FitErrorsBin3 = FitBinnError3[0]->GetName();
+  FitErrorsBin3 = FitErrorsBin3 + "+" + std::to_string(FitBinnError3[0]->GetParError(0));
+  FitBinnError3[1] = new TF1("ER1",FitErrorsBin3.c_str(),-1,1);
+  FitErrorsBin3 = FitBinnError3[0]->GetName();
+  FitErrorsBin3 = FitErrorsBin3 + "-" + std::to_string(FitBinnError3[0]->GetParError(0));
+  FitBinnError3[2] = new TF1("ER1",FitErrorsBin3.c_str(),-1,1);
+
+  FitBinnError3[1]->SetLineStyle(2);
+  FitBinnError3[2]->SetLineStyle(2);
+  FitBinnError3[1]->Draw("same");
+  FitBinnError3[2]->Draw("same");
+  FitBinnError3[0]->Draw("same");
+  
   cASMBSyE[2]->SaveAs("imagenes/SigmaAsymBinSysErrors2_3.eps");
   
+  // ------ Max Like Binning method comparation ---- //
   
   TCanvas *cASM = new TCanvas("","",900,450);
-  TGraphErrors *AsymM = new TGraphErrors(Asym1.size(),&(AvValue[0]),MaxL[2].data(),&(Error[0]),MaxLE[2].data());
+  TGraphErrors *AsymM = new TGraphErrors(Asym1.size(),&(AvValueG[5][0]),MaxL[5].data(),&(ErrorG[5][0]),MaxLE[5].data());
   TMultiGraph *AsymT = new TMultiGraph();
   AsymM->SetLineColor(kBlack);
   AsymM->SetTitle("Max Like");
   AsymT->Add(AsymG[0]);
-  AsymT->Add(AsymG[1]);
-  AsymT->Add(AsymG[2]);
   AsymT->Add(AsymM);
   AsymT->Draw("AP");
   AsymT->GetXaxis()->SetTitle("cos(#theta^{cm}_{K^{+}})");
   AsymT->GetYaxis()->SetTitle("#Sigma");
+  AsymT->GetHistogram()->GetYaxis()->SetRangeUser(-1,1);
   cASM->BuildLegend();
   cASM->SaveAs("imagenes/SigmaAsymBinMaxLike.eps");
 
+  // ------ Max Like Binning method comparation ---- //
+
+  vector<double> SysMaxL1, SysMaxLErrors1;      
+
+  for (UInt_t i = 0; i < Asym1.size(); i++) {
+    SysMaxL1.push_back(Asym1[i]-MaxL[5][i]);	SysMaxLErrors1.push_back(sqrt(pow(AsymE1[i],2)+pow(MaxLE[5][i],2)));
+  }
+
+  TF1 *FitMaxLError[3];
+  FitMaxLError[0]	= new TF1("E1","[0]",-1,1);
+  FitMaxLError[0]->SetParNames("#Delta #Sigma _{syst}");
+  
+  TCanvas *cMAXSys= new TCanvas("","",900,450);  
+  cMAXSys->cd(1);
+  TGraphErrors *MaxLSysError = new TGraphErrors(SysMaxL1.size(),AvValueG[5].data(),SysMaxL1.data(),ErrorG[5].data(),SysMaxLErrors1.data());
+  MaxLSysError->GetHistogram()->GetYaxis()->SetRangeUser(-0.5,0.5);
+  MaxLSysError->SetTitle("");
+  MaxLSysError->GetXaxis()->SetTitle("cos(#theta^{cm})");
+  MaxLSysError->GetYaxis()->SetTitle("#Delta #Sigma");
+  MaxLSysError->Draw("AP");
+  MaxLSysError->Fit(FitMaxLError[0]);
+  string FitErrorsMaxL = FitMaxLError[0]->GetName();
+  FitErrorsMaxL = FitErrorsMaxL + "+" + std::to_string(FitMaxLError[0]->GetParError(0));
+  FitMaxLError[1] = new TF1("ER1",FitErrorsMaxL.c_str(),-1,1);
+  FitErrorsMaxL = FitMaxLError[0]->GetName();
+  FitErrorsMaxL = FitErrorsMaxL + "-" + std::to_string(FitMaxLError[0]->GetParError(0));
+  FitMaxLError[2] = new TF1("ER1",FitErrorsMaxL.c_str(),-1,1);
+
+  FitMaxLError[1]->SetLineStyle(2);
+  FitMaxLError[2]->SetLineStyle(2);
+  FitMaxLError[1]->Draw("same");
+  FitMaxLError[2]->Draw("same");
+  FitMaxLError[0]->Draw("same");
+  cMAXSys->SaveAs("imagenes/SigmaAsymBinMaxLikeSys.eps");
+
+  
   TCanvas *cASME[6];
   float BimEn = 1.3;
 
   for (UInt_t i = 0; i < 6; i++) {
     cASME [i] = new TCanvas("","",900,450);
-    TGraphErrors *AsymME = new TGraphErrors(Asym1.size(),&(AvValue[0]),MaxL[i].data(),&(Error[0]),MaxLE[i].data());
+    TGraphErrors *AsymME = new TGraphErrors(Asym1.size(),&(AvValueG[i][0]),MaxL[i].data(),&(ErrorG[i][0]),MaxLE[i].data());
     string Name;
     Name = "Max Like " + std::to_string(BimEn);
     AsymME->SetTitle(Name.c_str());
     AsymME->GetXaxis()->SetTitle("cos(#theta^{cm}_{K^{+}})");
     AsymME->GetYaxis()->SetTitle("#Sigma");
-    AsymME->GetHistogram()->GetYaxis()->SetRangeUser(-0.5,1);
+    AsymME->GetHistogram()->GetYaxis()->SetRangeUser(-1,1);
     AsymME->Draw("AP");
     string AsymS;
     AsymS = "imagenes/SigmaAsymMaxLike" + std::to_string(i) + ".eps";
@@ -1802,8 +1903,6 @@ void Histograms::DoCanvasAsym(){
     BimEn+=0.2;
   }
 
-
-  
 }
 
 //***************** Friend Functions ******************** //

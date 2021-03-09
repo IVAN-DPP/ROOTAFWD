@@ -38,6 +38,7 @@ public:
   void PrintLevel(UInt_t);
   void GetLatexTable(string,string,string);
   void GetPoints(vector<double> &,vector<double> &);
+  vector<double> GetPartitions();
 };
 
 
