@@ -419,6 +419,14 @@ void Codecuts::CodeCuts(){
     h_DeltaBVSMissingMass->Fill(MMNeut_kaon.M(),deltbeta[2]);
     h_DeltaBVSMissingMomentum->Fill(MMNeut_kaon.P(),deltbeta[2]);
 
+
+    if(myDataList->getCoh_edge_nom() == float(1.3)) h_InvariantMassEnergy[0]->Fill(Sigma.M());
+    else if(myDataList->getCoh_edge_nom() == float(1.5)) h_InvariantMassEnergy[1]->Fill(Sigma.M());
+    else if(myDataList->getCoh_edge_nom() == float(1.7)) h_InvariantMassEnergy[2]->Fill(Sigma.M());
+    else if(myDataList->getCoh_edge_nom() == float(1.9)) h_InvariantMassEnergy[3]->Fill(Sigma.M());
+    else if(myDataList->getCoh_edge_nom() == float(2.1)) h_InvariantMassEnergy[4]->Fill(Sigma.M());
+    else if(myDataList->getCoh_edge_nom() == float(2.3)) h_InvariantMassEnergy[5]->Fill(Sigma.M());
+    
     //------------Momentum proton----------------.//
     h_MomentumProton->Fill(proton.P());
     //-----------------BOOST------------------------------//
