@@ -1488,11 +1488,21 @@ void Histograms::DoCanvas(){
 
 void Histograms::DoCanvasCosPart(){
 
+  double Energy=1.3;
+
   for (UInt_t i = 0; i < 6; i++) {
     HistoBinning *BT = new HistoBinning(h_CosThetaCMT[i],10);
     vector<double> AvValue, Error;
     BT->DoHistoBinning();
     BT->GetPoints(AvValue, Error);
+    string Path = "./CosBin_"+to_string(i)+".tex";
+    stringstream E1,E2;
+    E1 << fixed << setprecision(2) << Energy-0.2;
+    E2 << fixed << setprecision(2) << Energy;
+    string Caption  = "Tamaño y cantidad de eventos por cada partición realizada en $\\cos{\\theta^{cm}_{K^{+}}}$ en un rango de energias de $E_{\\gamma} = " + E1.str() + "-" + E2.str() + "$ GeV";
+    string Label = "CosBin"+to_string(i);
+    BT->GetLatexTable(Path,Caption,Label);
+    Energy+=0.2;
     AvValueG.push_back(AvValue);
     ErrorG.push_back(Error);
     PART.push_back(BT->GetPartitions());
@@ -1919,6 +1929,17 @@ void Histograms::DoCanvasAsym(){
   cASM->BuildLegend();
   cASM->SaveAs("imagenes/SigmaAsymBinMaxLike.eps");
 
+  // fstream OutMax;	OutMax.open("MaxLikeLamb.txt",ios::out);
+
+  // for (UInt_t i = 0; i < 10; i++) 
+  //   OutMax << AvValueG[5][i] 	<< "\t"
+  // 	   << MaxL[5][i]	<< "\t"
+  // 	   << ErrorG[5][i]	<< "\t"
+  // 	   << MaxLE[5][i]	<< endl;
+
+  // OutMax.close();
+
+  
   // ------ Max Like Binning method comparation ---- //
 
   vector<double> SysMaxL1, SysMaxLErrors1;      
@@ -1960,8 +1981,11 @@ void Histograms::DoCanvasAsym(){
   for (UInt_t i = 0; i < 6; i++) {
     cASME [i] = new TCanvas("","",900,450);
     TGraphErrors *AsymME = new TGraphErrors(Asym1.size(),&(AvValueG[i][0]),MaxL[i].data(),&(ErrorG[i][0]),MaxLE[i].data());
+    stringstream E1, E2;
+    E1 << fixed << setprecision(2) << BimEn-0.2;
+    E2 << fixed << setprecision(2) << BimEn;
     string Name;
-    Name = "Max Like " + std::to_string(BimEn);
+    Name = "E_{#gamma} = " + E1.str() + "-" + E2.str() + " GeV";
     AsymME->SetTitle(Name.c_str());
     AsymME->GetXaxis()->SetTitle("cos(#theta^{cm}_{K^{+}})");
     AsymME->GetYaxis()->SetTitle("#Sigma");

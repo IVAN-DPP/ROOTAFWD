@@ -93,7 +93,7 @@ void HistoBinning::GetLatexTable(string Path,string Caption,string Label){
   cout << setprecision(2);
   fstream LTXT;
   LTXT.open(Path,ios::out);
-  
+  LTXT << setprecision(2);
   LTXT << "\\begin{table}[H]" << endl
        << "\t\\centering"       << endl
        << "\t\\begin{tabular}{|c|c|c|}" << endl
@@ -103,7 +103,7 @@ void HistoBinning::GetLatexTable(string Path,string Caption,string Label){
   for (UInt_t i = 0; i < Events.size(); i++) {
     LTXT << "\t\t" << i+1 << "\t&"
 	 << "$" <<Point[i] << "\\leq\\cos{\\theta^{cm}_{K^+}}\\leq" << Point[i+1] << "$" << "\t&"
-	 << "$" <<Events[i] << "$"<< "\t\\\\ \\hline\n";
+	 << "$" <<int(Events[i]) << "$"<< "\t\\\\ \\hline\n";
   }
 
 
