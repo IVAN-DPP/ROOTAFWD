@@ -20,6 +20,9 @@ using namespace std;
 void LinesPTCuts();
 void NameLinesInv(double, double, int, int);
 Double_t fitf(Double_t *,Double_t *);
+Double_t BreitWignerF(Double_t *,Double_t *);
+//Double_t LinealF(Double_t *,Double_t *);
+//Double_t FitFunction(Double_t *,Double_t *);
 class Histograms{
   //Friends Functions
   friend void LinesPTCuts();       //Functions for do the lines in Theta-Phi Correlations
@@ -69,7 +72,6 @@ protected:
 
   TH1F *h_MissingMass_kaonpion            		= NULL;
   TH1F *h_MissingMass_pi0             			= NULL;
-  TH1F *h_MissingMass_Pion				= NULL;
   TH1F *h_MissingMass_Lambda				= NULL;
   TH1F *h_MissingP[2]                      		= {};
   TH1F *h_MissingPcut[2]                   		= {};
@@ -79,6 +81,8 @@ protected:
 
   TH1F *h_InvariantMass                   		= NULL;
   TH1F *h_InvariantMasscut[4]                		= {};
+  TH1F *h_InvariantMassEnergy[6]			= {};
+  TF1  *FitBreitWigner					= NULL;
   TH1F *h_IMSigmaComparation[3]				= {};
   TH1F *h_MissingMassFinal_Neutron			= NULL;
 
@@ -301,9 +305,6 @@ void Histograms::DoHistograms(){
 				       " ; MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
 				       100, 0.7, 1.2);
 
-   h_MissingMass_Pion = new TH1F(" h_MissingMass_Pion",
-				       " ; MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
-				       100, 0.7, 1.2);
  
    h_MissingMass_Lambda  = new TH1F("h_MissingMass_Lambda",
 				       " ; MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
@@ -312,7 +313,7 @@ void Histograms::DoHistograms(){
    h_MissingMassFinal_Neutron = new TH1F("h_MissingMassFinal_Neutron",
 				       " ; MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]; Frequency",
 				       100, 0.7, 1.2);
-  
+
 
   h_MissingMass_vsMissingMasskaonpion[0] = new TH2F("MissingMass_correlationKaonPion",
 						    "; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}];  MM(#gamma d #rightarrow #pi^{+} #pi^{-} X p) [GeV/c^{2}]",
@@ -343,9 +344,8 @@ void Histograms::DoHistograms(){
   h_MissingPcut[1] = new TH1F("h_missingpcutLambda",
 			      "; Missing momentum (#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c]; Frequency",
 			      100, 0.0, 1.5);
-  
-  
-  h_MissingMvsIMMass[0] = new TH2F("h_missingMvsmSigma",
+
+    h_MissingMvsIMMass[0] = new TH2F("h_missingMvsmSigma",
 				 "; IM(#pi^{-} n) [GeV/c^{2}]; MM(#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c^{2}]",
 				 200, 1.0, 1.5, 200, 0.7, 1.2);
 
@@ -399,6 +399,35 @@ void Histograms::DoHistograms(){
 				   "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
 				   100, 1.0, 1.5);
 
+  //---------Invariant mass for each energy-----------//
+
+  h_InvariantMassEnergy[0] = new TH1F("h_InvariantMassEnergy[0]",
+				      "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
+				      100, 1.0, 1.5);
+
+  h_InvariantMassEnergy[1] = new TH1F("h_InvariantMassEnergy[1]",
+				      "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
+				      100, 1.0, 1.5);
+    
+  h_InvariantMassEnergy[2] = new TH1F("h_InvariantMassEnergy[2]",
+				      "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
+				      100, 1.0, 1.5);
+
+  h_InvariantMassEnergy[3] = new TH1F("h_InvariantMassEnergy[3]",
+				      "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
+				      100, 1.0, 1.5);
+
+  h_InvariantMassEnergy[4] = new TH1F("h_InvariantMassEnergy[4]",
+				      "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
+				      100, 1.0, 1.5);
+
+  h_InvariantMassEnergy[5] = new TH1F("h_InvariantMassEnergy[5]",
+				      "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
+				      100, 1.0, 1.5);
+  FitBreitWigner = new TF1("BreitWignerF", BreitWignerF, 1.0, 1.5, 2);
+  FitBreitWigner->SetParameter(0,1.0);     FitBreitWigner->SetParName(0,"const");
+  FitBreitWigner->SetParameter(1,2.0);     FitBreitWigner->SetParName(1,"sigma");
+  FitBreitWigner->SetParameter(1,2.0);    FitBreitWigner->SetParName(2,"mean");
   //----------Momentum proton---------------//
   
    h_MomentumProton = new TH1F("h_MomentumProton",
@@ -1162,7 +1191,6 @@ void Histograms::DoCanvas(){
   cMMF->cd(1);
   h_MissingMassFinal_Neutron->Draw();
   cMMF->SaveAs("imagenes/MissingMassFinalNeutron.eps");
-
  
  
   //------------ Missing Momentum -----------------//
@@ -1398,6 +1426,35 @@ void Histograms::DoCanvas(){
   
   IVMF->SaveAs("imagenes/InvariantMassFinall_Sigma.eps");
 
+  //------------- Invariant mass for each energy--------------//
+  TCanvas *IVMFE = new TCanvas("IVMFE","Invariant mass for 1.3 GeV", 1450, 900);
+  IVMFE->Divide(3,2);
+  gStyle->SetOptStat("me");
+  IVMFE->cd(1);
+  h_InvariantMassEnergy[0]->SetTitle("E_{#gamma}=1.1-1.3 GeV");
+  h_InvariantMassEnergy[0]->Draw();
+  h_InvariantMassEnergy[0]->Fit("BreitWignerF","QR");
+  FitBreitWigner->Draw("same");
+  IVMFE->cd(2);
+  h_InvariantMassEnergy[1]->SetTitle("E_{#gamma}=1.3-1.5 GeV");
+  h_InvariantMassEnergy[1]->Draw();
+  IVMFE->cd(3);
+  h_InvariantMassEnergy[2]->SetTitle("E_{#gamma}=1.5-1.7 GeV");
+  h_InvariantMassEnergy[2]->Draw();
+  IVMFE->cd(4);
+  h_InvariantMassEnergy[3]->SetTitle("E_{#gamma}=1.7-1.9 GeV");
+  h_InvariantMassEnergy[3]->Draw();
+  IVMFE->cd(5);
+  h_InvariantMassEnergy[4]->SetTitle("E_{#gamma}=1.9-2.1 GeV");
+  h_InvariantMassEnergy[4]->Draw();
+  IVMFE->cd(6);
+  h_InvariantMassEnergy[5]->SetTitle("E_{#gamma}=2.1-2.3 GeV");
+  h_InvariantMassEnergy[5]->Draw();
+    
+  IVMFE->SaveAs("imagenes/InvariantMassFinall_E13.eps");
+
+  
+
 
   //------------- Others ---------------- //
   
@@ -1431,11 +1488,21 @@ void Histograms::DoCanvas(){
 
 void Histograms::DoCanvasCosPart(){
 
+  double Energy=1.3;
+
   for (UInt_t i = 0; i < 6; i++) {
     HistoBinning *BT = new HistoBinning(h_CosThetaCMT[i],10);
     vector<double> AvValue, Error;
     BT->DoHistoBinning();
     BT->GetPoints(AvValue, Error);
+    string Path = "./CosBin_"+to_string(i)+".tex";
+    stringstream E1,E2;
+    E1 << fixed << setprecision(2) << Energy-0.2;
+    E2 << fixed << setprecision(2) << Energy;
+    string Caption  = "Tamaño y cantidad de eventos por cada partición realizada en $\\cos{\\theta^{cm}_{K^{+}}}$ en un rango de energias de $E_{\\gamma} = " + E1.str() + "-" + E2.str() + "$ GeV";
+    string Label = "CosBin"+to_string(i);
+    BT->GetLatexTable(Path,Caption,Label);
+    Energy+=0.2;
     AvValueG.push_back(AvValue);
     ErrorG.push_back(Error);
     PART.push_back(BT->GetPartitions());
@@ -1521,7 +1588,8 @@ void Histograms::DoCanvasAsym(){
   cCM2->SaveAs("imagenes/ThetaSigmaBoost.eps");
 
 
-  TCanvas *cCMT = new TCanvas("cCMT","cos Theta Kaon Boost", 1450, 500);
+  TCanvas *cCMT = new TCanvas("cCMT","cos Theta Kaon Boost", 1450, 900);
+  Double_t Energy=1.3;
   cCMT->Divide(2,3);
   for (UInt_t i = 0; i < 6; i++) {
     cCMT->cd(i+1);
@@ -1575,7 +1643,16 @@ void Histograms::DoCanvasAsym(){
     TextCosKT[2]->Draw("same");	  TextCosKT[7]->Draw("same");
     TextCosKT[3]->Draw("same");	  TextCosKT[8]->Draw("same");
     TextCosKT[4]->Draw("same");	  TextCosKT[9]->Draw("same");
+    
+    stringstream Energy1, Energy2;
+    Energy1 << fixed <<setprecision(2) << Energy-0.2;
+    Energy2 << fixed <<setprecision(2) << Energy;
+    string name;
+    name="E_{#gamma}="+Energy1.str()+"-"+Energy2.str()+" Gev";
+    h_CosThetaCMT[i]->SetTitle(name.c_str());
+    Energy+=0.2;
   }
+ 
   cCMT->SaveAs("imagenes/ThetaKaonBinBoost.eps");
   
   TCanvas *cTH0 = new TCanvas("CTH0","Theta proton",1450,500);
@@ -1674,12 +1751,16 @@ void Histograms::DoCanvasAsym(){
 
       h_Asym1[i]->GetXaxis()->SetTitle("Azimuthal Angle  #phi #circ (Lab)");
       h_Asym1[i]->GetYaxis()->SetTitle("(N_{PARA}-N_{PERP})/(N_{PARA}+N_{PERP})");
+      h_Asym1[i]->GetYaxis()->SetRangeUser(-1.0, 1.0);
       h_Asym1[i]->SetTitle(" ");
+      
       h_Asym2[i]->GetXaxis()->SetTitle("Azimuthal Angle  #phi #circ (Lab)");
       h_Asym2[i]->GetYaxis()->SetTitle("(N_{PARA}-N_{PERP})/(N_{PARA}+N_{PERP})");
+      h_Asym2[i]->GetYaxis()->SetRangeUser(-1.0, 1.0);
       h_Asym2[i]->SetTitle(" ");
       h_Asym3[i]->GetXaxis()->SetTitle("Azimuthal Angle  #phi #circ (Lab)");
       h_Asym3[i]->GetYaxis()->SetTitle("(N_{PARA}-N_{PERP})/(N_{PARA}+N_{PERP})");
+      h_Asym3[i]->GetYaxis()->SetRangeUser(-1.0, 1.0);
       h_Asym3[i]->SetTitle(" ");
     }
     string AsymS;
@@ -1848,6 +1929,17 @@ void Histograms::DoCanvasAsym(){
   cASM->BuildLegend();
   cASM->SaveAs("imagenes/SigmaAsymBinMaxLike.eps");
 
+  // fstream OutMax;	OutMax.open("MaxLikeLamb.txt",ios::out);
+
+  // for (UInt_t i = 0; i < 10; i++) 
+  //   OutMax << AvValueG[5][i] 	<< "\t"
+  // 	   << MaxL[5][i]	<< "\t"
+  // 	   << ErrorG[5][i]	<< "\t"
+  // 	   << MaxLE[5][i]	<< endl;
+
+  // OutMax.close();
+
+  
   // ------ Max Like Binning method comparation ---- //
 
   vector<double> SysMaxL1, SysMaxLErrors1;      
@@ -1882,16 +1974,18 @@ void Histograms::DoCanvasAsym(){
   FitMaxLError[2]->Draw("same");
   FitMaxLError[0]->Draw("same");
   cMAXSys->SaveAs("imagenes/SigmaAsymBinMaxLikeSys.eps");
-
-  
+    
   TCanvas *cASME[6];
   float BimEn = 1.3;
-
+  
   for (UInt_t i = 0; i < 6; i++) {
     cASME [i] = new TCanvas("","",900,450);
     TGraphErrors *AsymME = new TGraphErrors(Asym1.size(),&(AvValueG[i][0]),MaxL[i].data(),&(ErrorG[i][0]),MaxLE[i].data());
+    stringstream E1, E2;
+    E1 << fixed << setprecision(2) << BimEn-0.2;
+    E2 << fixed << setprecision(2) << BimEn;
     string Name;
-    Name = "Max Like " + std::to_string(BimEn);
+    Name = "E_{#gamma} = " + E1.str() + "-" + E2.str() + " GeV";
     AsymME->SetTitle(Name.c_str());
     AsymME->GetXaxis()->SetTitle("cos(#theta^{cm}_{K^{+}})");
     AsymME->GetYaxis()->SetTitle("#Sigma");
@@ -1975,4 +2069,15 @@ Double_t fitf(Double_t *x, Double_t *par){
   return fitval;
 }
 
+Double_t BreitWignerF(Double_t *x, Double_t *par){ 
+  return TMath::BreitWigner(x[0], par[0], par[1]);  
+} 
+
+/* Double_t LinealF(Double_t *x, Double_t *par){ */
+/*   return par[0]; */
+/* } */
+
+/* Double_t FitFunction(Double_t *x, Double_t *par){ */
+/*   return BreitWignerF(x,par) + 20; */
+/* } */
 #endif

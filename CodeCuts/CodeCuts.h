@@ -337,10 +337,8 @@ void Codecuts::CodeCuts(){
    
      h_BetaVsMomNeu->Fill(MMNeut_kaon.Rho(),MMNeut_kaon.Beta()-Neutron.Beta());
         
-     if(MMNeut_kaon.Beta()-Neutron.Beta() < -0.005 || MMNeut_kaon.Beta()-Neutron.Beta() > 0.005){
-       h_MissingMass_Pion->Fill(MMNeut_kaon.M());
-       continue;
-          }
+     if(MMNeut_kaon.Beta()-Neutron.Beta() < -0.005 || MMNeut_kaon.Beta()-Neutron.Beta() > 0.005) continue;
+          
     h_MissingMass_vsMissingMassPi0[1]->Fill(MMNeut_kaon.M(),MMKaon0.M());
  
 
