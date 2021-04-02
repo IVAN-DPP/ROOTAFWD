@@ -13,6 +13,7 @@
 #include "include/MaxLike.h"
 #include "src/TPaveStateModify.C"
 #include "src/HistoBinning.C"
+#include "src/Miscelaneous.C"
 
 using namespace std;
 
@@ -21,8 +22,12 @@ void LinesPTCuts();
 void NameLinesInv(double, double, int, int);
 Double_t fitf(Double_t *,Double_t *);
 Double_t BreitWignerF(Double_t *,Double_t *);
-//Double_t LinealF(Double_t *,Double_t *);
-//Double_t FitFunction(Double_t *,Double_t *);
+Double_t ConstF(Double_t *,Double_t *);
+Double_t LinealF(Double_t *,Double_t *);
+Double_t CuadF(Double_t *,Double_t *);
+Double_t CubF(Double_t *,Double_t *);
+Double_t Gaus(Double_t *,Double_t *);
+Double_t FitFunction(Double_t *,Double_t *);
 class Histograms{
   //Friends Functions
   friend void LinesPTCuts();       //Functions for do the lines in Theta-Phi Correlations
@@ -73,16 +78,26 @@ protected:
   TH1F *h_MissingMass_kaonpion            		= NULL;
   TH1F *h_MissingMass_pi0             			= NULL;
   TH1F *h_MissingMass_Lambda				= NULL;
-  TH1F *h_MissingP[2]                      		= {};
+  TH1F *h_MissingP[3]                      		= {};
   TH1F *h_MissingPcut[2]                   		= {};
   TH2F *h_MissingMvsIMMass[2]                		= {};
   TH2F *h_MissingMassvsSigmaMass          		= NULL;
   TH2F *h_MissingPvsSigmaMass             		= NULL;
+  TH1F *h_IMSigmaStar[2]				= {};
+  TH2F *h_IMSigma_vsIMSigmaStar[2]			= {};
 
+  
   TH1F *h_InvariantMass                   		= NULL;
   TH1F *h_InvariantMasscut[4]                		= {};
   TH1F *h_InvariantMassEnergy[6]			= {};
-  TF1  *FitBreitWigner					= NULL;
+  TF1  *FitBreitWigner1[3]				= {};
+  TF1  *FitBreitWigner2[3]				= {};
+  TF1  *FitBreitWigner3[3]				= {};
+  TF1  *FitBreitWigner4[3]				= {};
+  TF1  *FitBreitWigner5[3]				= {};
+  TF1  *FitBreitWigner6[3]				= {};
+  Int_t NParFitBreit;
+  string NameParFitBreit;
   TH1F *h_IMSigmaComparation[3]				= {};
   TH1F *h_MissingMassFinal_Neutron			= NULL;
 
@@ -347,7 +362,10 @@ void Histograms::DoHistograms(){
   h_MissingP[0] = new TH1F("h_missingpSigma",
 			   "; Missing momentum (#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c]; Frequency",
 			   100, 0.0, 1.);
-  h_MissingP[1] = new TH1F("h_missingpLambda",
+  h_MissingP[1] = new TH1F("h_missingpLambda[1]",
+			   "; Missing momentum (#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c]; Frequency",
+			   100, 0.0, 1.);
+  h_MissingP[2] = new TH1F("h_missingpLambda[2]",
 			   "; Missing momentum (#gamma d #rightarrow K^{+} #pi^{-} X p) [GeV/c]; Frequency",
 			   100, 0.0, 1.);
 
@@ -376,6 +394,26 @@ void Histograms::DoHistograms(){
   h_MissingPvsSigmaMass = new TH2F("h_missingPvsSigma",
 				   "; Masa [GeV/c^{2}]; p [GeV/c] ",
 				   100,1.0,1.5, 100, 0.0, 1.5);
+
+  //------------ Sigma star and Sigma comparations ----------//
+
+
+
+  h_IMSigmaStar[0] = new TH1F("h_IMSigmaStar[0]",
+			      "; IM(#Lambda #pi^{-}) [GeV/c^{2}]; Frequency ",
+			      100, 1.0, 1.5);
+  h_IMSigmaStar[1] = new TH1F("h_IMSigmaStar[0]",
+			      "; IM(#Lambda #pi^{-}) [GeV/c^{2}]; Frequency ",
+			      100,0.7, 1.2);
+
+  h_IMSigma_vsIMSigmaStar[0] = new TH2F("h_IMSigma_vsIMSigmaStar[0]",
+				      "; IM(#pi^{-} n) [GeV/c^{2}]; IM(#Lambda #pi^{-}) [GeV/c^{2}]",
+				      100,0.7,1.2, 100, 1.0, 1.5);
+
+  h_IMSigma_vsIMSigmaStar[1] = new TH2F("h_IMSigma_vsIMSigmaStar[1]",
+				      "; IM(#pi^{-} n) [GeV/c^{2}]; IM(#Lambda #pi^{-}) [GeV/c^{2}]",
+				      100,0.7,1.2, 100, 0, 1);
+  
   
   // ----------------------------------- //
 
@@ -437,10 +475,33 @@ void Histograms::DoHistograms(){
   h_InvariantMassEnergy[5] = new TH1F("h_InvariantMassEnergy[5]",
 				      "; IM(#pi^{-} n) [GeV/c^{2}]; Frequency ",
 				      100, 1.0, 1.5);
-  FitBreitWigner = new TF1("BreitWignerF", BreitWignerF, 1.0, 1.5, 2);
-  FitBreitWigner->SetParameter(0,1.0);     FitBreitWigner->SetParName(0,"const");
-  FitBreitWigner->SetParameter(1,2.0);     FitBreitWigner->SetParName(1,"sigma");
-  FitBreitWigner->SetParameter(1,2.0);    FitBreitWigner->SetParName(2,"mean");
+
+  NParFitBreit = 4;
+  NameParFitBreit = "ConstF";
+
+  FitBreitWigner1[0] = new TF1("BreitWignerF", FitFunction, 1.0, 1.5, NParFitBreit);
+  FitBreitWigner2[0] = new TF1("BreitWignerF", FitFunction, 1.0, 1.5, NParFitBreit);
+  FitBreitWigner3[0] = new TF1("BreitWignerF", FitFunction, 1.0, 1.5, NParFitBreit);
+  FitBreitWigner4[0] = new TF1("BreitWignerF", FitFunction, 1.0, 1.5, NParFitBreit);
+  FitBreitWigner5[0] = new TF1("BreitWignerF", FitFunction, 1.0, 1.5, NParFitBreit);
+  FitBreitWigner6[0] = new TF1("BreitWignerF", FitFunction, 1.0, 1.5, NParFitBreit);
+
+  FitBreitWigner1[0]->SetParNames("Jm","Mean Value","#Gamma","Background");
+  FitBreitWigner2[0]->SetParNames("Jm","Mean Value","#Gamma","Background");
+  FitBreitWigner3[0]->SetParNames("Jm","Mean Value","#Gamma","Background");
+  FitBreitWigner4[0]->SetParNames("Jm","Mean Value","#Gamma","Background");
+  FitBreitWigner5[0]->SetParNames("Jm","Mean Value","#Gamma","Background");
+  FitBreitWigner6[0]->SetParNames("Jm","Mean Value","#Gamma","Background");
+  
+  for (Int_t i = 0; i < NParFitBreit; i++) {
+    FitBreitWigner1[0]->SetParameter(i,1.0);
+    FitBreitWigner2[0]->SetParameter(i,1.0);
+    FitBreitWigner3[0]->SetParameter(i,1.0);
+    FitBreitWigner4[0]->SetParameter(i,1.0);
+    FitBreitWigner5[0]->SetParameter(i,1.0);
+    FitBreitWigner6[0]->SetParameter(i,1.0);
+  }
+  
   //----------Momentum proton---------------//
   
    h_MomentumProton = new TH1F("h_MomentumProton",
@@ -1243,12 +1304,17 @@ void Histograms::DoCanvasReconstructionBgMissingMomentum(){
   h_MissingP[1]->SetLabelSize(0.053, "XY");
   h_MissingP[1]->SetTitleSize(0.047, "XY");
   h_MissingP[1]->SetFillColor(kRed-7);
-  TPaveStateModify MMPStat(h_MissingP[0],h_MissingP[1]);
+  h_MissingP[2]->SetFillColor(kBlue-7);
+
+  vector<TH1*> VecMom{h_MissingP[1],h_MissingP[2]};
+  
+  TPaveStateModify MMPStat(h_MissingP[0],VecMom);
   MMPStat.BoxOptStat("e");
   MMPStat.BoxPosition(0.75,0.85*h_MissingP[0]->GetMaximum(),1,h_MissingP[0]->GetMaximum());
   MMPStat.BoxTextSize(0.04);
   MMPStat.SaveChanges();
   h_MissingP[1]->Draw("same");
+  h_MissingP[2]->Draw("same");
   LineM->Draw("same");
 
   MMP->SaveAs("imagenes/MissingMomentum.eps");
@@ -1471,36 +1537,154 @@ void Histograms::DoCanvasIMSigma(){
   IVMF->SaveAs("imagenes/InvariantMassFinall_Sigma.eps");
 
   //------------- Invariant mass for each energy--------------//
+
+
+  vector<vector<double>> EventsSigma;
+  vector<double> SigmaSig(6), Background(6);
+
+  TSpectrum *BackgroundS[6];
+  TH1 *h_BackgroundS[6];
+  
+  for (UInt_t i = 0; i < 6; i++) BackgroundS[i] = new TSpectrum();
+
+  for (UInt_t i = 0; i < 6; i++) h_BackgroundS[i] = BackgroundS[i]->Background(h_InvariantMassEnergy[i],5);
+    
+  
   TCanvas *IVMFE = new TCanvas("IVMFE","Invariant mass for 1.3 GeV", 1450, 900);
+  
   IVMFE->Divide(3,2);
   gStyle->SetOptStat("me");
   IVMFE->cd(1);
   h_InvariantMassEnergy[0]->SetTitle("E_{#gamma}=1.1-1.3 GeV");
   h_InvariantMassEnergy[0]->Draw();
-  h_InvariantMassEnergy[0]->Fit("BreitWignerF","QR");
-  FitBreitWigner->Draw("same");
+  h_BackgroundS[0]->Draw("same");
+  // h_InvariantMassEnergy[0]->Fit(FitBreitWigner1[0]);
+  // Double_t par1[NParFitBreit];
+  // FitBreitWigner1[0]->GetParameters(par1);
+  // FitBreitWigner1[1] = new TF1("Breitwigner",BreitWignerF,1.0,1.5,3);
+  // FitBreitWigner1[2] = new TF1("background",NameParFitBreit.c_str(),1.0,1.5,NParFitBreit-3);
+  // FitBreitWigner1[1]->SetParameters(par1);
+  // FitBreitWigner1[2]->SetParameters(&(par1[3]));
+
+  // // FitBreitWigner1[1]->SetLineColor(kBlue);	FitBreitWigner1[1]->Draw("same");
+  // FitBreitWigner1[2]->SetLineColor(kBlue);	FitBreitWigner1[2]->Draw("same");
+  // // FitBreitWigner1[0]->SetLineColor(kGreen);	FitBreitWigner1[0]->Draw("same");
+
+  // SigmaSig[0] 	= FitBreitWigner1[1]->Integral(1.0,1.5);
+  // Background[0]	= FitBreitWigner1[2]->Integral(1.0,1.5);
+  
   IVMFE->cd(2);
+
   h_InvariantMassEnergy[1]->SetTitle("E_{#gamma}=1.3-1.5 GeV");
   h_InvariantMassEnergy[1]->Draw();
+  h_BackgroundS[1]->Draw("same");
+  // h_InvariantMassEnergy[1]->Fit(FitBreitWigner2[0]);
+  // Double_t par2[NParFitBreit];
+  // FitBreitWigner2[0]->GetParameters(par2);
+  // FitBreitWigner2[1] = new TF1("Breitwigner",BreitWignerF,1.0,1.5,3);
+  // FitBreitWigner2[2] = new TF1("background",NameParFitBreit.c_str(),1.0,1.5,NParFitBreit-3);
+  // FitBreitWigner2[1]->SetParameters(par2);
+  // FitBreitWigner2[2]->SetParameters(&(par2[3]));
+  // // FitBreitWigner2[1]->SetLineColor(kBlue);	FitBreitWigner2[1]->Draw("same");
+  // FitBreitWigner2[2]->SetLineColor(kBlue);	FitBreitWigner2[2]->Draw("same");
+  // // FitBreitWigner2[0]->SetLineColor(kGreen);	FitBreitWigner2[0]->Draw("same");
+
+  // SigmaSig[1] 	= FitBreitWigner2[1]->Integral(1.0,1.5);
+  // Background[1]	= FitBreitWigner2[2]->Integral(1.0,1.5);
+  
   IVMFE->cd(3);
   h_InvariantMassEnergy[2]->SetTitle("E_{#gamma}=1.5-1.7 GeV");
   h_InvariantMassEnergy[2]->Draw();
+  h_BackgroundS[2]->Draw("same");
+  // h_InvariantMassEnergy[2]->Fit(FitBreitWigner3[0]);
+  // Double_t par3[NParFitBreit];
+  // // FitBreitWigner3[0]->GetParameters(par2);
+  // FitBreitWigner3[1] = new TF1("Breitwigner",BreitWignerF,1.0,1.5,3);
+  // FitBreitWigner3[2] = new TF1("background",NameParFitBreit.c_str(),1.0,1.5,NParFitBreit-3);
+  // FitBreitWigner3[1]->SetParameters(par3);
+  // FitBreitWigner3[2]->SetParameters(&(par3[3]));
+  // // FitBreitWigner3[1]->SetLineColor(kBlue);	FitBreitWigner3[1]->Draw("same");
+  // FitBreitWigner3[2]->SetLineColor(kBlue);	FitBreitWigner3[2]->Draw("same");
+  // // FitBreitWigner3[0]->SetLineColor(kGreen);	FitBreitWigner3[0]->Draw("same");
+  // SigmaSig[2] 	= FitBreitWigner3[1]->Integral(1.0,1.5);
+  // Background[2]	= FitBreitWigner3[2]->Integral(1.0,1.5);
+  
   IVMFE->cd(4);
   h_InvariantMassEnergy[3]->SetTitle("E_{#gamma}=1.7-1.9 GeV");
   h_InvariantMassEnergy[3]->Draw();
+  h_BackgroundS[3]->Draw("same");
+  // h_InvariantMassEnergy[3]->Fit(FitBreitWigner4[0]);
+  // Double_t par4[NParFitBreit];
+  // FitBreitWigner4[0]->GetParameters(par2);
+  // FitBreitWigner4[1] = new TF1("Breitwigner",BreitWignerF,1.0,1.5,3);
+  // FitBreitWigner4[2] = new TF1("background",NameParFitBreit.c_str(),1.0,1.5,NParFitBreit-3);
+  // FitBreitWigner4[1]->SetParameters(par4);
+  // FitBreitWigner4[2]->SetParameters(&(par4[3]));
+  // // FitBreitWigner4[1]->SetLineColor(kBlue);	FitBreitWigner4[1]->Draw("same");
+  // FitBreitWigner4[2]->SetLineColor(kBlue);	FitBreitWigner4[2]->Draw("same");
+  // // FitBreitWigner4[0]->SetLineColor(kGreen);	FitBreitWigner4[0]->Draw("same");
+
+  // SigmaSig[3] 	= FitBreitWigner4[1]->Integral(1.0,1.5);
+  // Background[3]	= FitBreitWigner4[2]->Integral(1.0,1.5);
+  
   IVMFE->cd(5);
   h_InvariantMassEnergy[4]->SetTitle("E_{#gamma}=1.9-2.1 GeV");
   h_InvariantMassEnergy[4]->Draw();
+  h_BackgroundS[4]->Draw("same");
+  // h_InvariantMassEnergy[4]->Fit(FitBreitWigner5[0]);
+  // Double_t par5[NParFitBreit];
+  // FitBreitWigner5[0]->GetParameters(par2);
+  // FitBreitWigner5[1] = new TF1("Breitwigner",BreitWignerF,1.0,1.5,3);
+  // FitBreitWigner5[2] = new TF1("background",NameParFitBreit.c_str(),1.0,1.5,NParFitBreit-3);
+  // FitBreitWigner5[1]->SetParameters(par5);
+  // FitBreitWigner5[2]->SetParameters(&(par5[3]));
+  // // FitBreitWigner5[1]->SetLineColor(kBlue);	FitBreitWigner5[1]->Draw("same");
+  // FitBreitWigner5[2]->SetLineColor(kBlue);	FitBreitWigner5[2]->Draw("same");
+  // // FitBreitWigner5[0]->SetLineColor(kGreen);	FitBreitWigner5[0]->Draw("same");
+  // SigmaSig[4] 	= FitBreitWigner5[1]->Integral(1.0,1.5);
+  // Background[4]	= FitBreitWigner5[2]->Integral(1.0,1.5);
+  
   IVMFE->cd(6);
   h_InvariantMassEnergy[5]->SetTitle("E_{#gamma}=2.1-2.3 GeV");
   h_InvariantMassEnergy[5]->Draw();
-    
+  // h_InvariantMassEnergy[5]->Fit(FitBreitWigner6[0]);
+  h_BackgroundS[5]->Draw("same");
+  // Double_t par6[NParFitBreit];
+  // FitBreitWigner6[0]->GetParameters(par2);
+  // FitBreitWigner6[1] = new TF1("Breitwigner",BreitWignerF,1.0,1.5,3);
+  // FitBreitWigner6[2] = new TF1("background",NameParFitBreit.c_str(),1.0,1.5,NParFitBreit-3);
+  // FitBreitWigner6[1]->SetParameters(par6);
+  // FitBreitWigner6[2]->SetParameters(&(par6[3]));
+  // // FitBreitWigner6[1]->SetLineColor(kBlue);	FitBreitWigner6[1]->Draw("same");
+  // FitBreitWigner6[2]->SetLineColor(kBlue);	FitBreitWigner6[2]->Draw("same");
+  // // FitBreitWigner6[0]->SetLineColor(kGreen);	FitBreitWigner6[0]->Draw("same");
+  // SigmaSig[5] 	= FitBreitWigner6[1]->Integral(1.0,1.5);
+  // Background[5]	= FitBreitWigner6[2]->Integral(1.0,1.5);
+
+  // EventsSigma.push_back(SigmaSig);
+  // EventsSigma.push_back(Background);
+  // GetEventBackgroundSigmaLaTeX(EventsSigma,"./BgSigma.tex","Background","Background");
+
   IVMFE->SaveAs("imagenes/InvariantMassFinall_E13.eps");
 
   
+  //------------ Sigma star and Sigma comparations ----------//
 
+  TCanvas *cIMStS1 = new TCanvas("","",900,500);
+  cIMStS1->Divide(2,2);
+  cIMStS1->cd(1);
+  h_IMSigmaStar[0]->Draw();
+  cIMStS1->cd(2);
+  h_IMSigmaStar[1]->Draw();
+  cIMStS1->cd(3);
+  h_IMSigma_vsIMSigmaStar[0]->Draw("colz");
+  cIMStS1->cd(4);
+  h_IMSigma_vsIMSigmaStar[1]->Draw("colz");  
+
+  cIMStS1->SaveAs("imagenes/InvariantMassSigma_SigmaStar.eps");
 
 }
+
 void Histograms::DoCanvasOthers(){
 
   //------------- Others ---------------- //
@@ -1532,19 +1716,19 @@ void Histograms::DoCanvasOthers(){
 }
 
 void Histograms::DoCanvas(){  
-  DoCanvasVertexToDT();
-  DoCanvasFiduciaryCut();
-  DoCanvasEnergyLossAndCoh();
-  DoCanvasReconstruction();
-  DoCanvasReconstructionMM();
-  DoCanvasReconstructionKPi();
-  DoCanvasReconstructionMMCuts();
-  DoCanvasReconstructionBgMissingMomentum();
-  DoCanvasReconstructionIMCorrelations();
-  DoCanvasProtonMomentum();
-  DoCanvasMissingMomentumCorrelations();
+  // DoCanvasVertexToDT();
+  // DoCanvasFiduciaryCut();
+  // DoCanvasEnergyLossAndCoh();
+  // DoCanvasReconstruction();
+  // DoCanvasReconstructionMM();
+  // DoCanvasReconstructionKPi();
+  // DoCanvasReconstructionMMCuts();
+  // DoCanvasReconstructionBgMissingMomentum();
+  // DoCanvasReconstructionIMCorrelations();
+  // DoCanvasProtonMomentum();
+  // DoCanvasMissingMomentumCorrelations();
   DoCanvasIMSigma();
-  DoCanvasOthers();
+  // DoCanvasOthers();
 }
 
 
@@ -2132,14 +2316,29 @@ Double_t fitf(Double_t *x, Double_t *par){
 }
 
 Double_t BreitWignerF(Double_t *x, Double_t *par){ 
-  return TMath::BreitWigner(x[0], par[0], par[1]);  
+  return par[0]*TMath::BreitWigner(x[0], par[1], par[2]);  
 } 
 
-/* Double_t LinealF(Double_t *x, Double_t *par){ */
-/*   return par[0]; */
-/* } */
+Double_t ConstF(Double_t *x, Double_t *par){
+  return par[0];
+}
 
-/* Double_t FitFunction(Double_t *x, Double_t *par){ */
-/*   return BreitWignerF(x,par) + 20; */
-/* } */
+Double_t LinealF(Double_t *x, Double_t *par){
+  return par[0]+par[1]*x[0];
+}
+
+Double_t CuadF(Double_t *x, Double_t *par){
+  return par[0]+par[1]*x[0]+par[2]*x[0]*x[0];
+}
+
+Double_t CubF(Double_t *x,Double_t *par){
+  return par[0]+par[1]*x[0]+par[2]*x[0]*x[0]+par[3]*x[0]*x[0]*x[0];
+}
+
+Double_t Gaus(Double_t *x,Double_t *par){
+  return TMath::Poisson(x[0],par[0]);
+}
+Double_t FitFunction(Double_t *x, Double_t *par){
+  return BreitWignerF(x,par) + ConstF(x,&(par[3]));
+}
 #endif

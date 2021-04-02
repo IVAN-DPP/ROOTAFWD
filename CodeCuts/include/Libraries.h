@@ -39,6 +39,7 @@
 #include "Math/Functor.h"
 #include "Math/IFunction.h"
 #include "TVirtualFitter.h"
+#include "TSpectrum.h"
 
 #include <sstream>
 #include <iostream>
