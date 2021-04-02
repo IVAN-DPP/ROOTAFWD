@@ -255,7 +255,6 @@ void Codecuts::CodeCuts(){
     h_Celoss[1]->Fill(myDataList->getEVNT_track(1).Rho(), CorrElossPr);
     h_Celoss[2]->Fill(myDataList->getEVNT_track(2).Rho(), CorrElossPi);
       
-
     //--------------- Coh Edge -------------- //
          
     h_TagrEpho[0]->Fill(myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0);
@@ -272,12 +271,12 @@ void Codecuts::CodeCuts(){
       Keys[0]=float(4.2);
       Keys[1]=myDataList->getCoh_edge_nom();
       Keys[2]=float(myDataList->getCoh_plan());
-  }
+    }
     else{
       Keys[0]=float(myDataList->getBeam_en());
       Keys[1]=myDataList->getCoh_edge_nom();
       Keys[2]=float(myDataList->getCoh_plan());
-  }
+    }
         
     double PhotoPol=0;
     PhotoPol=GetPol(keysPlane[Keys], myDataList->getCoh_edge(), myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0, 8, 0.2,0.3);
@@ -287,12 +286,13 @@ void Codecuts::CodeCuts(){
     GetPolAv(Keys,ItP,AvP,PhotoPol);
     Events[14]++;         //Events With PhotoPol Tables
 
+    
     //-------------- Reconstruction --------- //
       
     TLorentzVector photon, deuteron, kaon, proton ,pion, Neutron, WBoost, NT;			//Principal Reaction
-    TLorentzVector kaonpion;						//MIS-identification particles
-    TLorentzVector MMNeut_kaon, MMNeut_KPi, MMNeut_KP, MMSigma, MMKaon0, MMNeut_Pi0, Pion;		//Missing mass
-    TLorentzVector Sigma, Lambda, KaonS;								//Invariant Mass
+    TLorentzVector kaonpion;									//MIS-identification particles
+    TLorentzVector MMNeut_kaon, MMNeut_KPi, MMNeut_KP, MMSigma, MMLambda, MMKaon0, MMNeut_Pi0, Pion;	//Missing mass
+    TLorentzVector Sigma, Lambda, KaonS, SigmaSt;						//Invariant Mass
     
     photon.SetXYZM(0,0,myDataList->getTAGR_epho(myDataList->getIndex_k(0)),0);
     deuteron.SetXYZM(0,0,0,1.8756);
@@ -315,15 +315,16 @@ void Codecuts::CodeCuts(){
     Sigma 	= pion + Neutron;
     Lambda 	= pion + proton;
     MMSigma  	= photon + deuteron - proton - kaon;           			// Correlation with invariant mass (lambda)
+    MMLambda	= photon + deuteron - Neutron - kaon;
     WBoost   	= photon + deuteron; 						// to make Boost
       
     MMNeut_KPi 	= photon + deuteron - proton - kaonpion - pion;     	   	// This missing mass is with the Pion-
     MMNeut_Pi0  = photon + deuteron - kaon - pion - Neutron - proton;
+    SigmaSt	= MMLambda + pion;
     
     h_MissingMass->Fill(MMNeut_kaon.M());
     h_IMSigmaComparation[0]->Fill(Sigma.M());
     h_MissingMass_kaonpion->Fill(MMNeut_KPi.M()); 
-    
    
     //h_MissingMvsIMMass->Fill(MMNeut_kaon.M(),MMNeut_kaon.P());
     h_MissingMass_vsMissingMasskaonpion[0]->Fill(MMNeut_kaon.M(), MMNeut_KPi.M());
@@ -346,7 +347,12 @@ void Codecuts::CodeCuts(){
  
     //  Double_t El = TMath::Power((Sigma.M()-offsetx)*cos(angle)+(MMSigma.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
     // +TMath::Power((Sigma.M()-offsetx)*sin(angle)-(MMSigma.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
-     
+    
+    //------------ Sigma star and Sigma comparations ----------//
+
+    h_IMSigmaStar[0]->Fill(MMLambda.M());
+    // h_IMSigma_vsIMSigmaStar[0]->Fill(MMLambda.M(),MMNeut_kaon.Beta()-Neutron.Beta());
+    
     //----------Correlación momentums vs missing mass------------------------//
     
     h_MissingMvsIMMass[0]->Fill(Sigma.M(),MMNeut_kaon.M());
@@ -381,15 +387,9 @@ void Codecuts::CodeCuts(){
       h_InvariantMasscut[2]->Fill(Sigma.M());
       
       
-    //------------- Comparación de missing momentums-----------//
-      
-    if( Lambda.M()<1.096 || Lambda.M()>1.136) 
-      h_MissingP[0]->Fill(MMNeut_kaon.P());   
-    if( Sigma.M()<1.08 || Sigma.M()>1.3)
-      h_MissingP[1]->Fill(MMNeut_kaon.P());
 
     
-    if ( Lambda.M()>=1.1 && Lambda.M()<=1.132)continue;
+    if ( Lambda.M()>=1.05 && Lambda.M()<=1.132)continue;
     h_MissingMass_Lambda->Fill(MMNeut_kaon.M());
     h_MissingMassFinal_Neutron->Fill(MMNeut_kaon.M());
     h_IMSigmaComparation[2]->Fill(Sigma.M());
@@ -398,7 +398,29 @@ void Codecuts::CodeCuts(){
     
     Events[16]++;         //Events With Lambda cuts
 
-   
+    //------------ Sigma star and Sigma comparations ----------//
+
+
+    h_IMSigma_vsIMSigmaStar[1]->Fill(MMNeut_kaon.M(),MMNeut_kaon.P());
+    // h_IMSigma_vsIMSigmaStar[1]->Fill(proton.P(),MMNeut_kaon.Beta()-Neutron.Beta());
+
+    // if(1.038*MMLambda.M()-0.037-SigmaSt.M() >= 0) continue;
+    h_IMSigma_vsIMSigmaStar[0]->Fill(MMNeut_kaon.M(),Sigma.M());
+    // if(MMLambda.M() <= 1.1243) continue;
+
+    //------------- Comparación de missing momentums-----------//
+      
+    if( Sigma.M()>=1.18 && Sigma.M()<=1.21)
+      h_MissingP[0]->Fill(MMNeut_kaon.P());
+
+    if( Sigma.M()<1.18){
+      h_MissingP[1]->Fill(MMNeut_kaon.P());
+      h_IMSigmaStar[1]->Fill(MMNeut_kaon.M());
+    }
+
+    if( Sigma.M()>1.21)
+      h_MissingP[2]->Fill(MMNeut_kaon.P());
+    
     //--------Correlation Momentums--------------//
     h_CorrelationMMomentum->Fill(Sigma.P(), Lambda.P());
     
@@ -429,8 +451,9 @@ void Codecuts::CodeCuts(){
     
     //------------Momentum proton----------------.//
     h_MomentumProton->Fill(proton.P());
-    //-----------------BOOST------------------------------//
 
+    //-----------------BOOST------------------------------//
+    
     CohE 	= myDataList->getCoh_edge();
     CohEN	= myDataList->getCoh_edge_nom();
     CohP	= myDataList->getCoh_plan();

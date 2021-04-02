@@ -32,4 +32,13 @@ double GetPol(int, double, double, int, double, double);
 void GetPolAv(vector<float>,vector<vector<int>>&,vector<vector<double>>&,double);
 
 void GetPolAvTable();
+
+void GetPolAvTableLatex(vector<vector<int>>,vector<vector<double>>,string,string ,string);
+
+void GetEventPercent(vector<int>);
+
+void GetEventPercentLatex(vector<int>,string,string,string);
+
+void GetEventBackgroundSigmaLaTeX(vector<vector<double>>,string,string,string);
+
 #endif

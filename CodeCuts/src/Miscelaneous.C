@@ -318,16 +318,16 @@ void GetPolAvTableLatex(vector<vector<int>> ItP,vector<vector<double>> AvP,strin
        << "\t\\begin{tabular}{|c|c|c|c|c|c|}" << endl
        << "\t\\hline" << endl
        << "\t\t$E_{\\gamma}$ Edge (GeV) & Energy Beam (GeV) & $\\bar{P}$ (Para) & N$^{\\circ}$ Events & $\\bar{P}$ (Perp) & N$^{\\circ}$ Events \\\\ \\hline\n"
-       << "\t\t" << 1.3 << "\t&" << 4.199 << "\t&" << AvP[0][0]/ItP[0][0] << "\t&" << ItP[0][0] << "\t&" << AvP[0][1]/ItP[0][1] << "\t&" << ItP[0][1] << "\\\\\n"
-       << "\t\t" << 1.5 << "\t&" << 4.072 << "\t&" << AvP[1][0]/ItP[1][0] << "\t&" << ItP[1][0] << "\t&" << AvP[1][1]/ItP[1][1] << "\t&" << ItP[1][1] << "\\\\\n"
-       << "\t\t" << 1.5 << "\t&" << 4.482 << "\t&" << AvP[2][0]/ItP[2][0] << "\t&" << ItP[2][0] << "\t&" << AvP[2][1]/ItP[2][1] << "\t&" << ItP[2][1] << "\\\\\n"
-       << "\t\t" << 1.7 << "\t&" << 4.072 << "\t&" << AvP[3][0]/ItP[3][0] << "\t&" << ItP[3][0] << "\t&" << AvP[3][1]/ItP[3][1] << "\t&" << ItP[3][1] << "\\\\\n"
-       << "\t\t" << 1.7 << "\t&" << 4.726 << "\t&" << AvP[4][0]/ItP[4][0] << "\t&" << ItP[4][0] << "\t&" << AvP[4][1]/ItP[4][1] << "\t&" << ItP[4][1] << "\\\\\n"
-       << "\t\t" << 1.7 << "\t&" << 4.756 << "\t&" << AvP[5][0]/ItP[5][0] << "\t&" << ItP[5][0] << "\t&" << AvP[5][1]/ItP[5][1] << "\t&" << ItP[5][1] << "\\\\\n"
-       << "\t\t" << 1.9 << "\t&" << 5.052 << "\t&" << AvP[6][0]/ItP[6][0] << "\t&" << ItP[6][0] << "\t&" << AvP[6][1]/ItP[6][1] << "\t&" << ItP[6][1] << "\\\\\n"
-       << "\t\t" << 2.1 << "\t&" << 5.052 << "\t&" << AvP[7][0]/ItP[7][0] << "\t&" << ItP[7][0] << "\t&" << AvP[7][1]/ItP[7][1] << "\t&" << ItP[7][1] << "\\\\\n"
-       << "\t\t" << 2.1 << "\t&" << 5.166 << "\t&" << AvP[8][0]/ItP[8][0] << "\t&" << ItP[8][0] << "\t&" << AvP[8][1]/ItP[8][1] << "\t&" << ItP[8][1] << "\\\\\n"
-       << "\t\t" << 2.3 << "\t&" << 5.166 << "\t&" << AvP[9][0]/ItP[9][0] << "\t&" << ItP[9][0] << "\t&" << AvP[9][1]/ItP[9][1] << "\t&" << ItP[9][1] << "\\\\\n"
+       << "\t\t$" << 1.3 << "$\t&$" << 4.199 << "$\t&$" << AvP[0][0]/ItP[0][0] << "$\t&$" << ItP[0][0] << "$\t&$" << AvP[0][1]/ItP[0][1] << "$\t&$" << ItP[0][1] << "\\\\\n"
+       << "\t\t$" << 1.5 << "$\t&$" << 4.072 << "$\t&$" << AvP[1][0]/ItP[1][0] << "$\t&$" << ItP[1][0] << "$\t&$" << AvP[1][1]/ItP[1][1] << "$\t&$" << ItP[1][1] << "\\\\\n"
+       << "\t\t$" << 1.5 << "$\t&$" << 4.482 << "$\t&$" << AvP[2][0]/ItP[2][0] << "$\t&$" << ItP[2][0] << "$\t&$" << AvP[2][1]/ItP[2][1] << "$\t&$" << ItP[2][1] << "\\\\\n"
+       << "\t\t$" << 1.7 << "$\t&$" << 4.072 << "$\t&$" << AvP[3][0]/ItP[3][0] << "$\t&$" << ItP[3][0] << "$\t&$" << AvP[3][1]/ItP[3][1] << "$\t&$" << ItP[3][1] << "\\\\\n"
+       << "\t\t$" << 1.7 << "$\t&$" << 4.726 << "$\t&$" << AvP[4][0]/ItP[4][0] << "$\t&$" << ItP[4][0] << "$\t&$" << AvP[4][1]/ItP[4][1] << "$\t&$" << ItP[4][1] << "\\\\\n"
+       << "\t\t$" << 1.7 << "$\t&$" << 4.756 << "$\t&$" << AvP[5][0]/ItP[5][0] << "$\t&$" << ItP[5][0] << "$\t&$" << AvP[5][1]/ItP[5][1] << "$\t&$" << ItP[5][1] << "\\\\\n"
+       << "\t\t$" << 1.9 << "$\t&$" << 5.052 << "$\t&$" << AvP[6][0]/ItP[6][0] << "$\t&$" << ItP[6][0] << "$\t&$" << AvP[6][1]/ItP[6][1] << "$\t&$" << ItP[6][1] << "\\\\\n"
+       << "\t\t$" << 2.1 << "$\t&$" << 5.052 << "$\t&$" << AvP[7][0]/ItP[7][0] << "$\t&$" << ItP[7][0] << "$\t&$" << AvP[7][1]/ItP[7][1] << "$\t&$" << ItP[7][1] << "\\\\\n"
+       << "\t\t$" << 2.1 << "$\t&$" << 5.166 << "$\t&$" << AvP[8][0]/ItP[8][0] << "$\t&$" << ItP[8][0] << "$\t&$" << AvP[8][1]/ItP[8][1] << "$\t&$" << ItP[8][1] << "\\\\\n"
+       << "\t\t$" << 2.3 << "$\t&$" << 5.166 << "$\t&$" << AvP[9][0]/ItP[9][0] << "$\t&$" << ItP[9][0] << "$\t&$" << AvP[9][1]/ItP[9][1] << "$\t&$" << ItP[9][1] << "\\\\\n"
        << "\t\t\\hline" << endl
        << "\t\\end{tabular}" << endl
        << "\t\\caption{"     << Caption << "}" << endl
@@ -416,6 +416,32 @@ void GetEventPercentLatex(vector<int> Events,string Path,string Caption,string L
        << "\t\tBackground remove by "
        << "$K^{+}\\Lambda^{0}n$"   	     << "\t&" 	    << "it is in the code"
        << setw(33-17)	  	<< "\t&" << Events[17] << "\t&" << double(Events[17]*100)/double(Events[0]) << "\\\\\n"
+       << "\t\t\\hline" 		     << endl
+       << "\t\\end{tabular}" 		     << endl
+       << "\t\\caption{"     		     << Caption << "}" << endl
+       << "\t\\label{tab:"  		     << Label   << "}" << endl
+       << "\\end{table}"     		     << endl;
+
+  cout << "We Create: " << Path.substr(Path.find_last_of("/")+1,Path.size()-Path.find_last_of("/")) << endl;
+  LTXT.close();
+}
+
+void GetEventBackgroundSigmaLaTeX(vector<vector<double>> Events,string Path,string Caption,string Label){
+  fstream LTXT;
+  LTXT.open(Path,ios::out);
+  
+  LTXT << "\\begin{table}[H]" 		     		<< endl
+       << "\t\\centering"       	     		<< endl
+       << "\t\\begin{tabular}{|c|c|c|}"		    	<< endl
+       << "\t\t\\hline"			     		<< endl
+       << "\t\t$\\Sigma^{-}$ Signal" 		     	<< setw(43-7)  		<< "\t&" << "Background"
+       << "\t&"	<< "Events Background / Events $\\Sigma^{-}$ * 100 $\\%$"  	<< "\\\\\\hline\n"
+       << "\t\t" << "$1.1-1.3$" << "\t&$" << Events[0][0] << "$\t&$" << Events[1][0] << "$\t&$" << double(Events[1][0])/double(Events[0][0]) << "$\\\\\n"
+       << "\t\t" << "$1.3-1.5$" << "\t&$" << Events[0][1] << "$\t&$" << Events[1][1] << "$\t&$" << double(Events[1][1])/double(Events[0][1]) << "$\\\\\n"
+       << "\t\t" << "$1.5-1.7$" << "\t&$" << Events[0][2] << "$\t&$" << Events[1][2] << "$\t&$" << double(Events[1][2])/double(Events[0][2]) << "$\\\\\n"
+       << "\t\t" << "$1.7-1.9$" << "\t&$" << Events[0][3] << "$\t&$" << Events[1][3] << "$\t&$" << double(Events[1][3])/double(Events[0][3]) << "$\\\\\n"
+       << "\t\t" << "$1.9-2.1$" << "\t&$" << Events[0][4] << "$\t&$" << Events[1][4] << "$\t&$" << double(Events[1][4])/double(Events[0][4]) << "$\\\\\n"
+       << "\t\t" << "$2.1-2.3$" << "\t&$" << Events[0][5] << "$\t&$" << Events[1][5] << "$\t&$" << double(Events[1][5])/double(Events[0][5]) << "$\\\\\n"
        << "\t\t\\hline" 		     << endl
        << "\t\\end{tabular}" 		     << endl
        << "\t\\caption{"     		     << Caption << "}" << endl
