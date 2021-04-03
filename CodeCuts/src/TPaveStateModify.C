@@ -202,7 +202,7 @@ void TPaveStateModify::BoxOptStat(string TS,int Precision){
 	Obj << m;
 	StrObj = Obj.str();
 
-	STR = "Mean = " + StrObj;
+	STR = "Valor medio = " + StrObj;
 	myt = new TLatex(0,0,STR.c_str());
 	myt ->SetTextFont(42);
 	myt ->SetTextSize(TextSize);
@@ -217,7 +217,7 @@ void TPaveStateModify::BoxOptStat(string TS,int Precision){
 	Obj << M;
 	StrObj = Obj.str();
     
-	STR = "Mean Error = " + StrObj;
+	STR = "Error medio = " + StrObj;
 	myt = new TLatex(0,0,STR.c_str());
 	myt ->SetTextFont(42);
 	myt ->SetTextSize(TextSize);
@@ -232,7 +232,7 @@ void TPaveStateModify::BoxOptStat(string TS,int Precision){
 	Obj << e;
 	StrObj = Obj.str();
     
-	STR = "Entries = " + StrObj;
+	STR = "Entradas = " + StrObj;
 	myt = new TLatex(0,0,STR.c_str());
 	myt ->SetTextFont(42);
 	myt ->SetTextSize(TextSize);
@@ -241,7 +241,7 @@ void TPaveStateModify::BoxOptStat(string TS,int Precision){
 	break;
 
       case 'n':
-	STR = "Name = " + n;
+	STR = "Nombre = " + n;
 	myt = new TLatex(0,0,STR.c_str());
 	myt ->SetTextFont(42);
 	myt ->SetTextSize(TextSize);
