@@ -90,7 +90,6 @@ void Codecuts::CodeCuts(){
 
     //------------------ Delta Beta ---------------//
     double deltbeta[3]     = {};
-    double deltbetacut[3]  = {};
       
     //---------- Vertex ------------ //
       
@@ -102,7 +101,6 @@ void Codecuts::CodeCuts(){
     
     for (int i=0;i<myDataList->getNum_chargedtracks();i++){
       deltbeta[i]=myDataList->getEVNT_track(i).Beta()-myDataList->getEVNT_bem(i);
-      h_DeltaBe[i]->Fill(myDataList->getEVNT_track(i).Rho(),deltbeta[i]);
       h_BeVSp[i]->Fill(myDataList->getEVNT_track(i).Rho(),myDataList->getEVNT_bem(i));
       h_BeVSpT->Fill(myDataList->getEVNT_track(i).Rho(),myDataList->getEVNT_bem(i));
 
@@ -114,60 +112,59 @@ void Codecuts::CodeCuts(){
 
     
     
+    
     //------------------ Delta Beta with Cuts ---------------//
     
-    for (int i=0;i<myDataList->getNum_chargedtracks();i++){
-      deltbetacut[i]=myDataList->getEVNT_track(i).Beta()-myDataList->getEVNT_bem(i);
-	
-      if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue; 
-      if(deltbetacut[0] > 0.02  || deltbetacut[0] < -0.02) continue;
-      if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
+    h_DeltaBe[2]->Fill(myDataList->getEVNT_track(2).Rho(),deltbeta[2]);
+    if(deltbeta[2] > 0.05  || deltbeta[2] < -0.05) continue;
+    h_DeltaBecut[2]->Fill(myDataList->getEVNT_track(2).Rho(),deltbeta[2]);
+    h_DeltaBe[0]->Fill(myDataList->getEVNT_track(0).Rho(),deltbeta[0]);
+    Events[2]++;         
+    if(deltbeta[0] > 0.02  || deltbeta[0] < -0.02) continue;
+    h_DeltaBecut[0]->Fill(myDataList->getEVNT_track(0).Rho(),deltbeta[0]);
+    h_DeltaBe[1]->Fill(myDataList->getEVNT_track(1).Rho(),deltbeta[1]);
+    Events[3]++;         
+    if(deltbeta[1] > 0.025 || deltbeta[1] < -0.025) continue;
+    h_DeltaBecut[1]->Fill(myDataList->getEVNT_track(1).Rho(),deltbeta[1]);
+    Events[4]++;
+    
+    // h_DeltaBecut[i]->Fill(myDataList->getEVNT_track(i).Rho(),deltbeta[i]);
+    // h_BeVSpcut[i]->Fill(myDataList->getEVNT_track(i).Rho(),myDataList->getEVNT_bem(i));
 
-
-      h_DeltaBecut[i]->Fill(myDataList->getEVNT_track(i).Rho(),deltbeta[i]);
-      h_BeVSpcut[i]->Fill(myDataList->getEVNT_track(i).Rho(),myDataList->getEVNT_bem(i));
-
+    //------------------ Photons, Delta T  ------------------ // 
+      
+    for (int i=0;i<myDataList->getNum_photons();i++){
+      //LOOP OVER ALL PHOTONS
+      h_DeltaTall[0]->Fill(myDataList->getDelt_t_k(i));
+      h_DeltaTallvsp[0]->Fill(myDataList->getEVNT_track(1).Rho(),myDataList->getDelt_t_k(i));
+      h_DeltaTall[1]->Fill(myDataList->getDelt_t_pi(i));
+      h_DeltaTallvsp[1]->Fill(myDataList->getEVNT_track(2).Rho(),myDataList->getDelt_t_pi(i));
     }
+      
+    //------------Delta T with Cuts ----------- //
+      
+    // if (myDataList->getNumph_k()==1)
+    //   h_DeltaT[0]->Fill(myDataList->getDelt_t_k(myDataList->getIndex_k(0)));
+    // if(myDataList->getNumph_pi()==1)
+    //   h_DeltaT[1]->Fill(myDataList->getDelt_t_pi(myDataList->getIndex_pi(0)));
+      
+    if (myDataList->getNumph_k()!=1) continue;
+    Events[5]++;         //Events With Delta T Photon cut
+    //if (myDataList->getNumph_pi()!=1) continue;
 
-    if(deltbetacut[2] > 0.05  || deltbetacut[2] < -0.05) continue;
-    Events[2]++;         //Events With DeltaB cut
-    if(deltbetacut[0] > 0.02  || deltbetacut[0] < -0.02) continue;
-    Events[3]++;         //Events With DeltaB cut
-    if(deltbetacut[1] > 0.025 || deltbetacut[1] < -0.025) continue;
-    Events[4]++;         //Events With DeltaB cut
        
     //------------------Correlation Theta-Phi, -----------------------/
-    
-    h_ThePhi[0]->Fill(myDataList->getEVNT_track(0).Phi()*TMath::RadToDeg(), myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg());  
-    h_ThePhi[1]->Fill(myDataList->getEVNT_track(1).Phi()*TMath::RadToDeg(), myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg());
-    h_ThePhi[2]->Fill(myDataList->getEVNT_track(2).Phi()*TMath::RadToDeg(), myDataList->getEVNT_track(2).Theta()*TMath::RadToDeg());
-    
-    
+
+
+      
+
+
+
     //-----Cuts due to detector geometry (Fiduciary cuts)---------//
     //------------------------------------------------------------//
-      
-    Double_t phiproton_cut;
-    phiproton_cut= myDataList->getEVNT_track(0).Phi()*TMath::RadToDeg();
-    
-    if( (phiproton_cut <= -25)   && (phiproton_cut >= -35)  ) continue;
-    if( (phiproton_cut <= -85)   && (phiproton_cut >= -95)  ) continue;
-    if( (phiproton_cut <= -145)  && (phiproton_cut >= -155) ) continue;
-    if( (phiproton_cut >= 25)    && (phiproton_cut <= 35)   ) continue;
-    if( (phiproton_cut >= 85)    && (phiproton_cut <= 95)   ) continue;
-    if( (phiproton_cut >= 145)   && (phiproton_cut <= 155)  ) continue;
 
-    if(F_ThePhiProt[0]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
-       F_ThePhiProt[1]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
-       F_ThePhiProt[2]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
-       F_ThePhiProt[3]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
-       F_ThePhiProt[4]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
-       F_ThePhiProt[5]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
-       F_ThePhiProt[6]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg()) continue;
-       
-    h_ThePhicut[0]->Fill(phiproton_cut, myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg());
-
-    Events[5]++;         //Events With Phi-Theta Cuts
     //kaon cuts
+    h_ThePhi[1]->Fill(myDataList->getEVNT_track(1).Phi()*TMath::RadToDeg(), myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg());
     Double_t phikaon_cut;
     phikaon_cut= myDataList->getEVNT_track(1).Phi()*TMath::RadToDeg();
         
@@ -189,9 +186,33 @@ void Codecuts::CodeCuts(){
     h_ThePhicut[1]->Fill(phikaon_cut, myDataList->getEVNT_track(1).Theta()*TMath::RadToDeg());
 
     Events[6]++;         //Events With Phi-Theta Cuts   
+
+    h_ThePhi[0]->Fill(myDataList->getEVNT_track(0).Phi()*TMath::RadToDeg(), myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg());    
+    Double_t phiproton_cut;
+    phiproton_cut= myDataList->getEVNT_track(0).Phi()*TMath::RadToDeg();
+    
+    if( (phiproton_cut <= -25)   && (phiproton_cut >= -35)  ) continue;
+    if( (phiproton_cut <= -85)   && (phiproton_cut >= -95)  ) continue;
+    if( (phiproton_cut <= -145)  && (phiproton_cut >= -155) ) continue;
+    if( (phiproton_cut >= 25)    && (phiproton_cut <= 35)   ) continue;
+    if( (phiproton_cut >= 85)    && (phiproton_cut <= 95)   ) continue;
+    if( (phiproton_cut >= 145)   && (phiproton_cut <= 155)  ) continue;
+
+    if(F_ThePhiProt[0]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[1]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[2]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[3]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[4]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[5]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg() ||
+       F_ThePhiProt[6]->Eval(phiproton_cut) > myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg()) continue;
+       
+    h_ThePhicut[0]->Fill(phiproton_cut, myDataList->getEVNT_track(0).Theta()*TMath::RadToDeg());
+
+    Events[7]++;         //Events With Phi-Theta Cuts
       
     //Pion cuts
-    
+
+    h_ThePhi[2]->Fill(myDataList->getEVNT_track(2).Phi()*TMath::RadToDeg(), myDataList->getEVNT_track(2).Theta()*TMath::RadToDeg());
     Double_t phiPion_cut;
     phiPion_cut= myDataList->getEVNT_track(2).Phi()*TMath::RadToDeg();
       
@@ -213,33 +234,10 @@ void Codecuts::CodeCuts(){
     
     h_ThePhicut[2]->Fill(phiPion_cut, myDataList->getEVNT_track(2).Theta()*TMath::RadToDeg());
 
-    Events[7]++;         //Events With Phi-Theta Cuts   
+    Events[8]++;         //Events With Phi-Theta Cuts   
     
-    //------------------ Photons, Delta T  ------------------ // 
       
-    for (int i=0;i<myDataList->getNum_photons();i++){
-      //LOOP OVER ALL PHOTONS
-      if (fabs(deltbeta[1])<0.025){
-	h_DeltaTall[0]->Fill(myDataList->getDelt_t_k(i));
-	h_DeltaTallvsp[0]->Fill(myDataList->getEVNT_track(1).Rho(),myDataList->getDelt_t_k(i));
-      }
-      if (fabs(deltbeta[2])<0.05){
-	h_DeltaTall[1]->Fill(myDataList->getDelt_t_pi(i));
-	h_DeltaTallvsp[1]->Fill(myDataList->getEVNT_track(2).Rho(),myDataList->getDelt_t_pi(i));
-      }
-    }
-      
-    //------------Delta T with Cuts ----------- //
-      
-    if (myDataList->getNumph_k()==1)
-      h_DeltaT[0]->Fill(myDataList->getDelt_t_k(myDataList->getIndex_k(0)));
-    if(myDataList->getNumph_pi()==1)
-      h_DeltaT[1]->Fill(myDataList->getDelt_t_pi(myDataList->getIndex_pi(0)));
-      
-    if (myDataList->getNumph_k()!=1) continue;
-    Events[8]++;         //Events With Delta T Photon cut
-    //if (myDataList->getNumph_pi()!=1) continue;
-      
+
     //--------------- Energy loss ----------- //
     double CorrElossKa, CorrElossPr, CorrElossPi;
 
@@ -255,44 +253,13 @@ void Codecuts::CodeCuts(){
     h_Celoss[1]->Fill(myDataList->getEVNT_track(1).Rho(), CorrElossPr);
     h_Celoss[2]->Fill(myDataList->getEVNT_track(2).Rho(), CorrElossPi);
       
-
-    //--------------- Coh Edge -------------- //
-         
-    h_TagrEpho[0]->Fill(myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0);
-    if (myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0 > myDataList->getCoh_edge()) continue;
-    h_TagrEpho[1]->Fill(myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0);        Events[9]++;         //Events With Tager Epho
-    if (myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000< myDataList->getCoh_edge()-200.0) continue;
-    h_TagrEpho[2]->Fill(myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0);        Events[10]++;         //Events With Tager Epho
-    if (fabs(myDataList->getCoh_edge()-myDataList->getCoh_edge_nom()*1000)>15)continue;     Events[11]++;         //Events With Tager Epho
-    if (myDataList->getTrip_flag()!=0)continue;                                             Events[12]++;         //Events With Tager Epho
-    if (myDataList->getCoh_plan()!=0 && myDataList->getCoh_plan()!=1)continue;              Events[13]++;         //Events With Tager Epho
-
-    vector<float> Keys(3);
-    if(myDataList->getCoh_edge_nom() == float(1.3)){
-      Keys[0]=float(4.2);
-      Keys[1]=myDataList->getCoh_edge_nom();
-      Keys[2]=float(myDataList->getCoh_plan());
-  }
-    else{
-      Keys[0]=float(myDataList->getBeam_en());
-      Keys[1]=myDataList->getCoh_edge_nom();
-      Keys[2]=float(myDataList->getCoh_plan());
-  }
-        
-    double PhotoPol=0;
-    PhotoPol=GetPol(keysPlane[Keys], myDataList->getCoh_edge(), myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0, 8, 0.2,0.3);
     
-    if (PhotoPol<0.5) continue;
-    
-    GetPolAv(Keys,ItP,AvP,PhotoPol);
-    Events[14]++;         //Events With PhotoPol Tables
-
     //-------------- Reconstruction --------- //
       
     TLorentzVector photon, deuteron, kaon, proton ,pion, Neutron, WBoost, NT;			//Principal Reaction
-    TLorentzVector kaonpion;						//MIS-identification particles
-    TLorentzVector MMNeut_kaon, MMNeut_KPi, MMNeut_KP, MMSigma, MMKaon0, MMNeut_Pi0, Pion;		//Missing mass
-    TLorentzVector Sigma, Lambda, KaonS;								//Invariant Mass
+    TLorentzVector kaonpion;									//MIS-identification particles
+    TLorentzVector MMNeut_kaon, MMNeut_KPi, MMNeut_KP, MMSigma, MMLambda, MMKaon0, MMNeut_Pi0, Pion;	//Missing mass
+    TLorentzVector Sigma, Lambda, KaonS, SigmaSt;						//Invariant Mass
     
     photon.SetXYZM(0,0,myDataList->getTAGR_epho(myDataList->getIndex_k(0)),0);
     deuteron.SetXYZM(0,0,0,1.8756);
@@ -302,7 +269,7 @@ void Codecuts::CodeCuts(){
     double Py_kaonpion = myDataList->getEVNT_track(1).Rho()* sin(myDataList->getEVNT_track(1).Theta())* sin(myDataList->getEVNT_track(1).Phi());
     double Pz_kaonpion = myDataList->getEVNT_track(1).Rho()*(myDataList->getEVNT_track(1).CosTheta());
 
-     // This is the Pion- mass, because we need remove the background of Pion-
+    // This is the Pion- mass, because we need remove the background of Pion-
     kaonpion.SetXYZM(Px_kaonpion, Py_kaonpion, Pz_kaonpion, 0.139); 	     
       
     proton 	= myDataList->geteloss_track(0);
@@ -315,38 +282,45 @@ void Codecuts::CodeCuts(){
     Sigma 	= pion + Neutron;
     Lambda 	= pion + proton;
     MMSigma  	= photon + deuteron - proton - kaon;           			// Correlation with invariant mass (lambda)
+    MMLambda	= photon + deuteron - Neutron - kaon;
     WBoost   	= photon + deuteron; 						// to make Boost
       
     MMNeut_KPi 	= photon + deuteron - proton - kaonpion - pion;     	   	// This missing mass is with the Pion-
     MMNeut_Pi0  = photon + deuteron - kaon - pion - Neutron - proton;
+    SigmaSt	= MMLambda + pion;
     
     h_MissingMass->Fill(MMNeut_kaon.M());
     h_IMSigmaComparation[0]->Fill(Sigma.M());
     h_MissingMass_kaonpion->Fill(MMNeut_KPi.M()); 
-    
    
     //h_MissingMvsIMMass->Fill(MMNeut_kaon.M(),MMNeut_kaon.P());
     h_MissingMass_vsMissingMasskaonpion[0]->Fill(MMNeut_kaon.M(), MMNeut_KPi.M());
     h_MissingMass_vsMissingMassPi0[0]->Fill(MMNeut_kaon.M(),MMNeut_Pi0.M());
              
     //-----------Cuts misidentified particles pion plus--------//
-    if(MMNeut_KPi.M() < 0.98) continue;     
+    if(MMNeut_KPi.M() < 0.98) continue;
+    Events[9]++;         //Events With NOT PION, YES Kaon
     h_MissingMass_vsMissingMasskaonpion[1]->Fill(MMNeut_kaon.M(), MMNeut_KPi.M());
     h_MissingMass_pi0->Fill(MMNeut_Pi0.M());
     //-----------Cuts misidentified particles pion zero-------//
    
-     h_BetaVsMomNeu->Fill(MMNeut_kaon.Rho(),MMNeut_kaon.Beta()-Neutron.Beta());
+    h_BetaVsMomNeu->Fill(MMNeut_kaon.Rho(),MMNeut_kaon.Beta()-Neutron.Beta());
         
-     if(MMNeut_kaon.Beta()-Neutron.Beta() < -0.005 || MMNeut_kaon.Beta()-Neutron.Beta() > 0.005) continue;
+    if(MMNeut_kaon.Beta()-Neutron.Beta() < -0.005 || MMNeut_kaon.Beta()-Neutron.Beta() > 0.005) continue;
           
     h_MissingMass_vsMissingMassPi0[1]->Fill(MMNeut_kaon.M(),MMKaon0.M());
  
 
-    Events[15]++;         //Events With NOT PION, YES Kaon
+    Events[10]++;         //Delta Beta neutron
  
     //  Double_t El = TMath::Power((Sigma.M()-offsetx)*cos(angle)+(MMSigma.M()-offsety)*sin(angle),2)/TMath::Power(radx,2)
     // +TMath::Power((Sigma.M()-offsetx)*sin(angle)-(MMSigma.M()-offsety)*cos(angle),2)/TMath::Power(rady,2);
-     
+    
+    //------------ Sigma star and Sigma comparations ----------//
+
+    h_IMSigmaStar[0]->Fill(MMLambda.M());
+    // h_IMSigma_vsIMSigmaStar[0]->Fill(MMLambda.M(),MMNeut_kaon.Beta()-Neutron.Beta());
+    
     //----------Correlación momentums vs missing mass------------------------//
     
     h_MissingMvsIMMass[0]->Fill(Sigma.M(),MMNeut_kaon.M());
@@ -381,30 +355,51 @@ void Codecuts::CodeCuts(){
       h_InvariantMasscut[2]->Fill(Sigma.M());
       
       
-    //------------- Comparación de missing momentums-----------//
-      
-    if( Lambda.M()<1.096 || Lambda.M()>1.136) 
-      h_MissingP[0]->Fill(MMNeut_kaon.P());   
-    if( Sigma.M()<1.08 || Sigma.M()>1.3)
-      h_MissingP[1]->Fill(MMNeut_kaon.P());
 
     
-    if ( Lambda.M()>=1.1 && Lambda.M()<=1.132)continue;
+    if ( Lambda.M()>=1.05 && Lambda.M()<=1.132)continue;
     h_MissingMass_Lambda->Fill(MMNeut_kaon.M());
     h_MissingMassFinal_Neutron->Fill(MMNeut_kaon.M());
     h_IMSigmaComparation[2]->Fill(Sigma.M());
     //Cut for LamdaMass in +/- 8sigma
 
     
-    Events[16]++;         //Events With Lambda cuts
+    Events[11]++;         //Events With Lambda cuts
 
-   
+    //------------ Sigma star and Sigma comparations ----------//
+
+
+    h_IMSigma_vsIMSigmaStar[1]->Fill(MMNeut_kaon.M(),MMNeut_kaon.P());
+    // h_IMSigma_vsIMSigmaStar[1]->Fill(proton.P(),MMNeut_kaon.Beta()-Neutron.Beta());
+
+    // if(1.038*MMLambda.M()-0.037-SigmaSt.M() >= 0) continue;
+    h_IMSigma_vsIMSigmaStar[0]->Fill(MMNeut_kaon.M(),Sigma.M());
+    // if(MMLambda.M() <= 1.1243) continue;
+
+    //------------- Comparación de missing momentums-----------//
+      
+    if( Sigma.M()>=1.18 && Sigma.M()<=1.21)
+      h_MissingP[0]->Fill(MMNeut_kaon.P());
+
+    if( Sigma.M()<1.19 || Sigma.M()>1.21) 
+      h_MissingP[0]->Fill(MMNeut_kaon.P()); 
+
+    if( Sigma.M()>=1.19 && Sigma.M()<=1.21)
+      h_MissingP[1]->Fill(MMNeut_kaon.P());
+
+    // if( Sigma.M()<1.18){
+    //   h_MissingP[1]->Fill(MMNeut_kaon.P());
+    //   h_IMSigmaStar[1]->Fill(MMNeut_kaon.M());
+    // }
+
+    // if( Sigma.M()>1.21)
+    //   h_MissingP[2]->Fill(MMNeut_kaon.P());
+    
     //--------Correlation Momentums--------------//
     h_CorrelationMMomentum->Fill(Sigma.P(), Lambda.P());
     
-    // Events[17]++;         //Events With Mass neutron range
     if(MMNeut_kaon.P()<=0.2) continue;                                    //Cut for rescattering
-    Events[18]++;         //Events With Neutron Rescattering Lambada cuts
+    Events[12]++;         //Events With Neutron Rescattering Lambada cuts
 
 
     h_MMNeutron_vsMMassSigma[1]->Fill(MMNeut_kaon.M(),MMSigma.M());       //Cut MM neutron and MM sigma 
@@ -419,10 +414,50 @@ void Codecuts::CodeCuts(){
     h_DeltaBVSMissingMass->Fill(MMNeut_kaon.M(),deltbeta[2]);
     h_DeltaBVSMissingMomentum->Fill(MMNeut_kaon.P(),deltbeta[2]);
 
+
+    if(myDataList->getCoh_edge_nom() == float(1.3)) h_InvariantMassEnergy[0]->Fill(Sigma.M());
+    else if(myDataList->getCoh_edge_nom() == float(1.5)) h_InvariantMassEnergy[1]->Fill(Sigma.M());
+    else if(myDataList->getCoh_edge_nom() == float(1.7)) h_InvariantMassEnergy[2]->Fill(Sigma.M());
+    else if(myDataList->getCoh_edge_nom() == float(1.9)) h_InvariantMassEnergy[3]->Fill(Sigma.M());
+    else if(myDataList->getCoh_edge_nom() == float(2.1)) h_InvariantMassEnergy[4]->Fill(Sigma.M());
+    else if(myDataList->getCoh_edge_nom() == float(2.3)) h_InvariantMassEnergy[5]->Fill(Sigma.M());
+    
     //------------Momentum proton----------------.//
     h_MomentumProton->Fill(proton.P());
-    //-----------------BOOST------------------------------//
 
+
+    //--------------- Coh Edge -------------- //
+         
+    h_TagrEpho[0]->Fill(myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0);
+    if (myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0 > myDataList->getCoh_edge()) continue;
+    h_TagrEpho[1]->Fill(myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0);        
+    if (myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000< myDataList->getCoh_edge()-200.0) continue;
+    h_TagrEpho[2]->Fill(myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0);        
+    if (fabs(myDataList->getCoh_edge()-myDataList->getCoh_edge_nom()*1000)>15)continue;     
+    if (myDataList->getTrip_flag()!=0)continue;                                             
+    if (myDataList->getCoh_plan()!=0 && myDataList->getCoh_plan()!=1)continue;              
+
+    vector<float> Keys(3);
+    if(myDataList->getCoh_edge_nom() == float(1.3)){
+      Keys[0]=float(4.2);
+      Keys[1]=myDataList->getCoh_edge_nom();
+      Keys[2]=float(myDataList->getCoh_plan());
+    }
+    else{
+      Keys[0]=float(myDataList->getBeam_en());
+      Keys[1]=myDataList->getCoh_edge_nom();
+      Keys[2]=float(myDataList->getCoh_plan());
+    }
+        
+    double PhotoPol=0;
+    PhotoPol=GetPol(keysPlane[Keys], myDataList->getCoh_edge(), myDataList->getTAGR_epho(myDataList->getIndex_k(0))*1000.0, 8, 0.2,0.3);
+    
+    if (PhotoPol<0.5) continue;
+    
+    GetPolAv(Keys,ItP,AvP,PhotoPol);
+
+    //-----------------BOOST------------------------------//
+    
     CohE 	= myDataList->getCoh_edge();
     CohEN	= myDataList->getCoh_edge_nom();
     CohP	= myDataList->getCoh_plan();
