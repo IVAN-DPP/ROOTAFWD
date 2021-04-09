@@ -752,6 +752,10 @@ void Histograms::DoCanvasVertexToDT(){
   VertexLines[0]->SetLineColor(2);
   VertexLines[1]->SetLineColor(2);
 
+  TPaveStateModify Vert(h_Vertex);
+  Vert.BoxOptStat("e");
+  Vert.SaveChanges();
+
   VertexLines[0]->Draw("same");
   VertexLines[1]->Draw("same");
 
@@ -782,12 +786,18 @@ void Histograms::DoCanvasVertexToDT(){
   FFitsminus[0] = new TF1("DBProtonFitminus",FFname[0].c_str(),0,3);
   FFits[0]->Draw("same");
   FFitsminus[0]->Draw("same");
+  TPaveStateModify DB0(h_DeltaBe[0]);
+  DB0.BoxOptStat("e");
+  DB0.SaveChanges();
   c0DB->SaveAs("imagenes/ProtonDB_VS_P.eps");
   
   TCanvas *c0DBC=new TCanvas("c0DBC","Delta Beta With Cuts", 1000, 500);
   c0DBC->cd(1);
   h_DeltaBecut[0]->SetTitleSize(0.047, "XY");
   h_DeltaBecut[0]->Draw("colz");
+  TPaveStateModify DB00(h_DeltaBecut[0]);
+  DB00.BoxOptStat("e");
+  DB00.SaveChanges();
   c0DBC->SaveAs("imagenes/ProtonDB_VS_P_C.eps");
 
   //------ Kaon ------//
@@ -803,12 +813,18 @@ void Histograms::DoCanvasVertexToDT(){
   FFitsminus[1] = new TF1("DBKaonFitminus",FFname[0].c_str(),0,3);
   FFits[1]->Draw("same");
   FFitsminus[1]->Draw("same");
+  TPaveStateModify DB1(h_DeltaBe[1]);
+  DB1.BoxOptStat("e");
+  DB1.SaveChanges();
   c1DB->SaveAs("imagenes/KaonDB_VS_P.eps");
 
   TCanvas *c1DBC=new TCanvas("c1DBC","Delta Beta With Cuts", 1000, 500);
   c1DBC->cd(1);
   h_DeltaBecut[1]->SetTitleSize(0.047, "XY");
   h_DeltaBecut[1]->Draw("colz");
+  TPaveStateModify DB11(h_DeltaBecut[1]);
+  DB11.BoxOptStat("e");
+  DB11.SaveChanges();
   c0DBC->SaveAs("imagenes/KaonDB_VS_P_C.eps");
 
   
@@ -825,12 +841,18 @@ void Histograms::DoCanvasVertexToDT(){
   FFitsminus[2] = new TF1("DBPionFitminus",FFname[0].c_str(),0,3);
   FFits[2]->Draw("same");
   FFitsminus[2]->Draw("same");
+  TPaveStateModify DB2(h_DeltaBe[2]);
+  DB2.BoxOptStat("e");
+  DB2.SaveChanges();
   c2DB->SaveAs("imagenes/PionDB_VS_P.eps");
 
   TCanvas *c2DBC=new TCanvas("c2DBC","Delta Beta With Cuts", 1000, 500);
   c2DBC->cd(1);
   h_DeltaBecut[2]->SetTitleSize(0.047, "XY");
   h_DeltaBecut[2]->Draw("colz");
+  TPaveStateModify DB22(h_DeltaBecut[2]);
+  DB22.BoxOptStat("e");
+  DB22.SaveChanges();
   c2DBC->SaveAs("imagenes/PionDB_VS_P_C.eps");
 
 
@@ -897,7 +919,9 @@ void Histograms::DoCanvasVertexToDT(){
   BeVSp[0]->Draw("same");
   BeVSp[1]->Draw("same");
   BeVSp[2]->Draw("same");
-  
+  TPaveStateModify BT(h_BeVSpT);
+  BT.BoxOptStat("e");
+  BT.SaveChanges();  
   cB->SaveAs("imagenes/B_VS_P.eps");
   
 
@@ -937,6 +961,9 @@ void Histograms::DoCanvasVertexToDT(){
   h_DeltaTall[0]->Draw();
   DTL1->Draw("same");
   DTL2->Draw("same");
+  TPaveStateModify DTK(h_DeltaTall[0]);
+  DTK.BoxOptStat("e");
+  DTK.SaveChanges();  
   c0T->SaveAs("imagenes/DeltaTcut_Kaon.eps");
 
   //--- DT Pion ---//
@@ -954,6 +981,9 @@ void Histograms::DoCanvasVertexToDT(){
   DTL2Pion->SetLineColor(2);
   DTL1Pion->Draw("same");
   DTL2Pion->Draw("same");
+  TPaveStateModify DTPi(h_DeltaTall[1]);
+  DTPi.BoxOptStat("e");
+  DTPi.SaveChanges();  
   c1T->SaveAs("imagenes/DeltaTcut_Pion.eps");
 
 }
@@ -964,7 +994,7 @@ void Histograms::DoCanvasFiduciaryCut(){
   //----- Detector geometry (Fiduciary cuts)---------//
 
   gStyle->SetStatY(0.94);
-    
+  gStyle->SetOptStat("e");
   //------ Proton ------//
   
   TCanvas *c0TP=new TCanvas("c0TP","Theta-Phi correlation", 1200, 500);
@@ -980,6 +1010,9 @@ void Histograms::DoCanvasFiduciaryCut(){
   F_ThePhiProt[6]->Draw("same");
 
   LinesPTCuts();
+  TPaveStateModify FDP(h_ThePhi[0]);
+  FDP.BoxOptStat("e");
+  FDP.SaveChanges();  
   c0TP->SaveAs("imagenes/Fiduciary_Proton.eps");
   
   //------ Kaon ------//
@@ -997,6 +1030,10 @@ void Histograms::DoCanvasFiduciaryCut(){
   F_ThePhiProt[6]->Draw("same");
 
   LinesPTCuts();
+  TPaveStateModify FDK(h_ThePhi[1]);
+  FDK.BoxOptStat("e");
+  FDK.SaveChanges();  
+
   c1TP->SaveAs("imagenes/Fiduciary_Kaon.eps");
 
   //------ Pion ------//
@@ -1015,6 +1052,10 @@ void Histograms::DoCanvasFiduciaryCut(){
 
 
   LinesPTCuts();
+  TPaveStateModify FDPi(h_ThePhi[2]);
+  FDPi.BoxOptStat("e");
+  FDPi.SaveChanges();  
+
   c2TP->SaveAs("imagenes/Fiduciary_Pion.eps");
 
   // 3 in 1
@@ -1052,6 +1093,10 @@ void Histograms::DoCanvasFiduciaryCut(){
   c0TPC->cd(1);
   h_ThePhicut[0]->SetTitleSize(0.05, "XY");
   h_ThePhicut[0]->Draw("colz");
+  TPaveStateModify FDPC(h_ThePhicut[0]);
+  FDPC.BoxOptStat("e");
+  FDPC.SaveChanges();  
+
   c0TPC->SaveAs("imagenes/Fiduciarycuts_Proton.eps");
   
   //------ Kaon ------//
@@ -1060,6 +1105,10 @@ void Histograms::DoCanvasFiduciaryCut(){
   c1TPC->cd(1);
   h_ThePhicut[1]->SetTitleSize(0.05, "XY");
   h_ThePhicut[1]->Draw("colz");
+  TPaveStateModify FDKC(h_ThePhicut[1]);
+  FDKC.BoxOptStat("e");
+  FDKC.SaveChanges();  
+
   c1TPC->SaveAs("imagenes/Fiduciarycuts_Kaon.eps");
 
   //------ Pion ------//
@@ -1068,6 +1117,10 @@ void Histograms::DoCanvasFiduciaryCut(){
   c2TPC->cd(1);
   h_ThePhicut[2]->SetTitleSize(0.05, "XY");
   h_ThePhicut[2]->Draw("colz");
+  TPaveStateModify FDPiC(h_ThePhicut[2]);
+  FDPiC.BoxOptStat("e");
+  FDPiC.SaveChanges();  
+
   c2TPC->SaveAs("imagenes/Fiduciarycuts_Pion.eps");
 
   // 3 in 1
@@ -1096,19 +1149,26 @@ void Histograms::DoCanvasEnergyLossAndCoh(){
   //-------------------- Energy Loss -------------------- //
 
   gStyle->SetStatY(0.9);
-
+  gStyle->SetOptStat("e");
+  
   //------ Proton ------//
   
   TCanvas *c0EL=new TCanvas("c0EL","Delta Energy loss", 1200, 500);
   c0EL->cd(1);
   h_eloss[0]->SetTitleSize(0.04, "XY");
   h_eloss[0]->Draw();
+  TPaveStateModify EL0(h_eloss[0]);
+  EL0.BoxOptStat("e");
+  EL0.SaveChanges();  
   c0EL->SaveAs("imagenes/Energyloss_Proton.eps");
 
   TCanvas *c0CEL=new TCanvas("c0CEL","Correlation Energy loss", 1200, 500);
   c0CEL->cd(1);
   h_Celoss[0]->SetTitleSize(0.04, "XY");
   h_Celoss[0]->Draw("colz");
+  TPaveStateModify ELC0(h_Celoss[0]);
+  ELC0.BoxOptStat("e");
+  ELC0.SaveChanges();  
   c0CEL->SaveAs("imagenes/CorrelationEnergyloss_Proton.eps");
 
  
@@ -1118,12 +1178,18 @@ void Histograms::DoCanvasEnergyLossAndCoh(){
   c1EL->cd(1);
   h_eloss[1]->SetTitleSize(0.04, "XY");
   h_eloss[1]->Draw();
+  TPaveStateModify EL1(h_eloss[1]);
+  EL1.BoxOptStat("e");
+  EL1.SaveChanges();  
   c1EL->SaveAs("imagenes/Energyloss_Kaon.eps");
 
   TCanvas *c1CEL=new TCanvas("c1CEL","Correlation Energy loss", 1200, 500);
   c1CEL->cd(1);
   h_Celoss[1]->SetTitleSize(0.04, "XY");
   h_Celoss[1]->Draw("colz");
+  TPaveStateModify ELC1(h_Celoss[1]);
+  ELC1.BoxOptStat("e");
+  ELC1.SaveChanges();  
   c1CEL->SaveAs("imagenes/CorrelationEnergyloss_Kaon.eps");
 
   //------ Pion ------//
@@ -1131,12 +1197,18 @@ void Histograms::DoCanvasEnergyLossAndCoh(){
   TCanvas *c2EL=new TCanvas("c2EL","Delta Energy loss", 1200, 500);
   h_eloss[2]->SetTitleSize(0.04, "XY");
   h_eloss[2]->Draw();
+  TPaveStateModify EL2(h_eloss[2]);
+  EL2.BoxOptStat("e");
+  EL2.SaveChanges();  
   c2EL->SaveAs("imagenes/Energyloss_Pion.eps");
 
   TCanvas *c2CEL=new TCanvas("c2CEL","Correlation Energy loss", 1200, 500);
   c2CEL->cd(1);
   h_Celoss[2]->SetTitleSize(0.04, "XY");
   h_Celoss[2]->Draw("colz");
+  TPaveStateModify ELC2(h_Celoss[2]);
+  ELC2.BoxOptStat("e");
+  ELC2.SaveChanges();  
   c2CEL->SaveAs("imagenes/CorrelationEnergyloss_Pion.eps");
 
   //---- Get Coherent Edge ---- //
@@ -1152,25 +1224,28 @@ void Histograms::DoCanvasEnergyLossAndCoh(){
 
 }
 
-void Histograms::DoCanvasReconstruction(){
-  //******************* Reconstruction **********************//
-}
 
 void Histograms::DoCanvasReconstructionMM(){
 
   //----------- MM before Cuts for MM correlation ------- //
 
   //------ Kaon ------//
-  
+  gStyle->SetOptStat("em");
   TCanvas *c0MM=new TCanvas("c0MM","Missing mass", 1200, 500);
   c0MM->cd(1);
   h_MissingMass->SetTitleSize(0.043, "XY");
   h_MissingMass->Draw();
+  TPaveStateModify MM(h_MissingMass,2);
+  MM.BoxOptStat("em");
+  MM.SaveChanges();  
   c0MM->SaveAs("imagenes/MissingMass.eps");
+
 }
 
 void Histograms::DoCanvasReconstructionKPi(){
 
+  gStyle->SetOptStat("e");
+  
   //---------- MM Kaon-Pion Correlation without cut ---------------//
   
   TCanvas *c0ELL=new TCanvas("c0ELL","Correlation of MM", 900, 500);
@@ -1186,6 +1261,9 @@ void Histograms::DoCanvasReconstructionKPi(){
   //myEllipse->SetFillStyle(0);
   //myEllipse->SetLineColor(kRed);
   //myEllipse->Draw("same");
+  TPaveStateModify MIKPi(h_MissingMass_vsMissingMasskaonpion[0]);
+  MIKPi.BoxOptStat("e");
+  MIKPi.SaveChanges();  
   c0ELL->SaveAs("imagenes/MIS_Identification_KPi.eps");
 
   //---------- MM Kaon-Pion Correlation with cut ---------------//
@@ -1197,6 +1275,9 @@ void Histograms::DoCanvasReconstructionKPi(){
   //myEllipse->SetFillStyle(0);
   //myEllipse->SetLineColor(kRed);
   //myEllipse->Draw("same");
+  TPaveStateModify MIKPiC(h_MissingMass_vsMissingMasskaonpion[1]);
+  MIKPiC.BoxOptStat("e");
+  MIKPiC.SaveChanges();
   c0ELLC->SaveAs("imagenes/MIS_Identification_KPi_C.eps");
   
   //---------- MM Pion_0 Correlation without cut ---------------//
@@ -1216,7 +1297,7 @@ void Histograms::DoCanvasReconstructionKPi(){
   c2ELLC->SaveAs("imagenes/MIS_Identification_Pi0_C.eps");
 
   
-  gStyle->SetOptStat("me");
+  gStyle->SetOptStat("e");
    
   TCanvas *c1MMC=new TCanvas("c1MMC","Missing mass", 1200, 500);
   c1MMC->cd(1);
@@ -1249,7 +1330,8 @@ void Histograms::DoCanvasReconstructionKPi(){
 void Histograms::DoCanvasReconstructionMMCuts(){
 
   //----------- MM After Cuts for MM correlation ------- //
-  
+
+  gStyle->SetOptStat("e");
 
   //------ Kaon ------//  
   
@@ -1265,7 +1347,6 @@ void Histograms::DoCanvasReconstructionMMCuts(){
   vector<TH1*> LHMM;
   LHMM.push_back(h_MissingMasscut);
   LHMM.push_back(h_MissingMass_Lambda);
-  gStyle->SetOptStat(110);
   TPaveStateModify MMC0(h_MissingMass, LHMM);
   MMC0.BoxPosition(1.05, h_MissingMass->GetMaximum()/2, 1.2, h_MissingMass->GetMaximum()+100);
   MMC0.BoxTextSize(0.045);
@@ -1286,8 +1367,10 @@ void Histograms::DoCanvasReconstructionMMCuts(){
 }
 
 void Histograms::DoCanvasReconstructionBgMissingMomentum(){
-  
+
   //------------ Missing Momentum -----------------//
+
+  gStyle->SetOptStat("e");
   
   TCanvas *MMP=new TCanvas("MMP","Missing Momentum", 1450, 500);
   MMP->cd(1);
@@ -1322,6 +1405,8 @@ void Histograms::DoCanvasReconstructionBgMissingMomentum(){
 }
 
 void Histograms::DoCanvasReconstructionIMCorrelations(){
+
+  gStyle->SetOptStat("e");
   TCanvas *c312=new TCanvas("c312","MM Neutron vs IM Sigma", 1450, 500);
   c312->cd(1);
   h_MissingMvsIMMass[0]->SetLabelSize(0.05, "XY");
@@ -1334,7 +1419,9 @@ void Histograms::DoCanvasReconstructionIMCorrelations(){
   h_MissingMvsIMMass[1]->SetLabelSize(0.05, "XY");
   h_MissingMvsIMMass[1]->SetTitleSize(0.045, "XY");
   h_MissingMvsIMMass[1]->Draw("colz");
-   
+  TPaveStateModify MMIML(h_MissingMvsIMMass[1]);
+  MMIML.BoxOptStat("e");
+  MMIML.SaveChanges();
   c314->SaveAs("imagenes/MMvsInvMassCorrelationLambda.eps");
 
 
@@ -1360,10 +1447,13 @@ void Histograms::DoCanvasReconstructionIMCorrelations(){
   LambdaLines[1]->Draw("same");
   
   h_LambdaMass->Fit(lamdaMassFit);
+  lamdaMassFit->SetParNames("Constante","Valor Medio","#sigma");
   gStyle->SetOptFit(111);
   lamdaMassFit->Draw("same");
   NameLinesInv(1.116, 0.002, 12, 4);
-
+  TPaveStateModify IML(h_LambdaMass);
+  IML.BoxOptStat("e");
+  IML.SaveChanges();
   STDC->SaveAs("imagenes/InvariantMassComparation_Lambda.eps");
 
   //----- Sigma ------//
@@ -1373,7 +1463,7 @@ void Histograms::DoCanvasReconstructionIMCorrelations(){
   h_InvariantMass->SetLabelSize(0.045, "XY");
   h_InvariantMass->SetTitleSize(0.043, "XY");
   h_InvariantMass->Draw();
-  gStyle->SetOptStat("me");
+  gStyle->SetOptStat("e");
   h_InvariantMasscut[0]->SetFillColor(kGreen-7);
   h_InvariantMasscut[1]->SetFillColor(kBlue-7);
   h_InvariantMasscut[2]->SetFillColor(kMagenta-7);
@@ -1400,7 +1490,7 @@ void Histograms::DoCanvasReconstructionIMCorrelations(){
   h_IMSigmaComparation[0]->SetLabelSize(0.045, "XY");
   h_IMSigmaComparation[0]->SetTitleSize(0.043, "XY");
   h_IMSigmaComparation[0]->Draw();
-  gStyle->SetOptStat("me");
+  gStyle->SetOptStat("e");
   h_IMSigmaComparation[1]->SetFillColor(kRed-7);
   h_IMSigmaComparation[2]->SetFillColor(kGreen-7);
   vector<TH1*> IVMCHistos;
@@ -1431,7 +1521,9 @@ void Histograms::DoCanvasReconstructionIMCorrelations(){
   IMCorrLine2->SetLineWidth(2);
   IMCorrLine2->SetLineColor(2);
   IMCorrLine2->Draw("same");
-  
+  TPaveStateModify IMLCorr(h_InvMassLambda_vsInvMassSigma);
+  IMLCorr.BoxOptStat("e");
+  IMLCorr.SaveChanges();  
   cIMLS->SaveAs("imagenes/InvariantMassCorrelation.eps");
 
   //-------------------Correlation MM Sigma and IM Sigma------------//
@@ -1464,11 +1556,15 @@ void Histograms::DoCanvasProtonMomentum(){
 
   //-------------Momentum proton--------------//
 
+  gStyle->SetOptStat("em");
   TCanvas *cMP=new TCanvas("cMP","Momentum proton", 900, 500);
   cMP->cd(1);
   h_MomentumProton->SetTitleSize(0.045, "XY");  
   h_MomentumProton->Draw();
-  
+
+  TPaveStateModify MomP(h_MomentumProton,2);
+  MomP.BoxOptStat("em");
+  MomP.SaveChanges();  
   cMP->SaveAs("imagenes/MomentumProton.eps");    
 
 }
@@ -1477,6 +1573,8 @@ void Histograms::DoCanvasMissingMomentumCorrelations(){
 
   //--------------Correlation Missing momentums--------------------//
 
+  gStyle->SetOptStat("e");
+  
   TCanvas *cMMom=new TCanvas("cMMom","Correlation Missing momentums", 900, 500);
   cMMom->cd(1);
   h_CorrelationMMomentum->SetTitleSize(0.045, "XY");  
@@ -1500,6 +1598,9 @@ void Histograms::DoCanvasMissingMomentumCorrelations(){
 
   CutDBLines[0]->Draw("same");
   CutDBLines[1]->Draw("same");
+  TPaveStateModify MomN(h_BetaVsMomNeu);
+  MomN.BoxOptStat("em");
+  MomN.SaveChanges();  
   cMMomN->SaveAs("imagenes/MomentumVsBetaNeutron.eps");
 
 }
@@ -1508,12 +1609,15 @@ void Histograms::DoCanvasIMSigma(){
 
   
   //---------------Missing mass Sigma-----------------------//
-  
+
+  gStyle->SetOptStat("em");
   TCanvas *cMMS=new TCanvas("cMMS","Missing mass Sigma", 900, 500);
   cMMS->cd(1);
   h_MMassSigma->SetTitleSize(0.045, "XY");  
   h_MMassSigma->Draw();
-  
+  TPaveStateModify MMS(h_MMassSigma,2);
+  MMS.BoxOptStat("em");
+  MMS.SaveChanges();  
   cMMS->SaveAs("imagenes/MissingMassSigma.eps");
 
   //---------------Missing mass Sigma Cut-----------------------//
@@ -1522,7 +1626,9 @@ void Histograms::DoCanvasIMSigma(){
   cMMSC->cd(1);
   h_MMassSigmaCut->SetTitleSize(0.045, "XY");  
   h_MMassSigmaCut->Draw();
-  
+  TPaveStateModify MMSC(h_MMassSigmaCut,2);
+  MMSC.BoxOptStat("em");
+  MMSC.SaveChanges();  
   cMMSC->SaveAs("imagenes/MissingMassSigmaCut.eps");
 
   //------------ Final Invarian Mass ---------------//
@@ -1530,9 +1636,10 @@ void Histograms::DoCanvasIMSigma(){
   TCanvas *IVMF = new TCanvas("IVMF","Invariant mass", 900, 500);
   IVMF->cd(1);
 
-  gStyle->SetOptStat("me");
   h_InvariantMasscut[3]->Draw("same");
- 
+  TPaveStateModify MMFS(h_InvariantMasscut[3],2);
+  MMFS.BoxOptStat("em");
+  MMFS.SaveChanges();  
   
   IVMF->SaveAs("imagenes/InvariantMassFinall_Sigma.eps");
 
@@ -1553,15 +1660,14 @@ void Histograms::DoCanvasIMSigma(){
   TCanvas *IVMFE = new TCanvas("IVMFE","Invariant mass for 1.3 GeV", 1450, 900);
   
   IVMFE->Divide(3,2);
-  gStyle->SetOptStat("me");
+  gStyle->SetOptStat("e");
   IVMFE->cd(1);
-  h_InvariantMassEnergy[0]->SetTitle("E_{#gamma}=1.1-1.3 GeV");
+  h_InvariantMassEnergy[0]->SetTitle("E_{#gamma}=1,1-1,3 GeV");
   h_InvariantMassEnergy[0]->Draw();
+  h_BackgroundS[0]->SetLineColor(kRed-5);
   h_BackgroundS[0]->Draw("same");
   TPaveStateModify BGAl1(h_InvariantMassEnergy[0],h_BackgroundS[0]);
   BGAl1.BoxOptStat("em");
-  BGAl1.BoxPosition(0.75,(h_InvariantMassEnergy[0]->GetMaximum()/2),0.85,h_InvariantMassEnergy[0]->GetMaximum()+100);
-  BGAl1.BoxTextSize(0.05);
   BGAl1.SaveChanges();
   
   // h_InvariantMassEnergy[0]->Fit(FitBreitWigner1[0]);
@@ -1581,14 +1687,12 @@ void Histograms::DoCanvasIMSigma(){
   
   IVMFE->cd(2);
 
-  h_InvariantMassEnergy[1]->SetTitle("E_{#gamma}=1.3-1.5 GeV");
+  h_InvariantMassEnergy[1]->SetTitle("E_{#gamma}=1,3-1,5 GeV");
   h_InvariantMassEnergy[1]->Draw();
+  h_BackgroundS[1]->SetLineColor(kRed-5);
   h_BackgroundS[1]->Draw("same");
   TPaveStateModify BGAl2(h_InvariantMassEnergy[1],h_BackgroundS[1]);
   BGAl2.BoxOptStat("em");
-  BGAl2.BoxSize(0.7,0.7);
-  BGAl2.BoxPosition(0.75,(h_InvariantMassEnergy[1]->GetMaximum()/2),0.85,h_InvariantMassEnergy[1]->GetMaximum()+100);
-  BGAl2.BoxTextSize(0.05);
   BGAl2.SaveChanges();
   // h_InvariantMassEnergy[1]->Fit(FitBreitWigner2[0]);
   // Double_t par2[NParFitBreit];
@@ -1605,14 +1709,12 @@ void Histograms::DoCanvasIMSigma(){
   // Background[1]	= FitBreitWigner2[2]->Integral(1.0,1.5);
   
   IVMFE->cd(3);
-  h_InvariantMassEnergy[2]->SetTitle("E_{#gamma}=1.5-1.7 GeV");
+  h_InvariantMassEnergy[2]->SetTitle("E_{#gamma}=1,5-1,7 GeV");
   h_InvariantMassEnergy[2]->Draw();
+  h_BackgroundS[2]->SetLineColor(kRed-5);
   h_BackgroundS[2]->Draw("same");
   TPaveStateModify BGAl3(h_InvariantMassEnergy[2],h_BackgroundS[2]);
   BGAl3.BoxOptStat("em");
-  BGAl3.BoxSize(0.7,0.7);
-  BGAl3.BoxPosition(0.75,(h_InvariantMassEnergy[2]->GetMaximum()/2),0.85,h_InvariantMassEnergy[2]->GetMaximum()+100);
-  BGAl3.BoxTextSize(0.05);
   BGAl3.SaveChanges();
   // h_InvariantMassEnergy[2]->Fit(FitBreitWigner3[0]);
   // Double_t par3[NParFitBreit];
@@ -1628,14 +1730,12 @@ void Histograms::DoCanvasIMSigma(){
   // Background[2]	= FitBreitWigner3[2]->Integral(1.0,1.5);
   
   IVMFE->cd(4);
-  h_InvariantMassEnergy[3]->SetTitle("E_{#gamma}=1.7-1.9 GeV");
+  h_InvariantMassEnergy[3]->SetTitle("E_{#gamma}=1,7-1,9 GeV");
   h_InvariantMassEnergy[3]->Draw();
+  h_BackgroundS[3]->SetLineColor(kRed-5);
   h_BackgroundS[3]->Draw("same");
   TPaveStateModify BGAl4(h_InvariantMassEnergy[3],h_BackgroundS[3]);
   BGAl4.BoxOptStat("em");
-  BGAl4.BoxSize(0.7,0.7);
-  BGAl4.BoxPosition(0.75,(h_InvariantMassEnergy[3]->GetMaximum()/2),0.85,h_InvariantMassEnergy[3]->GetMaximum()+100);
-  BGAl4.BoxTextSize(0.05);
   BGAl4.SaveChanges();
   // h_InvariantMassEnergy[3]->Fit(FitBreitWigner4[0]);
   // Double_t par4[NParFitBreit];
@@ -1652,14 +1752,12 @@ void Histograms::DoCanvasIMSigma(){
   // Background[3]	= FitBreitWigner4[2]->Integral(1.0,1.5);
   
   IVMFE->cd(5);
-  h_InvariantMassEnergy[4]->SetTitle("E_{#gamma}=1.9-2.1 GeV");
+  h_InvariantMassEnergy[4]->SetTitle("E_{#gamma}=1,9-2,1 GeV");
   h_InvariantMassEnergy[4]->Draw();
+  h_BackgroundS[4]->SetLineColor(kRed-5);
   h_BackgroundS[4]->Draw("same");
   TPaveStateModify BGAl5(h_InvariantMassEnergy[4],h_BackgroundS[5]);
   BGAl5.BoxOptStat("em");
-  BGAl5.BoxSize(0.7,0.7);
-  BGAl5.BoxPosition(0.75,(h_InvariantMassEnergy[4]->GetMaximum()/2),0.85,h_InvariantMassEnergy[4]->GetMaximum()+100);
-  BGAl5.BoxTextSize(0.05);
   BGAl5.SaveChanges();
   // h_InvariantMassEnergy[4]->Fit(FitBreitWigner5[0]);
   // Double_t par5[NParFitBreit];
@@ -1675,16 +1773,14 @@ void Histograms::DoCanvasIMSigma(){
   // Background[4]	= FitBreitWigner5[2]->Integral(1.0,1.5);
   
   IVMFE->cd(6);
-  h_InvariantMassEnergy[5]->SetTitle("E_{#gamma}=2.1-2.3 GeV");
+  h_InvariantMassEnergy[5]->SetTitle("E_{#gamma}=2,1-2,3 GeV");
   h_InvariantMassEnergy[5]->Draw();
-  // h_InvariantMassEnergy[5]->Fit(FitBreitWigner6[0]);
+  h_BackgroundS[5]->SetLineColor(kRed-5);
   h_BackgroundS[5]->Draw("same");
   TPaveStateModify BGAl6(h_InvariantMassEnergy[5],h_BackgroundS[5]);
   BGAl6.BoxOptStat("em");
-  BGAl6.BoxSize(0.7,0.7);
-  BGAl6.BoxPosition(0.75,(h_InvariantMassEnergy[5]->GetMaximum()/2),0.85,h_InvariantMassEnergy[5]->GetMaximum()+100);
-  BGAl6.BoxTextSize(0.05);
   BGAl6.SaveChanges();
+  // h_InvariantMassEnergy[5]->Fit(FitBreitWigner6[0]);
   // Double_t par6[NParFitBreit];
   // FitBreitWigner6[0]->GetParameters(par2);
   // FitBreitWigner6[1] = new TF1("Breitwigner",BreitWignerF,1.0,1.5,3);
@@ -1755,8 +1851,7 @@ void Histograms::DoCanvas(){
   DoCanvasVertexToDT();
   DoCanvasFiduciaryCut();
   DoCanvasEnergyLossAndCoh();
-  DoCanvasReconstruction();
-  DoCanvasReconstructionMM();
+  // DoCanvasReconstructionMM();
   DoCanvasReconstructionKPi();
   DoCanvasReconstructionMMCuts();
   DoCanvasReconstructionBgMissingMomentum();
@@ -1795,7 +1890,8 @@ void Histograms::DoCanvasCosPart(){
 }
 
 void Histograms::DoCanvasAsym(){
-  
+
+  gStyle->SetOptStat("em");
   TCanvas *cCM0 = new TCanvas("cCM0","cos Theta proton Boost", 1450, 500);
   cCM0->cd(1);
   h_CosThetaCM[0]->Draw();
@@ -1933,8 +2029,11 @@ void Histograms::DoCanvasAsym(){
     name="E_{#gamma}="+Energy1.str()+"-"+Energy2.str()+" Gev";
     h_CosThetaCMT[i]->SetTitle(name.c_str());
     Energy+=0.2;
+    TPaveStateModify CosBin(h_CosThetaCMT[i]);
+    CosBin.BoxOptStat("em");
+    CosBin.SaveChanges();
   }
- 
+  
   cCMT->SaveAs("imagenes/ThetaKaonBinBoost.eps");
   
   TCanvas *cTH0 = new TCanvas("CTH0","Theta proton",1450,500);

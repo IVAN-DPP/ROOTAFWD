@@ -12,23 +12,54 @@
 
 using namespace std;
 
+TPaveStateModify::TPaveStateModify(TH1 *PH,UInt_t L){
+  PrincipalHisto=PH;
+  Histos.push_back(PH);
+  gPad->Update();
+  Pave = (TPaveStats*)PrincipalHisto->FindObject("stats");
+  Pave->SetName("mystats");
+  ListText = Pave->GetListOfLines();
+
+  switch(L){
+  case 1:
+    Const = Pave->GetLineWith("Entries");
+    ListText->Remove(Const);
+    break;
+  case 2:
+    Const = Pave->GetLineWith("Entries");
+    ListText->Remove(Const);
+    Const = Pave->GetLineWith("Mean");
+    ListText->Remove(Const);
+    break;
+  }
+ 
+  
+}
+
+
 TPaveStateModify::TPaveStateModify(TH1 *PH,TH1 *SH){
   PrincipalHisto=PH;
+  Histos.push_back(PH);
   Histos.push_back(SH);
   gPad->Update();
   Pave = (TPaveStats*)PrincipalHisto->FindObject("stats");
   Pave->SetName("mystats");
   ListText = Pave->GetListOfLines();
+  Const = Pave->GetLineWith("Entries");
+  ListText->Remove(Const);
 }
 
 
 TPaveStateModify::TPaveStateModify(TH1 *PH,vector<TH1*> SH){
   PrincipalHisto=PH;
-  Histos = SH;
+  Histos.push_back(PH);
+  for (UInt_t i = 0; i < SH.size(); i++) Histos.push_back(SH[i]);
   gPad->Update();
   Pave = (TPaveStats*)PrincipalHisto->FindObject("stats");
   Pave->SetName("mystats");
   ListText = Pave->GetListOfLines();
+  Const = Pave->GetLineWith("Entries");
+  ListText->Remove(Const);
 }
 
 void TPaveStateModify::BoxOptStatActive(int it){

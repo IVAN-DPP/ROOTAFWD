@@ -17,6 +17,7 @@ protected:
   vector<TH1*> Histos;
   TPaveStats *Pave 	= NULL;
   TList *ListText  	= NULL;
+  TText *Const		= NULL;
   double XSize;
   double YSize;
   double XStat;
@@ -40,6 +41,7 @@ protected:
   
 public:
   TPaveStateModify(){}
+  TPaveStateModify(TH1 *,UInt_t = 1);
   TPaveStateModify(TH1 *,TH1 *);
   TPaveStateModify(TH1 *,vector<TH1*>);
   void BoxOptStatActive(int);
